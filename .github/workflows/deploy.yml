@@ -41,7 +41,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      # enablement: true hace que la action prenda Pages sola la primera vez.
+      # Sin esto falla con "Get Pages site failed" hasta que alguien va a
+      # Settings y lo activa a mano.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: src
