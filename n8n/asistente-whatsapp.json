@@ -1,0 +1,457 @@
+{
+  "name": "Librería Neneko — Asistente de WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "={{ ['GET', 'POST'] }}",
+        "multipleMethods": true,
+        "path": "whatsapp-neneko",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        300
+      ],
+      "id": "wh-entrada",
+      "name": "Webhook de Meta",
+      "webhookId": "REEMPLAZAR-AL-IMPORTAR",
+      "notes": "rawBody activado: la verificación de firma necesita los bytes exactos que mandó Meta, no el JSON re-serializado."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.query?.['hub.mode'] === 'subscribe' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -900,
+        300
+      ],
+      "id": "if-verificacion",
+      "name": "¿Es la verificación de Meta?",
+      "notes": "Meta pega una sola vez con GET y ?hub.mode=subscribe cuando das de alta el webhook. Hay que devolverle el hub.challenge tal cual."
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.verify_token'] === $env.META_VERIFY_TOKEN ? $json.query['hub.challenge'] : 'token invalido' }}",
+        "options": {
+          "responseCode": "={{ $json.query['hub.verify_token'] === $env.META_VERIFY_TOKEN ? 200 : 403 }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -660,
+        180
+      ],
+      "id": "resp-challenge",
+      "name": "Devolver el challenge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Verifica que el pedido lo mandó Meta y no cualquiera que descubrió la URL.\n// Sin esto, alguien podría inyectarle mensajes falsos al flujo.\nconst crypto = require('crypto');\n\nconst secret = $env.META_APP_SECRET;\nif (!secret) {\n  throw new Error('Falta la variable de entorno META_APP_SECRET');\n}\n\nconst item = $input.first();\nconst firmaRecibida = item.json.headers?.['x-hub-signature-256'];\n\n// Con rawBody activado el cuerpo llega como binario. Hay que firmar esos bytes\n// exactos: si re-serializás el JSON, el orden de las claves puede cambiar y la\n// firma no coincide nunca.\nconst crudo = item.binary?.data\n  ? Buffer.from(item.binary.data.data, 'base64')\n  : Buffer.from(JSON.stringify(item.json.body ?? {}), 'utf8');\n\nconst esperada = 'sha256=' + crypto.createHmac('sha256', secret).update(crudo).digest('hex');\n\n// timingSafeEqual en vez de === para no filtrar información por el tiempo que\n// tarda la comparación.\nlet valida = false;\nif (typeof firmaRecibida === 'string' && firmaRecibida.length === esperada.length) {\n  valida = crypto.timingSafeEqual(Buffer.from(firmaRecibida), Buffer.from(esperada));\n}\n\nconst cuerpo = item.binary?.data ? JSON.parse(crudo.toString('utf8')) : item.json.body;\n\nreturn [{ json: { firmaValida: valida, body: cuerpo } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        400
+      ],
+      "id": "code-firma",
+      "name": "Verificar la firma"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.firmaValida }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -440,
+        400
+      ],
+      "id": "if-firma",
+      "name": "¿Firma válida?"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "firma invalida",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        540
+      ],
+      "id": "resp-403",
+      "name": "Rechazar (403)"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        300
+      ],
+      "id": "resp-200",
+      "name": "Responder 200 ya mismo",
+      "notes": "Meta espera un 200 en menos de 5 segundos. Este nodo contesta y el flujo SIGUE ejecutándose después: leer el Sheet y armar la respuesta pasa con Meta ya conforme."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Saca el mensaje del payload y descarta lo que no hay que responder.\nconst staticData = $getWorkflowStaticData('global');\nstaticData.procesados = staticData.procesados || [];\n\nconst value = $json.body?.entry?.[0]?.changes?.[0]?.value ?? {};\n\n// Los avisos de \"entregado\" y \"leído\" llegan al MISMO webhook pero vienen en\n// statuses[], no en messages[]. Si no filtrás esto, el bot se contesta solo.\nif (!Array.isArray(value.messages) || value.messages.length === 0) {\n  return [{ json: { procesar: false, motivo: 'evento de estado, no es un mensaje' } }];\n}\n\nconst msg = value.messages[0];\nconst contacto = value.contacts?.[0];\n\n// Meta reintenta hasta 7 días si no recibió un 200, así que el mismo mensaje\n// puede llegar varias veces. El wamid es único por mensaje.\nif (staticData.procesados.includes(msg.id)) {\n  return [{ json: { procesar: false, motivo: 'duplicado: ' + msg.id } }];\n}\nstaticData.procesados.push(msg.id);\nif (staticData.procesados.length > 500) {\n  staticData.procesados = staticData.procesados.slice(-500);\n}\n\n// El texto SOLO existe si type === 'text'. Un audio o una foto no traen\n// .text.body y asumir que sí es el error más común al empezar.\nreturn [{\n  json: {\n    procesar: true,\n    wamid: msg.id,\n    de: msg.from,\n    nombre: contacto?.profile?.name ?? '',\n    tipo: msg.type,\n    texto: msg.type === 'text' ? (msg.text?.body ?? '') : '',\n  },\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "id": "code-extraer",
+      "name": "Extraer mensaje y deduplicar"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.procesar }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        220,
+        300
+      ],
+      "id": "if-procesar",
+      "name": "¿Hay un mensaje nuevo?"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $env.SHEET_CATALOGO_ID }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Catalogo",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        220
+      ],
+      "id": "sheets-catalogo",
+      "name": "Leer el catálogo",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR_CRED_SHEETS",
+          "name": "Google Sheets"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Es la MISMA hoja que alimenta el mercadito de la web, así el precio que dice el bot y el que muestra la página no se despegan. onError: continueRegularOutput hace que si el Sheet falla, el bot igual derive a la dueña en vez de morir en silencio."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decide qué contestar. Reglas por palabra clave, sin IA: es barato,\n// predecible y no inventa precios. La rama de \"no sé\" deriva a la dueña.\nconst consulta = $('Extraer mensaje y deduplicar').first().json;\n\n// Si el Sheet falló, esto queda vacío y el flujo deriva a la dueña.\nconst catalogo = $input.all()\n  .map(i => i.json)\n  .filter(f => f && (f.Producto || f.producto));\n\nconst normalizar = s => String(s ?? '')\n  .toLowerCase()\n  .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')   // saca acentos\n  .replace(/[^a-z0-9\\s]/g, ' ')                        // saca signos: \"anillado?\" no matcheaba\n  .replace(/\\s+/g, ' ')\n  .trim();\n\nconst texto = normalizar(consulta.texto);\nconst saludo = consulta.nombre ? `¡Hola ${consulta.nombre}! ` : '¡Hola! ';\n\n// Un mensaje que no es texto (audio, foto, ubicación) no se puede matchear\n// por palabras: va derecho a la dueña.\nif (consulta.tipo !== 'text' || !texto) {\n  return [{ json: { ...consulta, respondio: false, motivo: `mensaje de tipo ${consulta.tipo}` } }];\n}\n\nconst tiene = (...palabras) => palabras.some(p => texto.includes(p));\n\n// Busca el producto en el catálogo por coincidencia de palabras.\nconst buscarEnCatalogo = () => {\n  const palabras = texto.split(/\\s+/).filter(p => p.length > 3);\n  if (!palabras.length) return null;\n  return catalogo.find(fila => {\n    const nombre = normalizar(fila.Producto ?? fila.producto);\n    return palabras.some(p => nombre.includes(p));\n  }) ?? null;\n};\n\nlet respuesta = null;\n\nif (tiene('horario', 'abren', 'abierto', 'cierran', 'atienden')) {\n  respuesta = `${saludo}Abrimos de lunes a sábado de 9 a 20:30 hs 🕐`;\n}\nelse if (tiene('donde', 'direccion', 'ubicad', 'llegar', 'quedan')) {\n  respuesta = `${saludo}Estamos en Peña 3102, CABA, a metros de Santa Fe 📍`;\n}\nelse {\n  const producto = buscarEnCatalogo();\n  if (producto) {\n    const nombre = producto.Producto ?? producto.producto;\n    const precio = producto.Precio ?? producto.precio;\n    respuesta = precio\n      ? `${saludo}${nombre}: ${precio}. Te lo dejamos listo para retirar 👍`\n      : `${saludo}Sí, tenemos ${nombre}. Pasá y lo vemos 👍`;\n  }\n}\n\nif (!respuesta) {\n  return [{ json: { ...consulta, respondio: false, motivo: 'ninguna regla matcheó' } }];\n}\n\nreturn [{ json: { ...consulta, respondio: true, respuesta } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ],
+      "id": "code-decidir",
+      "name": "Decidir la respuesta"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "caseSensitive": true
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.respondio }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        300
+      ],
+      "id": "if-respondio",
+      "name": "¿Supimos responder?"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_NUMBER_ID }}",
+        "recipientPhoneNumber": "={{ $json.de }}",
+        "textBody": "={{ $json.respuesta }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        200
+      ],
+      "id": "wa-responder",
+      "name": "Responder al cliente",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "REEMPLAZAR_CRED_WHATSAPP",
+          "name": "WhatsApp (System User)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_NUMBER_ID }}",
+        "recipientPhoneNumber": "={{ $env.TELEFONO_DUENA }}",
+        "textBody": "=🔔 Consulta que el bot no supo responder\n\nDe: {{ $json.nombre || 'sin nombre' }} ({{ $json.de }})\nTipo: {{ $json.tipo }}\nMotivo: {{ $json.motivo }}\n\nMensaje: {{ $json.texto || '(sin texto)' }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        420
+      ],
+      "id": "wa-derivar",
+      "name": "Avisar a la dueña",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "REEMPLAZAR_CRED_WHATSAPP",
+          "name": "WhatsApp (System User)"
+        }
+      },
+      "notes": "La rama de 'no sé qué contestar' NUNCA falla en silencio: si el bot no entiende, una persona se entera y responde."
+    }
+  ],
+  "connections": {
+    "Webhook de Meta": {
+      "main": [
+        [
+          {
+            "node": "¿Es la verificación de Meta?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es la verificación de Meta?": {
+      "main": [
+        [
+          {
+            "node": "Devolver el challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verificar la firma",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar la firma": {
+      "main": [
+        [
+          {
+            "node": "¿Firma válida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Firma válida?": {
+      "main": [
+        [
+          {
+            "node": "Responder 200 ya mismo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rechazar (403)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder 200 ya mismo": {
+      "main": [
+        [
+          {
+            "node": "Extraer mensaje y deduplicar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer mensaje y deduplicar": {
+      "main": [
+        [
+          {
+            "node": "¿Hay un mensaje nuevo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay un mensaje nuevo?": {
+      "main": [
+        [
+          {
+            "node": "Leer el catálogo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Leer el catálogo": {
+      "main": [
+        [
+          {
+            "node": "Decidir la respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir la respuesta": {
+      "main": [
+        [
+          {
+            "node": "¿Supimos responder?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Supimos responder?": {
+      "main": [
+        [
+          {
+            "node": "Responder al cliente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar a la dueña",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
