@@ -88,16 +88,31 @@ cargados a mano, sin romperse (degradación elegante intencional).
 
 ## Estado actual y pendientes conocidos
 
+Hecho:
+
+- [x] Open Graph y Twitter Card, para que el link se vea bien al compartirlo por WhatsApp.
+- [x] JSON-LD `StationeryStore` con dirección, horario, teléfono y rating.
+- [x] `canonical`, `robots.txt` y `sitemap.xml`.
+- [x] Tarjetas "Agregar producto" quitadas (eran links muertos visibles en producción).
+- [x] El demo de chat respeta `prefers-reduced-motion`: muestra la conversación quieta en vez
+      de animarla, y se pausa cuando la pestaña está en segundo plano.
+- [x] Accesibilidad: skip link, `<main>`, SVG decorativos ocultos a lectores de pantalla,
+      botones con etiqueta que dice de qué producto hablan, foco visible, tap targets de 44 px
+      y los dos colores que no llegaban a contraste AA corregidos.
+- [x] Los botones de producto abren WhatsApp con el mensaje ya escrito.
+
+Pendiente:
+
 - [ ] `SHEET_CSV_URL` sin configurar → el catálogo muestra datos de ejemplo.
-- [ ] Precios del HTML hardcodeados y probablemente desactualizados.
-- [ ] Tarjetas "Agregar producto" (`.is-placeholder`) visibles en producción — hay que
-      completarlas o quitarlas antes de publicar.
+      Paso a paso en [`catalogo-google-sheets.md`](./catalogo-google-sheets.md).
+- [ ] Precios del HTML hardcodeados y probablemente desactualizados. Se resuelve solo al
+      conectar el Sheet.
 - [ ] Sin fotos reales del local ni de los productos (los thumbs son SVG genéricos). El
       material de marketing indica que las fotos reales convierten mejor en negocios físicos.
-- [ ] Falta `<meta property="og:*">` para que el link se vea bien al compartirlo por WhatsApp.
-- [ ] Falta datos estructurados JSON-LD (`LocalBusiness`) para SEO local.
-- [ ] El demo de chat corre en loop infinito y no respeta `prefers-reduced-motion` para
-      detenerse (solo acelera las animaciones CSS).
+- [ ] Falta `og:image` (una foto del local, 1200×630) para la vista previa en WhatsApp.
+- [ ] Falta `geo` (latitud y longitud) en el JSON-LD.
+- [ ] Las URLs del `canonical`, los `og:*` y el JSON-LD apuntan a la de GitHub Pages. Si se
+      compra un dominio propio hay que actualizarlas — ver [`deploy.md`](./deploy.md).
 - [ ] Sin medición: no hay analytics ni tracking de clicks al CTA de WhatsApp.
 
 ---

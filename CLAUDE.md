@@ -24,6 +24,24 @@ barrio no necesita una toolchain.
 Únicas dependencias externas: Google Fonts (Bricolage Grotesque, IBM Plex Sans/Mono) y el
 iframe de Google Maps.
 
+El `package.json` existe solo para dar dos comandos (`npm test`, `npm run dev`); no tiene
+dependencias y no debería tenerlas.
+
+## Tests
+
+```bash
+npm test
+```
+
+Corren con el runner de Node, sin dependencias. `test/mercadito.test.mjs` extrae el
+`<script>` de `index.html` y lo evalúa en un `vm` con un DOM mínimo;
+`test/n8n-asistente.test.mjs` hace lo mismo con los nodos Code del workflow de n8n.
+
+Es decir: **los tests leen el código de producción, no una copia.** Si movés esas funciones
+de lugar, los tests se rompen — que es justamente lo que tienen que hacer.
+
+Corrélos antes de pushear. El deploy no publica si fallan.
+
 ## Reglas de diseño y contenido
 
 Salen de `docs/fundamentos-marketing-web.md`. Al tocar el sitio, respetá:
@@ -49,6 +67,7 @@ en el Google Business Profile. Las inconsistencias bajan el posicionamiento loca
 
 ## Al trabajar el bot de WhatsApp
 
+El workflow está en `n8n/asistente-whatsapp.json` y la puesta en marcha en `n8n/README.md`.
 Leé `docs/nucleo-whatsapp-n8n.md` antes de tocar nada. Los cuatro errores que ese documento
 existe para evitar:
 
