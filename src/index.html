@@ -948,13 +948,19 @@
   // ============================================================
   // APARICIÓN SUAVE AL SCROLLEAR
   // ============================================================
+  function revelar(el){
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+    // Saca los estilos inline una vez terminada la transición, para no dejar
+    // el elemento con un transform que pise al del CSS (ej: el hover).
+    setTimeout(() => { el.style.transform = ''; el.style.opacity = ''; }, 520);
+  }
+
   const io = menosMovimiento ? null : new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if(!entry.isIntersecting) return;
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
       io.unobserve(entry.target);
-      setTimeout(() => { entry.target.style.transform = ''; entry.target.style.opacity = ''; }, 520);
+      revelar(entry.target);
     });
   }, { threshold: 0.15 });
 
@@ -965,6 +971,14 @@
       el.style.transform = 'translateY(16px)';
       el.style.transition = 'opacity .5s ease, transform .5s ease';
       io.observe(el);
+
+      // Red de seguridad: el efecto esconde contenido y confía en que el
+      // observer lo devuelva. Si por lo que sea no dispara, los productos
+      // quedarían invisibles para siempre. Un aparecer feo es infinitamente
+      // mejor que un catálogo en blanco.
+      setTimeout(() => {
+        if(el.style.opacity === '0'){ io.unobserve(el); revelar(el); }
+      }, 3000);
     });
   }
 
