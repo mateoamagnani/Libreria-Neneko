@@ -1,14 +1,70 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Librería Neneko — Fotocopias, anillados y útiles en CABA</title>
 <meta name="description" content="Librería Neneko: fotocopias, anillados y útiles escolares y de oficina en Peña 3102, CABA. Pedís por WhatsApp y retirás en el local.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#F7F2E7">
+<link rel="canonical" href="https://mateoamagnani.github.io/Libreria-Neneko/">
+
+<!-- Open Graph: controla cómo se ve el link al compartirlo por WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="Librería Neneko">
+<meta property="og:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
+<meta property="og:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
+<meta property="og:url" content="https://mateoamagnani.github.io/Libreria-Neneko/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
+<meta name="twitter:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
+<!-- TODO: agregar <meta property="og:image"> con una foto real del local (1200x630 px). -->
+
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231E2A4F'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='16' font-weight='700' fill='%23E3A21A' text-anchor='middle'%3ELN%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Datos estructurados para SEO local: le dicen a Google el horario, la
+     dirección y el teléfono exactos. Tienen que coincidir con el Google
+     Business Profile (consistencia NAP). -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "StationeryStore",
+  "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
+  "name": "Librería Neneko",
+  "description": "Fotocopias, impresiones, anillados y útiles escolares y de oficina en Peña 3102, CABA.",
+  "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
+  "telephone": "+541161691209",
+  "priceRange": "$",
+  "currenciesAccepted": "ARS",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Peña 3102",
+    "addressLocality": "Ciudad Autónoma de Buenos Aires",
+    "addressRegion": "CABA",
+    "addressCountry": "AR"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "09:00",
+    "closes": "20:30"
+  }],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.4",
+    "reviewCount": "97",
+    "bestRating": "5"
+  }
+}
+</script>
+<!-- TODO: agregar "geo" con latitud y longitud exactas del local (sacarlas de
+     Google Maps con click derecho sobre el punto). -->
+<!-- TODO: si se compra un dominio propio, reemplazar la URL de arriba en el
+     canonical, en los og:*, y en los tres campos de este JSON-LD. -->
 <style>
   :root{
     --paper:#F7F2E7;
@@ -38,6 +94,22 @@
   }
   a{ color:inherit; }
   .container{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+
+  /* Foco visible: se ve al navegar con teclado, no al hacer click con el mouse */
+  :focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:4px; }
+
+  /* Solo para lectores de pantalla */
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  .skip-link{
+    position:absolute; left:12px; top:-60px; z-index:100;
+    background:var(--navy-deep); color:#fff; padding:12px 18px;
+    border-radius:0 0 8px 8px; text-decoration:none; font-weight:600;
+    transition:top .15s ease;
+  }
+  .skip-link:focus{ top:0; }
   h1,h2,h3,h4{ font-family:'Bricolage Grotesque', sans-serif; font-weight:600; letter-spacing:-0.01em; line-height:1.12; }
 
   .docket{
@@ -63,13 +135,6 @@
   .btn-ghost:hover{ border-color:var(--ink); }
   .btn svg{ width:17px; height:17px; }
 
-  .placeholder-flag{
-    display:inline-block; font-size:0.65rem; font-weight:700; text-transform:uppercase;
-    letter-spacing:0.03em; color:var(--stamp); border:1px dashed var(--stamp);
-    border-radius:4px; padding:2px 7px; margin-left:7px; vertical-align:middle; white-space:nowrap;
-    font-family:'IBM Plex Mono', monospace;
-  }
-
   /* Squiggle underline */
   .squiggle{
     position:relative; display:inline-block; white-space:nowrap;
@@ -86,7 +151,8 @@
     font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
     color:var(--ink-soft);
   }
-  .rating-inline .stars{ color:var(--mustard-deep); letter-spacing:-1px; }
+  /* mustard-deep daba 3.4:1 sobre el papel; mustard-ink llega a 5.7:1 */
+  .rating-inline .stars{ color:var(--mustard-ink); letter-spacing:-1px; }
   .rating-inline strong{ color:var(--ink); font-weight:700; }
   .trust-head .rating-inline{ color:#C9BFA9; font-size:0.85rem; }
   .trust-head .rating-inline strong{ color:#fff; }
@@ -239,7 +305,8 @@
     background:rgba(226,84,45,0.35); transform:translateX(-50%) rotate(-4deg);
     box-shadow:0 2px 5px rgba(0,0,0,0.1);
   }
-  .ticket .stars{ font-family:'IBM Plex Mono', monospace; color:#E2542D; letter-spacing:2px; font-size:0.85rem; display:block; margin-bottom:12px; }
+  /* #E2542D daba 3.7:1 sobre el papel del ticket — no llega a AA. Oscurecido a 4.8:1. */
+  .ticket .stars{ font-family:'IBM Plex Mono', monospace; color:#C2401B; letter-spacing:2px; font-size:0.85rem; display:block; margin-bottom:12px; }
   .ticket p{ font-size:0.92rem; color:var(--ink); line-height:1.55; margin-bottom:16px; }
   .ticket .who{ font-family:'IBM Plex Mono', monospace; font-size:0.68rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.04em; border-top:1px dashed var(--line); padding-top:10px; }
 
@@ -271,16 +338,14 @@
   .product-info{ padding:14px 14px 16px; }
   .product-info h4{ font-family:'Bricolage Grotesque', sans-serif; font-size:0.94rem; font-weight:600; margin-bottom:4px; }
   .product-info .price{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--mustard-ink); font-weight:700; margin-bottom:10px; }
+  /* min-height 44px: área de tap mínima recomendada en mobile */
   .product-info a{
-    display:block; text-align:center; font-size:0.74rem; font-weight:600;
+    display:flex; align-items:center; justify-content:center; min-height:44px;
+    text-align:center; font-size:0.8rem; font-weight:600;
     color:var(--navy); border:1px solid var(--navy); border-radius:8px;
     padding:6px 8px; text-decoration:none; transition:background .15s ease, color .15s ease;
   }
   .product-info a:hover{ background:var(--navy); color:#fff; }
-  .product-card.is-placeholder{ border-style:dashed; opacity:0.75; }
-  .product-card.is-placeholder .product-thumb{ color:var(--ink-soft); }
-  .product-card.is-placeholder .product-thumb svg{ width:26px; height:26px; }
-  .product-card.is-placeholder .product-info a{ border-style:dashed; }
 
 
   .location{ background:var(--paper); }
@@ -311,8 +376,8 @@
   .footer-brand .logo .mark{ border-color:var(--highlight); color:var(--highlight); }
   .footer-brand p{ color:#9BB5AA; font-size:0.9rem; max-width:32ch; }
   .footer-col h5{ font-family:'IBM Plex Mono', monospace; font-size:0.76rem; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:16px; color:#9BB5AA; }
-  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
-  .footer-col a{ text-decoration:none; color:#DCEAE3; font-size:0.92rem; }
+  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .footer-col a{ text-decoration:none; color:#DCEAE3; font-size:0.92rem; display:inline-flex; align-items:center; min-height:40px; }
   .footer-col a:hover{ color:var(--highlight); }
   .footer-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:26px; flex-wrap:wrap; gap:12px; font-size:0.8rem; color:#7FA093; font-family:'IBM Plex Mono', monospace; }
   .footer-bottom .draft-note{ color:var(--highlight); }
@@ -337,20 +402,33 @@
     .nav-inner{ height:auto; min-height:70px; padding:14px 0; }
     .nav-cta{ padding:9px 14px; font-size:0.8rem; white-space:nowrap; }
   }
-  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; } }
+  /* Movimiento reducido: además de esto, el JS no arranca la demo del chat
+     ni las animaciones de aparición al scrollear. */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *, *::before, *::after{
+      animation-duration:0.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.001ms !important;
+    }
+  }
 </style>
 </head>
 <body id="top">
 
-  <nav class="navbar">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <nav class="navbar" aria-label="Principal">
     <div class="container nav-inner">
       <div class="logo">Librería Neneko</div>
       <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
         Escribinos
       </a>
     </div>
   </nav>
+
+  <main id="contenido">
 
   <header class="hero">
     <div class="container hero-grid">
@@ -363,19 +441,22 @@
         <p class="lead">Imprimimos tus apuntes de la facu, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y te lo dejamos listo para retirar.</p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="https://wa.me/5491161691209" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
             Pedir por WhatsApp
           </a>
           <a class="btn btn-ghost" href="#mercadito">Ver productos</a>
         </div>
         <div class="info-badges">
-          <span class="badge-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Lun a sáb, hasta 20:30</span>
-          <span class="badge-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Peña 3102, CABA</span>
-          <span class="badge-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Retirás en el local</span>
+          <span class="badge-pill"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Lun a sáb, hasta 20:30</span>
+          <span class="badge-pill"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Peña 3102, CABA</span>
+          <span class="badge-pill"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Retirás en el local</span>
         </div>
       </div>
 
-      <div class="phone-frame">
+      <!-- Ilustración animada: es decorativa, no aporta información nueva.
+           aria-hidden evita que un lector de pantalla lea burbujas de chat que
+           van apareciendo solas mientras el usuario intenta leer otra cosa. -->
+      <div class="phone-frame" aria-hidden="true">
         <div class="phone">
           <span class="side-btn btn-action"></span>
           <span class="side-btn btn-vol-up"></span>
@@ -387,29 +468,29 @@
               <div class="status-row">
                 <span>9:41</span>
                 <span class="icons">
-                  <svg viewBox="0 0 20 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="3" width="3" height="9" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
-                  <svg viewBox="0 0 16 12" fill="#fff"><path d="M8 10.5a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4zM4.7 7.6a4.7 4.7 0 016.6 0l-1.5 1.5a2.6 2.6 0 00-3.6 0zM2 4.9a8.4 8.4 0 0112 0L12.5 6.4a6.3 6.3 0 00-9 0z"/></svg>
-                  <svg viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="#fff" opacity="0.5"/><rect x="2" y="2" width="15" height="8" rx="1.3" fill="#fff"/><rect x="23" y="4" width="1.5" height="4" rx="0.7" fill="#fff" opacity="0.5"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 12" fill="#fff"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="3" width="3" height="9" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 16 12" fill="#fff"><path d="M8 10.5a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4zM4.7 7.6a4.7 4.7 0 016.6 0l-1.5 1.5a2.6 2.6 0 00-3.6 0zM2 4.9a8.4 8.4 0 0112 0L12.5 6.4a6.3 6.3 0 00-9 0z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="#fff" opacity="0.5"/><rect x="2" y="2" width="15" height="8" rx="1.3" fill="#fff"/><rect x="23" y="4" width="1.5" height="4" rx="0.7" fill="#fff" opacity="0.5"/></svg>
                 </span>
               </div>
               <div class="wa-header">
                 <div class="avatar">LN</div>
                 <div class="who">Librería Neneko<div class="sub">en línea</div></div>
                 <div class="wa-icons">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>
-                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
                 </div>
               </div>
             </div>
             <div class="chat-body" id="chatBody"></div>
             <div class="wa-composer">
-              <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              <svg aria-hidden="true" class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
               <div class="composer-field">
                 <span>Mensaje</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.2 1.5 3.5 1.5 3.5-1.5 3.5-1.5" stroke-linecap="round"/><path d="M9 9.5h.01M15 9.5h.01" stroke-linecap="round"/></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.2 1.5 3.5 1.5 3.5-1.5 3.5-1.5" stroke-linecap="round"/><path d="M9 9.5h.01M15 9.5h.01" stroke-linecap="round"/></svg>
               </div>
-              <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 012-2h1l1.2-1.6A1 1 0 019 4h6a1 1 0 01.8.4L17 6h1a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"/><circle cx="12" cy="13" r="3.4"/></svg>
-              <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v4"/></svg>
+              <svg aria-hidden="true" class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 012-2h1l1.2-1.6A1 1 0 019 4h6a1 1 0 01.8.4L17 6h1a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V8z"/><circle cx="12" cy="13" r="3.4"/></svg>
+              <svg aria-hidden="true" class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v4"/></svg>
             </div>
           </div>
         </div>
@@ -417,11 +498,11 @@
     </div>
   </header>
 
-  <section class="mercadito" id="mercadito">
+  <section class="mercadito" id="mercadito" aria-labelledby="mercadito-titulo">
     <div class="container">
       <div class="section-head">
         <div class="docket">Mercadito</div>
-        <h2>Algunos de nuestros productos</h2>
+        <h2 id="mercadito-titulo">Algunos de nuestros productos</h2>
         <p>Una muestra de lo que vas a encontrar. Consultá disponibilidad y precio actualizado por WhatsApp.</p>
       </div>
 
@@ -429,12 +510,12 @@
       <div class="shop-group">
         <div class="shop-group-head">
           <h3>Impresiones y anillados</h3>
-          <span>4 productos</span>
+          <span>3 productos</span>
         </div>
         <div class="product-grid">
           <div class="product-card">
             <div class="product-thumb tone-navy">
-              <svg viewBox="0 0 64 64" fill="none">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none">
                 <rect x="10" y="24" width="44" height="24" rx="4" fill="#2C3B54"/>
                 <rect x="18" y="10" width="28" height="18" rx="2" fill="#fff" stroke="#D8DCE3" stroke-width="1.5"/>
                 <path d="M22 16h20M22 20h20M22 24h14" stroke="#B8BEC9" stroke-width="1.6" stroke-linecap="round"/>
@@ -446,12 +527,12 @@
             <div class="product-info">
               <h4>Fotocopia B/N</h4>
               <div class="price">$ 150 c/u</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Fotocopia%20B/N" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia B/N por WhatsApp">Consultar</a>
             </div>
           </div>
           <div class="product-card">
             <div class="product-thumb tone-terra">
-              <svg viewBox="0 0 64 64" fill="none">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none">
                 <rect x="10" y="24" width="44" height="24" rx="4" fill="#2C3B54"/>
                 <rect x="18" y="10" width="28" height="18" rx="2" fill="#fff" stroke="#D8DCE3" stroke-width="1.5"/>
                 <rect x="22" y="14" width="6" height="10" fill="#BF5A3E"/>
@@ -465,12 +546,12 @@
             <div class="product-info">
               <h4>Impresión color A4</h4>
               <div class="price">$ 400 c/u</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Impresi%C3%B3n%20color%20A4" target="_blank" rel="noopener" aria-label="Consultar por Impresión color A4 por WhatsApp">Consultar</a>
             </div>
           </div>
           <div class="product-card">
             <div class="product-thumb tone-mustard">
-              <svg viewBox="0 0 64 64" fill="none">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none">
                 <rect x="20" y="10" width="30" height="44" rx="2" fill="#fff" stroke="#E2D6B8" stroke-width="1.5"/>
                 <path d="M26 18h18M26 24h18M26 30h18M26 36h18M26 42h12" stroke="#DCCFA9" stroke-width="1.6" stroke-linecap="round"/>
                 <circle cx="16" cy="14" r="4" fill="none" stroke="#A97A34" stroke-width="3"/>
@@ -483,15 +564,7 @@
             <div class="product-info">
               <h4>Anillado hasta 100 hj.</h4>
               <div class="price">$ 1.800</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
-            </div>
-          </div>
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Anillado%20hasta%20100%20hj." target="_blank" rel="noopener" aria-label="Consultar por Anillado hasta 100 hj. por WhatsApp">Consultar</a>
             </div>
           </div>
         </div>
@@ -500,12 +573,12 @@
       <div class="shop-group">
         <div class="shop-group-head">
           <h3>Útiles escolares y de oficina</h3>
-          <span>4 productos</span>
+          <span>3 productos</span>
         </div>
         <div class="product-grid">
           <div class="product-card">
             <div class="product-thumb tone-navy">
-              <svg viewBox="0 0 64 64" fill="none">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none">
                 <rect x="16" y="8" width="34" height="48" rx="3" fill="#2C3B54"/>
                 <rect x="42" y="8" width="8" height="48" rx="0" fill="#233149"/>
                 <circle cx="20" cy="16" r="2.2" fill="#F7F2E7"/>
@@ -520,12 +593,12 @@
             <div class="product-info">
               <h4>Cuaderno A4 rayado</h4>
               <div class="price">$ 3.200</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Cuaderno%20A4%20rayado" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno A4 rayado por WhatsApp">Consultar</a>
             </div>
           </div>
           <div class="product-card">
             <div class="product-thumb tone-terra">
-              <svg viewBox="0 0 64 64" fill="none">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none">
                 <rect x="16" y="18" width="30" height="38" rx="2" fill="#F2E2DA" stroke="#E3C6B8" stroke-width="1.5"/>
                 <rect x="19" y="14" width="30" height="38" rx="2" fill="#FBF7F0" stroke="#E3C6B8" stroke-width="1.5"/>
                 <rect x="22" y="10" width="30" height="38" rx="2" fill="#fff" stroke="#BF5A3E" stroke-width="1.8"/>
@@ -535,12 +608,12 @@
             <div class="product-info">
               <h4>Repuesto x100 hojas</h4>
               <div class="price">$ 2.100</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Repuesto%20x100%20hojas" target="_blank" rel="noopener" aria-label="Consultar por Repuesto x100 hojas por WhatsApp">Consultar</a>
             </div>
           </div>
           <div class="product-card">
             <div class="product-thumb tone-mustard">
-              <svg viewBox="0 0 64 64" fill="none" transform-origin="32 32">
+              <svg aria-hidden="true" viewBox="0 0 64 64" fill="none" transform-origin="32 32">
                 <g transform="rotate(-35 32 32)">
                   <rect x="27" y="8" width="10" height="38" rx="4" fill="#2C3B54"/>
                   <path d="M27 46h10l-5 12z" fill="#1C2536"/>
@@ -553,60 +626,12 @@
             <div class="product-info">
               <h4>Lapicera Bic azul</h4>
               <div class="price">$ 900</div>
-              <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
-            </div>
-          </div>
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
+              <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Lapicera%20Bic%20azul" target="_blank" rel="noopener" aria-label="Consultar por Lapicera Bic azul por WhatsApp">Consultar</a>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="shop-group">
-        <div class="shop-group-head">
-          <h3>Más categorías</h3>
-          <span>a completar</span>
-        </div>
-        <div class="product-grid">
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
-            </div>
-          </div>
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
-            </div>
-          </div>
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
-            </div>
-          </div>
-          <div class="product-card is-placeholder">
-            <div class="product-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
-            <div class="product-info">
-              <h4>Agregar producto</h4>
-              <div class="price">$ —</div>
-              <a href="#">Editar</a>
-            </div>
-          </div>
-        </div>
-      </div>
       </div>
     </div>
   </section>
@@ -651,15 +676,15 @@
         <h2>Encontranos en el barrio</h2>
         <ul class="loc-list">
           <li>
-            <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+            <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-5.2-7-11a7 7 0 0114 0c0 5.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
             <div><div class="label">Peña 3102, CABA</div><div class="sub">A metros de Santa Fe</div></div>
           </li>
           <li>
-            <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.68 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0122 16.92z"/></svg></div>
+            <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.68 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0122 16.92z"/></svg></div>
             <div><div class="label">011 6169-1209</div><div class="sub">Pedidos por WhatsApp</div></div>
           </li>
           <li>
-            <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+            <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
             <div><div class="label">Lunes a sábado</div><div class="sub">Hasta las 20:30 hs</div></div>
           </li>
         </ul>
@@ -670,6 +695,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <footer class="site-footer">
     <div class="container">
@@ -704,84 +731,142 @@
 
 <script>
   // ============================================================
-  // MERCADITO — conexión con Google Sheets (precaria pero funcional)
+  // MERCADITO — catálogo desde Google Sheets
   //
-  // Cómo activarla:
-  // 1. Armá una hoja de Google Sheets con 3 columnas, en este orden
-  //    y sin encabezados de más: Categoria | Producto | Precio
+  // Cómo activarlo:
+  // 1. Armá una hoja con 3 columnas en este orden:
+  //    Categoria | Producto | Precio
+  //    (la fila de encabezado es opcional, se detecta sola)
   // 2. Archivo > Compartir > Publicar en la Web > elegí la hoja
   //    puntual > formato "Valores separados por comas (.csv)" > Publicar
-  // 3. Copiá esa URL y pegala acá abajo, reemplazando el texto de ejemplo.
-  // 4. Evitá comas dentro de los nombres de producto (el parser es simple).
+  // 3. Pegá esa URL acá abajo, reemplazando el texto de ejemplo.
   //
-  // Si la URL queda como está (sin configurar), la página sigue
-  // mostrando los productos de ejemplo cargados a mano, sin romperse.
+  // Los productos se agrupan por categoría en el orden en que aparecen
+  // en la hoja. Se pueden usar comas dentro de un nombre si el campo va
+  // entre comillas — el parser las respeta.
+  //
+  // Si la URL queda sin configurar, o el Sheet no responde, la página
+  // muestra los productos de ejemplo del HTML sin romperse.
+  //
+  // Paso a paso completo en docs/catalogo-google-sheets.md
   // ============================================================
   const SHEET_CSV_URL = "PEGAR_ACA_LA_URL_CSV_DE_GOOGLE_SHEETS";
 
+  const WHATSAPP = "https://wa.me/5491161691209";
+
+  // El contenido del Sheet lo escribe una persona, no el código. Si un nombre
+  // de producto trae < o & sin escapar, se rompe el HTML; por eso todo lo que
+  // viene de la hoja pasa por acá antes de entrar al DOM.
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  })[c]);
+
+  const linkConsulta = nombre =>
+    `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería consultar por: ' + nombre)}`;
+
   const PRODUCT_ICONS_BY_TONE = {
-    navy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="9" rx="1.5"/><path d="M7 8V4h10v4"/><path d="M7 17v3h10v-3"/></svg>',
-    mustard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h9l5 5v10.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 19.5z"/><path d="M14 4v5h5"/><path d="M8 13h5M8 16h8"/></svg>',
-    terra: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 3v18M15 3v18"/></svg>'
+    navy: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="9" rx="1.5"/><path d="M7 8V4h10v4"/><path d="M7 17v3h10v-3"/></svg>',
+    mustard: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h9l5 5v10.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 19.5z"/><path d="M14 4v5h5"/><path d="M8 13h5M8 16h8"/></svg>',
+    terra: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 3v18M15 3v18"/></svg>'
   };
   const TONES = ['navy', 'mustard', 'terra'];
 
+  // Parser de CSV completo: soporta comas dentro de comillas, comillas
+  // escapadas ("" dentro de un campo) y saltos de línea dentro de una celda.
+  // Con esto ya no hace falta evitar comas al cargar los productos.
   function parseCsv(text){
-    return text.trim().split('\n').map(line => {
-      // separador simple por coma, respeta comillas básicas
-      const cells = [];
-      let cur = '', inQuotes = false;
-      for(const ch of line){
-        if(ch === '"'){ inQuotes = !inQuotes; }
-        else if(ch === ',' && !inQuotes){ cells.push(cur.trim()); cur = ''; }
-        else{ cur += ch; }
+    const s = text.replace(/\r\n?/g, '\n');
+    const rows = [];
+    let row = [], cell = '', inQuotes = false;
+    for(let i = 0; i < s.length; i++){
+      const ch = s[i];
+      if(inQuotes){
+        if(ch === '"'){
+          if(s[i + 1] === '"'){ cell += '"'; i++; }   // comilla escapada
+          else inQuotes = false;
+        } else cell += ch;
       }
-      cells.push(cur.trim());
-      return cells;
-    }).filter(row => row.length >= 3 && row[0]);
+      else if(ch === '"'){ inQuotes = true; }
+      else if(ch === ','){ row.push(cell); cell = ''; }
+      else if(ch === '\n'){ row.push(cell); rows.push(row); row = []; cell = ''; }
+      else cell += ch;
+    }
+    row.push(cell);
+    if(row.some(c => c !== '')) rows.push(row);
+    return rows.map(r => r.map(c => c.trim()));
+  }
+
+  // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
+  function normalizarFilas(rows){
+    if(!rows.length) return [];
+    const [cat, prod] = rows[0].map(c => c.toLowerCase());
+    const tieneEncabezado =
+      /^categor/.test(cat || '') && /^(producto|nombre|art)/.test(prod || '');
+    return (tieneEncabezado ? rows.slice(1) : rows)
+      .filter(r => r.length >= 3 && r[0] && r[1]);
   }
 
   function buildMercaditoHTML(rows){
-    const groups = {};
+    const groups = new Map();
     rows.forEach(([categoria, nombre, precio]) => {
-      if(!groups[categoria]) groups[categoria] = [];
-      groups[categoria].push({ nombre, precio });
+      if(!groups.has(categoria)) groups.set(categoria, []);
+      groups.get(categoria).push({ nombre, precio });
     });
-    return Object.entries(groups).map(([categoria, productos], gi) => {
+    return [...groups].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
         return `<div class="product-card">
           <div class="product-thumb tone-${tone}">${PRODUCT_ICONS_BY_TONE[tone]}</div>
           <div class="product-info">
-            <h4>${p.nombre}</h4>
-            <div class="price">${p.precio}</div>
-            <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">Consultar</a>
+            <h4>${esc(p.nombre)}</h4>
+            <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
           </div>
         </div>`;
       }).join('');
       return `<div class="shop-group">
-        <div class="shop-group-head"><h3>${categoria}</h3><span>${productos.length} producto${productos.length===1?'':'s'}</span></div>
+        <div class="shop-group-head"><h3>${esc(categoria)}</h3><span>${productos.length} producto${productos.length === 1 ? '' : 's'}</span></div>
         <div class="product-grid">${cards}</div>
       </div>`;
     }).join('');
   }
 
   async function loadProductsFromSheet(){
-    if(!SHEET_CSV_URL || SHEET_CSV_URL.startsWith('PEGAR_ACA')) return; // todavía no configurada
+    // Sin configurar todavía: la página se queda con los productos de ejemplo
+    // que ya están en el HTML. Es la degradación esperada, no un error.
+    if(!SHEET_CSV_URL || SHEET_CSV_URL.startsWith('PEGAR_ACA')) return;
+
+    const wrap = document.getElementById('mercaditoDynamic');
+    if(!wrap) return;
+
     try{
-      const res = await fetch(SHEET_CSV_URL);
-      if(!res.ok) return;
-      const text = await res.text();
-      const rows = parseCsv(text);
-      if(!rows.length) return;
-      const wrap = document.getElementById('mercaditoDynamic');
-      if(wrap) wrap.innerHTML = buildMercaditoHTML(rows);
+      // Si el Sheet tarda o no responde, no dejamos la página colgada:
+      // a los 8 segundos abandonamos y quedan los productos de ejemplo.
+      const ac = new AbortController();
+      const timeout = setTimeout(() => ac.abort(), 8000);
+      const res = await fetch(SHEET_CSV_URL, { signal: ac.signal });
+      clearTimeout(timeout);
+
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+
+      const filas = normalizarFilas(parseCsv(await res.text()));
+      if(!filas.length) throw new Error('la hoja no tiene filas usables');
+
+      wrap.innerHTML = buildMercaditoHTML(filas);
+      revelarNuevasTarjetas(wrap);
     }catch(err){
-      console.warn('No se pudo cargar el mercadito desde Sheets, se muestran los productos de ejemplo.', err);
+      console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
     }
   }
-  loadProductsFromSheet();
 
+  // Respeta la preferencia del sistema: si el usuario pidió menos movimiento,
+  // no arrancamos ni la demo del chat ni las apariciones al scrollear.
+  const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ============================================================
+  // DEMO DEL CHAT (decorativa)
+  // ============================================================
   const SEQUENCE = [
     { user: "Hola! ¿qué horarios tienen hoy?", bot: "¡Hola! Hoy abrimos de 9 a 13 y de 16:30 a 20hs 🕐" },
     { user: "¿Tienen anillado?", bot: "Sí! Anillamos en el momento, cuesta $[precio] hasta 100 hojas 📎" },
@@ -798,7 +883,7 @@
     chatBody.scrollTop = chatBody.scrollHeight;
     return b;
   }
-  async function showTyping(){
+  function showTyping(){
     const typing = document.createElement('div');
     typing.className = 'typing';
     typing.innerHTML = '<span></span><span></span><span></span>';
@@ -807,44 +892,92 @@
     return typing;
   }
 
+  // Mientras la pestaña está en segundo plano no tiene sentido animar:
+  // gasta batería y nadie lo está viendo.
+  const esperarVisible = () => document.hidden
+    ? new Promise(r => document.addEventListener('visibilitychange', r, { once: true }))
+    : Promise.resolve();
+
   async function playDemo(){
-    chatBody.innerHTML = '';
-    addBubble('¡Hola! 👋 ¿En qué te puedo ayudar?', 'bot');
-    await wait(1500);
-    for(const step of SEQUENCE){
-      addBubble(step.user, 'user');
-      await wait(700);
-      const typing = await showTyping();
-      await wait(1100);
-      typing.remove();
-      addBubble(step.bot, 'bot');
-      await wait(2400);
-    }
-    await wait(2200);
-    playDemo();
-  }
-  playDemo();
-
-  // Nav: sombra al hacer scroll
-  const navbar = document.querySelector('.navbar');
-  window.addEventListener('scroll', () => {
-    navbar.style.boxShadow = window.scrollY > 8 ? '0 4px 18px rgba(33,31,26,0.08)' : 'none';
-  });
-
-  // Aparición suave de secciones al hacer scroll
-  const revealTargets = document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges');
-  revealTargets.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(16px)'; el.style.transition = 'opacity .5s ease, transform .5s ease'; });
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        io.unobserve(entry.target);
-        setTimeout(() => { entry.target.style.transform = ''; entry.target.style.opacity = ''; }, 520);
+    // Bucle en vez de llamada recursiva: la versión recursiva encadenaba una
+    // promesa por vuelta y nunca liberaba las anteriores.
+    while(true){
+      await esperarVisible();
+      chatBody.replaceChildren();
+      addBubble('¡Hola! 👋 ¿En qué te puedo ayudar?', 'bot');
+      await wait(1500);
+      for(const step of SEQUENCE){
+        addBubble(step.user, 'user');
+        await wait(700);
+        const typing = showTyping();
+        await wait(1100);
+        typing.remove();
+        addBubble(step.bot, 'bot');
+        await wait(2400);
       }
+      await wait(2200);
+    }
+  }
+
+  if(chatBody){
+    if(menosMovimiento){
+      // Estado final, sin animación: se ve la conversación completa y quieta.
+      addBubble('¡Hola! 👋 ¿En qué te puedo ayudar?', 'bot');
+      SEQUENCE.forEach(s => { addBubble(s.user, 'user'); addBubble(s.bot, 'bot'); });
+    } else {
+      playDemo();
+    }
+  }
+
+  // ============================================================
+  // NAV — sombra al hacer scroll
+  // ============================================================
+  const navbar = document.querySelector('.navbar');
+  let scrollPendiente = false;
+  window.addEventListener('scroll', () => {
+    // Un scroll dispara decenas de eventos por segundo; sin esto escribimos
+    // estilos en cada uno y forzamos recalculos de layout de más.
+    if(scrollPendiente) return;
+    scrollPendiente = true;
+    requestAnimationFrame(() => {
+      navbar.style.boxShadow = window.scrollY > 8 ? '0 4px 18px rgba(33,31,26,0.08)' : 'none';
+      scrollPendiente = false;
+    });
+  }, { passive: true });
+
+  // ============================================================
+  // APARICIÓN SUAVE AL SCROLLEAR
+  // ============================================================
+  const io = menosMovimiento ? null : new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(!entry.isIntersecting) return;
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      io.unobserve(entry.target);
+      setTimeout(() => { entry.target.style.transform = ''; entry.target.style.opacity = ''; }, 520);
     });
   }, { threshold: 0.15 });
-  revealTargets.forEach(el => io.observe(el));
+
+  function observarAparicion(elementos){
+    if(!io) return;
+    elementos.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(16px)';
+      el.style.transition = 'opacity .5s ease, transform .5s ease';
+      io.observe(el);
+    });
+  }
+
+  // Las tarjetas que llegan del Sheet aparecen después de este setup inicial,
+  // así que hay que registrarlas aparte.
+  function revelarNuevasTarjetas(wrap){
+    observarAparicion(wrap.querySelectorAll('.product-card'));
+  }
+
+  observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
+
+  // Va al final: necesita revelarNuevasTarjetas ya definida.
+  loadProductsFromSheet();
 </script>
 </body>
 </html>
