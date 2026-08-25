@@ -6,6 +6,25 @@ solo la próxima vez que alguien entra.
 
 ---
 
+## Una planilla, dos conexiones
+
+Es **la misma hoja** para el sitio y para el bot de WhatsApp — por eso el precio que dice el
+bot y el que muestra la web no se despegan nunca. Pero cada uno la lee de una manera
+distinta, y confundirlas es lo que hace que después no ande ninguna de las dos:
+
+| | La web | El bot (n8n) |
+|---|---|---|
+| Cómo entra | URL pública de CSV | ID de la planilla + credencial de Google |
+| Hay que publicarla | Sí, obligatorio | No hace falta |
+| Quién la lee | El navegador del visitante | El servidor de n8n |
+| Fila de encabezado | Opcional | **Obligatoria** |
+| Si falla | Muestra los productos de ejemplo | Deriva la consulta a la dueña |
+
+Este documento cubre la conexión de **la web**. La del bot está en
+[`n8n/README.md`](../n8n/README.md).
+
+---
+
 ## Cómo funciona
 
 ```
@@ -41,9 +60,14 @@ Tres columnas, en este orden:
 Hay una plantilla lista para copiar y pegar en
 [`docs/plantilla-catalogo.csv`](./plantilla-catalogo.csv).
 
+La pestaña tiene que llamarse **`Catalogo`** (sin acento, con C mayúscula): el nodo de n8n
+la busca por ese nombre exacto.
+
 **Detalles que importan:**
 
-- La fila de encabezado es **opcional** — el código la detecta y la descarta sola.
+- **Poné siempre la fila de encabezado.** La web la detecta y la descarta sola, así que para
+  el sitio es opcional — pero el bot usa esos títulos para saber cuál columna es el precio,
+  así que para n8n es obligatoria. Con encabezado funcionan las dos.
 - Las categorías aparecen en la página **en el orden en que salen en la hoja**. Poné arriba
   lo que más se vende.
 - Se pueden usar comas dentro de un nombre; Google las exporta entre comillas y el parser las
