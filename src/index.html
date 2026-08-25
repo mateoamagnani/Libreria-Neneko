@@ -398,9 +398,14 @@
     .product-grid{ grid-template-columns:1fr 1fr; gap:12px; }
     .phone-frame{ width:100%; max-width:302px; }
     .hero-top{ flex-direction:column; align-items:flex-start; gap:14px; }
-    .logo{ font-size:1.3rem; gap:0; }
-    .nav-inner{ height:auto; min-height:70px; padding:14px 0; }
-    .nav-cta{ padding:9px 14px; font-size:0.8rem; white-space:nowrap; }
+    /* El logo baja de tamaño con la pantalla en vez de saltar de golpe:
+       en un teléfono angosto competía con el botón por el mismo espacio. */
+    .logo{ font-size:clamp(1.05rem, 5vw, 1.3rem); gap:0; min-width:0; }
+    /* OJO: el padding va con los dos valores. Un "padding:14px 0" deja el
+       padding horizontal en cero y pisa el de .container — el logo terminaba
+       pegado al borde izquierdo y el botón al derecho. */
+    .nav-inner{ height:auto; min-height:70px; padding:14px 20px; gap:12px; }
+    .nav-cta{ padding:9px 14px; font-size:0.8rem; white-space:nowrap; flex-shrink:0; }
   }
   /* Movimiento reducido: además de esto, el JS no arranca la demo del chat
      ni las animaciones de aparición al scrollear. */
@@ -444,7 +449,7 @@
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
             Pedir por WhatsApp
           </a>
-          <a class="btn btn-ghost" href="#mercadito">Ver productos</a>
+          <a class="btn btn-ghost" href="#productos">Ver productos</a>
         </div>
         <div class="info-badges">
           <span class="badge-pill"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Lun a sáb, hasta 20:30</span>
@@ -498,11 +503,10 @@
     </div>
   </header>
 
-  <section class="mercadito" id="mercadito" aria-labelledby="mercadito-titulo">
+  <section class="mercadito" id="productos" aria-labelledby="productos-titulo">
     <div class="container">
       <div class="section-head">
-        <div class="docket">Mercadito</div>
-        <h2 id="mercadito-titulo">Algunos de nuestros productos</h2>
+        <h2 id="productos-titulo">Algunos de nuestros productos</h2>
         <p>Una muestra de lo que vas a encontrar. Consultá disponibilidad y precio actualizado por WhatsApp.</p>
       </div>
 
@@ -708,7 +712,7 @@
         <div class="footer-col">
           <h5>Navegación</h5>
           <ul>
-            <li><a href="#mercadito">Mercadito</a></li>
+            <li><a href="#productos">Productos</a></li>
             <li><a href="#confianza">Reseñas</a></li>
             <li><a href="#ubicacion">Ubicación</a></li>
           </ul>
