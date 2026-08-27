@@ -89,6 +89,22 @@
     --card:#FFFCF5;
     --line:#E2D6B8;
     --maxw:1320px;
+    font-size:16px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0F1419;
+      --paper-alt:#1A202C;
+      --ink:#E8E4DC;
+      --ink-soft:#B0A89F;
+      --mustard:#D4A574;
+      --mustard-deep:#C4926B;
+      --mustard-ink:#E8A537;
+      --navy:#E8E4DC;
+      --navy-deep:#0F1419;
+      --card:#1A202C;
+      --line:#3A3428;
+    }
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; }
@@ -132,6 +148,16 @@
   }
   .skip-link:focus{ top:0; }
   h1,h2,h3,h4{ font-family:'Bricolage Grotesque', sans-serif; font-weight:600; letter-spacing:-0.01em; line-height:1.12; }
+
+  /* Respetar preferencias de reducción de movimiento */
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
 
   .docket{
     font-family:'IBM Plex Mono', monospace;
@@ -478,7 +504,7 @@
              onerror="this.remove()">
         <span>Librería Neneko</span>
       </a>
-      <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener">
+      <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
         Escribinos
       </a>
@@ -497,7 +523,7 @@
         <h1 style="margin-top:16px;">Fotocopias, anillados y <span class="squiggle">todo lo del cole</span>, a la vuelta de tu casa</h1>
         <p class="lead">Imprimimos tus apuntes de la facu, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y te lo dejamos listo para retirar.</p>
         <div class="hero-ctas">
-          <a class="btn btn-primary" href="https://wa.me/5491161691209" target="_blank" rel="noopener">
+          <a class="btn btn-primary" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
             Pedir por WhatsApp
           </a>
