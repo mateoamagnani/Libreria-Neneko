@@ -765,7 +765,7 @@
   //
   // Paso a paso completo en docs/catalogo-google-sheets.md
   // ============================================================
-  const SHEET_CSV_URL = "PEGAR_ACA_LA_URL_CSV_DE_GOOGLE_SHEETS";
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
 
   const WHATSAPP = "https://wa.me/5491161691209";
 
@@ -860,7 +860,14 @@
       // a los 8 segundos abandonamos y quedan los productos de ejemplo.
       const ac = new AbortController();
       const timeout = setTimeout(() => ac.abort(), 8000);
-      const res = await fetch(SHEET_CSV_URL, { signal: ac.signal });
+
+      // El parámetro suelto al final hace que la URL sea distinta en cada
+      // carga, así el navegador no sirve una copia guardada y siempre pide
+      // los precios de nuevo. (El caché propio de Google sigue existiendo:
+      // un cambio en la planilla puede tardar unos minutos en salir.)
+      const url = SHEET_CSV_URL + (SHEET_CSV_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+
+      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
       clearTimeout(timeout);
 
       if(!res.ok) throw new Error('HTTP ' + res.status);
