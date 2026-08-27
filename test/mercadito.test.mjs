@@ -39,6 +39,27 @@ vm.runInContext(js, ctx);
 
 const { parseCsv, normalizarFilas, buildMercaditoHTML } = ctx;
 
+// Corre el script otra vez con un DOM propio, para poder mirar qué termina
+// dentro del mercadito cuando la respuesta del Sheet es la que le damos.
+function correrConSheet(respuesta) {
+  const pedidos = [];
+  const wrap = { innerHTML: '', querySelectorAll: () => [] };
+  const c = {
+    ...ctx,
+    document: { ...ctx.document, getElementById: (id) => (id === 'mercaditoDynamic' ? wrap : null) },
+    fetch: async (url) => {
+      pedidos.push(url);
+      return typeof respuesta === 'function'
+        ? respuesta(url)
+        : { ok: true, text: async () => respuesta };
+    },
+  };
+  vm.createContext(c);
+  vm.runInContext(js, c);
+  // loadProductsFromSheet() se llama al final del script y es async
+  return new Promise((r) => setImmediate(() => r({ pedidos, html: wrap.innerHTML })));
+}
+
 // Los arrays vienen de otro realm (el vm), así que no comparten prototipo con
 // los de acá: deepStrictEqual los rechazaría por eso aunque el contenido sea
 // idéntico. Comparamos la forma serializada.
@@ -107,4 +128,40 @@ test('buildMercaditoHTML: agrupa por categoría y cuenta bien', () => {
 test('buildMercaditoHTML: si no hay precio muestra "Consultar"', () => {
   const out = buildMercaditoHTML([['Utiles', 'Bic', '']]);
   assert.ok(out.includes('<div class="price">Consultar</div>'));
+});
+
+// ---------------------------------------------------------------------------
+// Conexión con el Sheet publicado
+// ---------------------------------------------------------------------------
+
+test('el catálogo apunta a un Sheet publicado, no al placeholder', () => {
+  const url = js.match(/const SHEET_CSV_URL = "([^"]*)"/)[1];
+  assert.ok(!url.startsWith('PEGAR_ACA'), 'quedó el placeholder sin reemplazar');
+  assert.match(url, /^https:\/\/docs\.google\.com\/spreadsheets\/d\/e\/2PACX-/,
+    'no es una URL de "Publicar en la Web" (un link de "Compartir" no sirve)');
+  assert.match(url, /output=csv/, 'la hoja no está publicada como CSV');
+});
+
+test('cada carga pide los precios de nuevo, sin usar copia guardada', async () => {
+  const { pedidos } = await correrConSheet('Categoria,Producto,Precio\nUtiles,Bic,$ 900');
+  assert.equal(pedidos.length, 1);
+  assert.match(pedidos[0], /[?&]_=\d+/, 'falta el parámetro que evita el caché del navegador');
+});
+
+test('los precios del Sheet reemplazan a los de ejemplo', async () => {
+  const { html } = await correrConSheet(
+    'Categoria,Producto,Precio\nImpresiones,Fotocopia B/N,$ 90 c/u\nUtiles,Cuaderno,$ 4.100');
+  assert.match(html, /\$ 90 c\/u/);
+  assert.match(html, /\$ 4\.100/);
+  assert.ok(!html.includes('$ 150 c/u'), 'quedó un precio de ejemplo');
+});
+
+test('si el Sheet no responde, no se toca el mercadito', async () => {
+  const { html } = await correrConSheet(() => ({ ok: false, status: 404 }));
+  assert.equal(html, '', 'no debe vaciar ni pisar los productos de ejemplo');
+});
+
+test('si el Sheet viene vacío, tampoco se toca', async () => {
+  const { html } = await correrConSheet('');
+  assert.equal(html, '');
 });
