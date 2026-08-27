@@ -19,9 +19,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
 <meta name="twitter:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
-<!-- TODO: agregar <meta property="og:image"> con una foto real del local (1200x630 px). -->
+<meta property="og:image" content="https://mateoamagnani.github.io/Libreria-Neneko/logo.png">
+<meta property="og:image:alt" content="Logo de Librería Neneko: un gato leyendo un libro">
+<meta name="twitter:image" content="https://mateoamagnani.github.io/Libreria-Neneko/logo.png">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231E2A4F'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='16' font-weight='700' fill='%23E3A21A' text-anchor='middle'%3ELN%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -175,7 +178,8 @@
     height:3px; background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
   }
   .nav-inner{ display:flex; align-items:center; justify-content:space-between; height:88px; position:relative; }
-  .logo{ display:flex; align-items:center; gap:10px; font-family:'Bricolage Grotesque', sans-serif; font-weight:800; font-size:2.1rem; letter-spacing:-0.02em; }
+  .logo{ display:flex; align-items:center; gap:12px; font-family:'Bricolage Grotesque', sans-serif; font-weight:800; font-size:2.1rem; letter-spacing:-0.02em; text-decoration:none; color:inherit; }
+  .logo-mark{ display:block; width:52px; height:52px; object-fit:contain; flex-shrink:0; }
   .logo .mark{
     width:38px; height:38px; border-radius:50%;
     border:1.5px dashed var(--mustard-ink); color:var(--mustard-ink);
@@ -328,9 +332,12 @@
   .shop-group-head h3{ font-size:1.1rem; font-weight:600; }
   .shop-group-head span{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-soft); }
   .product-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; }
+  /* Columna flex para que, con o sin detalle, todas las tarjetas de una fila
+     midan lo mismo y los botones queden alineados abajo. */
   .product-card{
     background:var(--card); border:1px solid var(--line); border-radius:8px;
     overflow:hidden; transition:transform .15s ease, box-shadow .15s ease;
+    display:flex; flex-direction:column;
   }
   .product-card:hover{ transform:translateY(-3px); box-shadow:0 14px 26px -14px rgba(31,36,32,0.22); }
   .product-thumb{
@@ -341,11 +348,14 @@
   .product-thumb.tone-navy{ background:#E7EBF1; }
   .product-thumb.tone-mustard{ background:#F2E8D6; }
   .product-thumb.tone-terra{ background:#F2E2DA; }
-  .product-info{ padding:14px 14px 16px; }
+  .product-thumb.tone-sage{ background:#E7EEE8; }
+  .product-info{ padding:14px 14px 16px; display:flex; flex-direction:column; flex:1; }
   .product-info h4{ font-family:'Bricolage Grotesque', sans-serif; font-size:0.94rem; font-weight:600; margin-bottom:4px; }
+  .product-detalle{ font-size:0.78rem; color:var(--ink-soft); line-height:1.4; margin:0 0 8px; }
   .product-info .price{ font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--mustard-ink); font-weight:700; margin-bottom:10px; }
   /* min-height 44px: área de tap mínima recomendada en mobile */
   .product-info a{
+    margin-top:auto;
     display:flex; align-items:center; justify-content:center; min-height:44px;
     text-align:center; font-size:0.8rem; font-weight:600;
     color:var(--navy); border:1px solid var(--navy); border-radius:8px;
@@ -436,7 +446,13 @@
 
   <nav class="navbar" aria-label="Principal">
     <div class="container nav-inner">
-      <div class="logo">Librería Neneko</div>
+      <!-- El logo se agrega como src/logo.png. Si el archivo no está, el
+           onerror lo saca y queda el nombre solo: nunca un icono roto. -->
+      <a class="logo" href="#top">
+        <img class="logo-mark" src="logo.png" alt="" width="52" height="52"
+             onerror="this.remove()">
+        <span>Librería Neneko</span>
+      </a>
       <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.07L2 22l5.05-1.34A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.2 14.2c-.22.63-1.28 1.2-1.77 1.27-.45.07-1.02.1-1.65-.1-.38-.12-.87-.28-1.5-.55-2.64-1.14-4.36-3.8-4.5-3.98-.13-.18-1.08-1.43-1.08-2.73s.68-1.94.92-2.2c.24-.27.53-.34.7-.34l.5.01c.16 0 .38-.06.6.46.22.53.75 1.83.82 1.96.07.13.11.29.02.47-.09.18-.14.29-.27.44-.13.16-.28.35-.4.47-.13.13-.27.27-.12.53.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.22 2.18 1.36.27.13.42.11.58-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.53.72 1.79.85.27.13.44.2.51.3.07.12.07.62-.15 1.25z"/></svg>
         Escribinos
@@ -541,7 +557,7 @@
             </div>
             <div class="product-info">
               <h4>Fotocopia B/N</h4>
-              <div class="price">$ 150 c/u</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Fotocopia%20B/N" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia B/N por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -560,7 +576,7 @@
             </div>
             <div class="product-info">
               <h4>Impresión color A4</h4>
-              <div class="price">$ 400 c/u</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Impresi%C3%B3n%20color%20A4" target="_blank" rel="noopener" aria-label="Consultar por Impresión color A4 por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -578,7 +594,7 @@
             </div>
             <div class="product-info">
               <h4>Anillado hasta 100 hj.</h4>
-              <div class="price">$ 1.800</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Anillado%20hasta%20100%20hj." target="_blank" rel="noopener" aria-label="Consultar por Anillado hasta 100 hj. por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -607,7 +623,7 @@
             </div>
             <div class="product-info">
               <h4>Cuaderno A4 rayado</h4>
-              <div class="price">$ 3.200</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Cuaderno%20A4%20rayado" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno A4 rayado por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -622,7 +638,7 @@
             </div>
             <div class="product-info">
               <h4>Repuesto x100 hojas</h4>
-              <div class="price">$ 2.100</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Repuesto%20x100%20hojas" target="_blank" rel="noopener" aria-label="Consultar por Repuesto x100 hojas por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -640,7 +656,7 @@
             </div>
             <div class="product-info">
               <h4>Lapicera Bic azul</h4>
-              <div class="price">$ 900</div>
+              <div class="price">Consultar</div>
               <a href="https://wa.me/5491161691209?text=Hola%21%20Quer%C3%ADa%20consultar%20por%3A%20Lapicera%20Bic%20azul" target="_blank" rel="noopener" aria-label="Consultar por Lapicera Bic azul por WhatsApp">Consultar</a>
             </div>
           </div>
@@ -717,7 +733,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="logo">Librería Neneko</div>
+          <div class="logo"><img class="logo-mark" src="logo.png" alt="" width="44" height="44" onerror="this.remove()"><span>Librería Neneko</span></div>
           <p>Fotocopias, anillados y útiles escolares y de oficina, en el barrio desde hace años.</p>
         </div>
         <div class="footer-col">
@@ -779,12 +795,55 @@
   const linkConsulta = nombre =>
     `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería consultar por: ' + nombre)}`;
 
-  const PRODUCT_ICONS_BY_TONE = {
-    navy: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="9" rx="1.5"/><path d="M7 8V4h10v4"/><path d="M7 17v3h10v-3"/></svg>',
-    mustard: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 012-2h9l5 5v10.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 014 19.5z"/><path d="M14 4v5h5"/><path d="M8 13h5M8 16h8"/></svg>',
-    terra: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 3v18M15 3v18"/></svg>'
+  // Los tonos rotan para dar ritmo visual a la grilla; el icono NO rota: sale
+  // del nombre del producto, así una fotocopia siempre se ve como una
+  // impresora y no como lo que le tocó por posición.
+  // Cuatro tonos, no tres: las filas son de 4 columnas, así que con tres el
+  // primero y el cuarto quedaban del mismo color.
+  const TONES = ['navy', 'mustard', 'terra', 'sage'];
+
+  const TRAZOS = {
+    impresion: '<rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M7 9V4h10v5"/><path d="M7 17v3h10v-3"/><path d="M17 12h.01"/>',
+    anillado:  '<rect x="8" y="3" width="12" height="18" rx="1.5"/><path d="M12 8h5M12 12h5M12 16h3"/><path d="M4 6h4M4 12h4M4 18h4"/><path d="M6 4.5v3M6 10.5v3M6 16.5v3"/>',
+    cuaderno:  '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 3v18"/><path d="M12 8h4M12 12h4"/>',
+    hojas:     '<rect x="3" y="7" width="13" height="14" rx="1.5"/><path d="M7 4h12a1 1 0 011 1v13"/><path d="M6 12h7M6 16h5"/>',
+    escritura: '<path d="M15.5 3.5l5 5L9 20H4v-5z"/><path d="M13.5 5.5l5 5"/>',
+    carpeta:   '<path d="M3 7a2 2 0 012-2h4l2 2.5h8a2 2 0 012 2V18a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>',
+    pincel:    '<path d="M17 3.5l3.5 3.5-7 7-3.5-3.5z"/><path d="M10 10.5c-2 2-1.5 4.5-5 6 1.5-3.5 4-3 6-5"/><path d="M4 20h6"/>',
+    pintura:   '<path d="M9 3h6l-.7 4H9.7z"/><path d="M7.5 7h9l.9 11.4a2 2 0 01-2 2.6h-6.8a2 2 0 01-2-2.6z"/><path d="M7.9 14h8.2"/>',
+    dibujo:    '<circle cx="8" cy="7.5" r="4"/><rect x="13.5" y="13" width="7" height="7" rx="1"/><path d="M7.5 13.5l3.5 6.5h-7z"/>',
+    generico:  '<path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7-7A2 2 0 013 12.2V5a2 2 0 012-2h7.2a2 2 0 011.4.6l7 7a2 2 0 010 2.8z"/><path d="M7.5 7.5h.01"/>',
   };
-  const TONES = ['navy', 'mustard', 'terra'];
+
+  // data-icono deja ver desde el DOM qué familia se eligió: sirve para
+  // depurar en el navegador y para que los tests lo puedan afirmar.
+  const ICONOS = Object.fromEntries(Object.entries(TRAZOS).map(([nombre, d]) => [nombre,
+    `<svg data-icono="${nombre}" aria-hidden="true" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+      stroke-linejoin="round">${d}</svg>`]));
+
+  // El orden importa: gana la primera que matchea. "Block de dibujo" tiene que
+  // caer en arte, no en cuaderno, por eso arte va antes.
+  const REGLAS_ICONO = [
+    [/fotocop|impres|copia|plastific|escane/, 'impresion'],
+    [/anillad|espiral|encuaderna/,            'anillado'],
+    [/pincel|brocha/,                         'pincel'],
+    [/tempera|pintura|acuarela|acrilic|oleo/, 'pintura'],
+    [/dibujo|block|crayon|plastilina|masa|glitter/, 'dibujo'],
+    [/lapicer|birome|lapiz|marcador|resaltador|boligrafo|corrector/, 'escritura'],
+    [/carpeta|bibliorato|folio|sobre/,        'carpeta'],
+    [/cuaderno|libreta|agenda/,               'cuaderno'],
+    [/hoja|repuesto|resma|papel|cartulina|afiche|etiqueta/, 'hojas'],
+  ];
+
+  const sinAcentos = s => String(s ?? '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  function iconoDe(nombre){
+    const n = sinAcentos(nombre);
+    const regla = REGLAS_ICONO.find(([re]) => re.test(n));
+    return ICONOS[regla ? regla[1] : 'generico'];
+  }
 
   // Parser de CSV completo: soporta comas dentro de comillas, comillas
   // escapadas ("" dentro de un campo) y saltos de línea dentro de una celda.
@@ -823,17 +882,22 @@
 
   function buildMercaditoHTML(rows){
     const groups = new Map();
-    rows.forEach(([categoria, nombre, precio]) => {
+    // La cuarta columna (Detalle) es opcional: una hoja de tres columnas
+    // sigue funcionando igual.
+    rows.forEach(([categoria, nombre, precio, detalle]) => {
       if(!groups.has(categoria)) groups.set(categoria, []);
-      groups.get(categoria).push({ nombre, precio });
+      groups.get(categoria).push({ nombre, precio, detalle });
     });
     return [...groups].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
+        const detalle = p.detalle
+          ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
         return `<div class="product-card">
-          <div class="product-thumb tone-${tone}">${PRODUCT_ICONS_BY_TONE[tone]}</div>
+          <div class="product-thumb tone-${tone}">${iconoDe(p.nombre)}</div>
           <div class="product-info">
             <h4>${esc(p.nombre)}</h4>
+            ${detalle}
             <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>

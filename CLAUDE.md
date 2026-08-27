@@ -24,6 +24,14 @@ barrio no necesita una toolchain.
 Únicas dependencias externas: Google Fonts (Bricolage Grotesque, IBM Plex Sans/Mono) y el
 iframe de Google Maps.
 
+Lo que se publica es la carpeta `src/` entera, así que ahí también viven los archivos
+sueltos: `robots.txt`, `sitemap.xml` y `logo.png`. Toda imagen que se agregue va acá y se
+referencia con ruta relativa (`src="logo.png"`), nunca como data URI: engordan el HTML y
+no se cachean aparte.
+
+**Cualquier `<img>` tiene que degradar bien si el archivo no está.** Los del logo llevan
+`onerror="this.remove()"`: si falta el archivo desaparecen en vez de dejar un icono roto.
+
 El `package.json` existe solo para dar dos comandos (`npm test`, `npm run dev`); no tiene
 dependencias y no debería tenerlas.
 

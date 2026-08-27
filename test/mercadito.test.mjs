@@ -165,3 +165,71 @@ test('si el Sheet viene vacío, tampoco se toca', async () => {
   const { html } = await correrConSheet('');
   assert.equal(html, '');
 });
+
+// ---------------------------------------------------------------------------
+// Iconos y detalle
+// ---------------------------------------------------------------------------
+
+const familiaIcono = (nombre) =>
+  (buildMercaditoHTML([['X', nombre, '']]).match(/data-icono="(\w+)"/) || [])[1];
+
+test('el icono sale del nombre del producto, no de la posición', () => {
+  const casos = {
+    'Fotocopiado B/N': 'impresion',
+    'Impresión color A4': 'impresion',
+    'Plastificado A4': 'impresion',
+    'Anillado hasta 100 hj.': 'anillado',
+    'Cuaderno A4 rayado': 'cuaderno',
+    'Repuesto x100 hojas': 'hojas',
+    'Cartulina color': 'hojas',
+    'Lapicera Bic azul': 'escritura',
+    'Carpeta N°3': 'carpeta',
+    'Témperas Alba x12': 'pintura',
+    'Set de pinceles x6': 'pincel',
+    'Block de dibujo El Nene': 'dibujo',
+  };
+  for (const [producto, esperado] of Object.entries(casos)) {
+    assert.equal(familiaIcono(producto), esperado, `${producto} debería usar "${esperado}"`);
+  }
+});
+
+test('el icono matchea sin importar acentos ni mayúsculas', () => {
+  assert.equal(familiaIcono('TEMPERAS ALBA'), 'pintura');
+  assert.equal(familiaIcono('impresion color'), 'impresion');
+});
+
+test('un producto desconocido cae en el icono genérico', () => {
+  assert.equal(familiaIcono('Mochila escolar'), 'generico');
+});
+
+test('una fila de 4 productos no repite tono de fondo', () => {
+  const out = buildMercaditoHTML([
+    ['X', 'Uno', ''], ['X', 'Dos', ''], ['X', 'Tres', ''], ['X', 'Cuatro', ''],
+  ]);
+  const tonos = [...out.matchAll(/product-thumb tone-(\w+)/g)].map((m) => m[1]);
+  assert.equal(tonos.length, 4);
+  assert.equal(new Set(tonos).size, 4, 'los 4 tonos deben ser distintos');
+});
+
+test('la columna Detalle es opcional y se muestra cuando está', () => {
+  const con = buildMercaditoHTML([['X', 'Cuaderno', '$ 100', 'Tapa dura']]);
+  assert.match(con, /<p class="product-detalle">Tapa dura<\/p>/);
+
+  const sin = buildMercaditoHTML([['X', 'Cuaderno', '$ 100']]);
+  assert.ok(!sin.includes('product-detalle'), 'sin detalle no debe quedar el <p> vacío');
+});
+
+test('el detalle también se escapa', () => {
+  const out = buildMercaditoHTML([['X', 'Cuaderno', '$ 100', '<b>oferta</b>']]);
+  assert.ok(out.includes('&lt;b&gt;oferta&lt;/b&gt;'));
+  assert.ok(!/<b>/.test(out));
+});
+
+test('el HTML de respaldo no trae precios inventados', () => {
+  // Si el Sheet falla se ven estas tarjetas: mejor "Consultar" que un número
+  // que nadie va a respetar en el mostrador.
+  const cuerpo = html.slice(html.indexOf('id="productos"'), html.indexOf('</section>', html.indexOf('id="productos"')));
+  const precios = [...cuerpo.matchAll(/<div class="price">([^<]*)<\/div>/g)].map((m) => m[1]);
+  assert.ok(precios.length > 0, 'debería haber tarjetas de respaldo');
+  precios.forEach((p) => assert.equal(p, 'Consultar', `precio inventado en el respaldo: ${p}`));
+});

@@ -1,7 +1,13 @@
-Categoria,Producto,Precio
-Impresiones y anillados,Fotocopia B/N,$ 150 c/u
-Impresiones y anillados,Impresión color A4,$ 400 c/u
-Impresiones y anillados,Anillado hasta 100 hj.,$ 1.800
-Útiles escolares y de oficina,Cuaderno A4 rayado,$ 3.200
-Útiles escolares y de oficina,Repuesto x100 hojas,$ 2.100
-Útiles escolares y de oficina,Lapicera Bic azul,$ 900
+Categoria,Producto,Precio,Detalle
+Impresiones y anillados,Fotocopiado B/N,$ 100 c/u,Desde una copia
+Impresiones y anillados,Impresión color A4,$ 300 c/u,"Apuntes, láminas y fotos"
+Impresiones y anillados,Anillado hasta 100 hj.,$ 1.000,Lo anillamos en el momento
+Impresiones y anillados,Plastificado A4,,Para que no se arruine
+Útiles escolares y de oficina,Cuaderno A4 rayado,$ 3.000,Tapa dura
+Útiles escolares y de oficina,Repuesto x100 hojas,,Rayado y cuadriculado
+Útiles escolares y de oficina,Lapicera Bic azul,$ 900,"También negra y roja"
+Útiles escolares y de oficina,Carpeta N°3,,Con ganchos
+Arte y manualidades,Témperas Alba x12,,Los colores de siempre
+Arte y manualidades,Block de dibujo El Nene,,Blanco y de color
+Arte y manualidades,Set de pinceles x6,,Distintos grosores
+Arte y manualidades,Cartulina color,,Por unidad
