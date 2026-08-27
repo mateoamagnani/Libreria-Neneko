@@ -182,6 +182,13 @@
   .btn-ghost:hover{ border-color:var(--ink); }
   .btn svg{ width:17px; height:17px; }
 
+  @media (prefers-color-scheme: dark){
+    .btn-primary{ background:#B8956C; color:#0F1419; box-shadow:0 6px 16px rgba(184,149,108,0.24); }
+    .btn-primary:hover{ background:#A67D52; }
+    .btn-ghost{ border-color:#666058; color:#E8E4DC; }
+    .btn-ghost:hover{ border-color:#E8E4DC; background:rgba(232,228,220,0.06); }
+  }
+
   /* Squiggle underline */
   .squiggle{
     position:relative; display:inline-block; white-space:nowrap;
