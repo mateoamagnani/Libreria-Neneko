@@ -46,16 +46,19 @@ que igual muestra los precios en el local, es un intercambio razonable.
 
 ### 1. Armar la hoja
 
-Tres columnas, en este orden:
+Cuatro columnas, en este orden. La cuarta (**Detalle**) es opcional: una línea
+corta que aparece debajo del nombre en la tarjeta.
 
-| Categoria | Producto | Precio |
-|---|---|---|
-| Impresiones y anillados | Fotocopia B/N | $ 150 c/u |
-| Impresiones y anillados | Impresión color A4 | $ 400 c/u |
-| Impresiones y anillados | Anillado hasta 100 hj. | $ 1.800 |
-| Útiles escolares y de oficina | Cuaderno A4 rayado | $ 3.200 |
-| Útiles escolares y de oficina | Repuesto x100 hojas | $ 2.100 |
-| Útiles escolares y de oficina | Lapicera Bic azul | $ 900 |
+| Categoria | Producto | Precio | Detalle |
+|---|---|---|---|
+| Impresiones y anillados | Fotocopiado B/N | $ 100 c/u | Desde una copia |
+| Impresiones y anillados | Anillado hasta 100 hj. | $ 1.000 | Lo anillamos en el momento |
+| Útiles escolares y de oficina | Cuaderno A4 rayado | $ 3.000 | Tapa dura |
+| Arte y manualidades | Témperas Alba x12 | | Los colores de siempre |
+
+Conviene que todas las categorías tengan **la misma cantidad de productos** —
+cuatro funciona bien: entran justo en una fila en pantalla grande y en dos en el
+teléfono, sin dejar huecos.
 
 Hay una plantilla lista para copiar y pegar en
 [`docs/plantilla-catalogo.csv`](./plantilla-catalogo.csv).
@@ -73,8 +76,22 @@ la busca por ese nombre exacto.
 - Se pueden usar comas dentro de un nombre; Google las exporta entre comillas y el parser las
   respeta.
 - El precio es texto libre: `$ 150`, `$150 c/u`, `desde $2.000`, lo que quieras.
-- Si dejás el precio vacío, la tarjeta muestra "Consultar".
+- Si dejás el precio vacío, la tarjeta muestra "Consultar". Es preferible eso a
+  poner un número que después no se respeta en el mostrador.
 - Filas sin categoría o sin nombre de producto se ignoran.
+- Si un precio te aparece en la web como `3000` en vez de `$ 3.000`, es porque
+  Google lo exportó como número. Poné un apóstrofo adelante en la celda
+  (`'$ 3.000`) para forzarlo a texto.
+
+### El icono lo elige el nombre
+
+No hay que cargar nada: el sitio mira el nombre del producto y elige el dibujo.
+Hay diez familias — impresión, anillado, cuaderno, hojas, escritura, carpeta,
+pintura, pincel, dibujo — y una genérica para lo que no reconoce.
+
+Alcanza con que el nombre tenga la palabra: *fotocopiado*, *anillado*,
+*cuaderno*, *repuesto*, *lapicera*, *carpeta*, *témperas*, *pincel*, *dibujo*,
+*cartulina*. Si le ponés "Mochila", cae en el icono genérico y se ve bien igual.
 
 ### 2. Publicarla como CSV
 
