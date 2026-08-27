@@ -23,8 +23,10 @@ const ctx = {
   console,
   document: {
     getElementById: () => null,
-    querySelector: () => ({ style: {} }),
+    // Sirve como navbar y como <meta>: el script les toca style y atributos.
+    querySelector: () => ({ style: {}, getAttribute: () => null, setAttribute() {} }),
     querySelectorAll: () => [],
+    elementFromPoint: () => null,
     addEventListener() {},
     hidden: false,
   },
@@ -232,4 +234,48 @@ test('el HTML de respaldo no trae precios inventados', () => {
   const precios = [...cuerpo.matchAll(/<div class="price">([^<]*)<\/div>/g)].map((m) => m[1]);
   assert.ok(precios.length > 0, 'debería haber tarjetas de respaldo');
   precios.forEach((p) => assert.equal(p, 'Consultar', `precio inventado en el respaldo: ${p}`));
+});
+
+// ---------------------------------------------------------------------------
+// Color de las barras del navegador en el teléfono
+// ---------------------------------------------------------------------------
+
+// Corre el script con un theme-color falso y control sobre qué hay al fondo
+// de la pantalla, para poder afirmar de qué color queda la barra.
+function correrConFondo(seccionAlFondo) {
+  const meta = {
+    valor: '#F7F2E7',
+    getAttribute: () => meta.valor,
+    setAttribute: (_, v) => { meta.valor = v; },
+  };
+  const c = {
+    ...ctx,
+    document: {
+      ...ctx.document,
+      querySelector: (sel) => (sel.includes('theme-color') ? meta : { style: {} }),
+      elementFromPoint: () => ({
+        closest: (sel) => (sel.includes(seccionAlFondo) ? {} : null),
+      }),
+    },
+  };
+  vm.createContext(c);
+  vm.runInContext(js, c);
+  return meta;
+}
+
+test('con el footer al fondo, la barra del navegador se pone oscura', () => {
+  assert.equal(correrConFondo('site-footer').valor, '#1C2536');
+});
+
+test('con la sección de reseñas al fondo, también', () => {
+  assert.equal(correrConFondo('trust').valor, '#1C2536');
+});
+
+test('con una sección clara al fondo, la barra vuelve a clara', () => {
+  assert.equal(correrConFondo('mercadito').valor, '#F7F2E7');
+});
+
+test('el theme-color del HTML arranca claro, como el navbar', () => {
+  const inicial = html.match(/<meta name="theme-color" content="([^"]+)"/)[1];
+  assert.equal(inicial, '#F7F2E7');
 });

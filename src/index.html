@@ -1019,6 +1019,32 @@
   // NAV — sombra al hacer scroll
   // ============================================================
   const navbar = document.querySelector('.navbar');
+
+  // ------------------------------------------------------------
+  // Color de las barras del navegador en el teléfono
+  // ------------------------------------------------------------
+  // Safari en iOS pinta sus barras con el theme-color de la página. Con un
+  // valor fijo crema, al llegar al footer oscuro quedaba una franja clara
+  // abajo, justo donde está la barra de direcciones. Poner theme-color en
+  // oscuro tampoco sirve: rompería la barra de arriba, que acompaña al
+  // navbar claro. Así que lo movemos según qué sección toca el borde de
+  // abajo de la pantalla.
+  const metaTema = document.querySelector('meta[name="theme-color"]');
+  const TEMA_CLARO = '#F7F2E7';
+  const TEMA_OSCURO = '#1C2536';
+
+  function actualizarColorDeBarra(){
+    if(!metaTema) return;
+    const alFondo = document.elementFromPoint(
+      Math.round(window.innerWidth / 2), window.innerHeight - 1);
+    const esOscuro = !!(alFondo && alFondo.closest('.trust, .site-footer'));
+    const color = esOscuro ? TEMA_OSCURO : TEMA_CLARO;
+    // Escribir el mismo valor una y otra vez hace parpadear la barra en iOS.
+    if(metaTema.getAttribute('content') !== color){
+      metaTema.setAttribute('content', color);
+    }
+  }
+
   let scrollPendiente = false;
   window.addEventListener('scroll', () => {
     // Un scroll dispara decenas de eventos por segundo; sin esto escribimos
@@ -1027,9 +1053,14 @@
     scrollPendiente = true;
     requestAnimationFrame(() => {
       navbar.style.boxShadow = window.scrollY > 8 ? '0 4px 18px rgba(33,31,26,0.08)' : 'none';
+      actualizarColorDeBarra();
       scrollPendiente = false;
     });
   }, { passive: true });
+
+  // Al cargar y al girar el teléfono, que arranque con el color correcto.
+  actualizarColorDeBarra();
+  window.addEventListener('resize', actualizarColorDeBarra, { passive: true });
 
   // ============================================================
   // APARICIÓN SUAVE AL SCROLLEAR
