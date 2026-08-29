@@ -31,7 +31,8 @@ Si hay inconsistencia, Google baja el ranking. Este es el "NAP" (Name, Address, 
 
 ### Paso 1.3: Horarios
 Clickeá **"Agregar horarios"** y poné:
-- **Lunes a sábado:** 09:00 – 20:30
+- **Lunes a viernes:** 09:00 – 13:00 y 16:30 – 20:30
+- **Sábado:** 09:00 – 14:00
 - **Domingo:** Cerrado
 
 (Si después cambia el horario, lo updatea acá. Google lo ve.)
@@ -44,7 +45,7 @@ Google pedirá fotos del local.
 - Una de los productos/estantes
 - Una de la gente (si hay clientes contentos, mejor)
 
-**Importante:** Las fotos deben verse profecionales. Si están borrosas o oscuras, Google las rechaza.
+**Importante:** Las fotos deben verse profesionales. Si están borrosas u oscuras, Google las rechaza.
 
 ### Paso 1.5: Verificación
 Google enviará una postal por correo (2-5 días). La postal tiene un código.
