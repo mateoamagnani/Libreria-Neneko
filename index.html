@@ -440,6 +440,17 @@
   .loc-list svg{ width:19px; height:19px; color:var(--mustard-ink); }
   .loc-list .label{ font-weight:600; margin-bottom:2px; font-family:'Bricolage Grotesque', sans-serif; }
   .loc-list .sub{ color:var(--ink-soft); font-size:0.88rem; }
+  .horario-item{ align-items:flex-start !important; }
+  .horario-tabla{ flex:1; display:flex; flex-direction:column; gap:6px; }
+  .horario-fila{ display:flex; justify-content:space-between; align-items:center; font-size:0.9rem; padding:4px 0; border-bottom:1px solid var(--line); }
+  .horario-fila:last-child{ border-bottom:none; }
+  .horario-fila .dia{ font-weight:600; color:var(--ink); min-width:70px; }
+  .horario-fila .hora{ color:var(--ink-soft); text-align:right; }
+  .horario-fila.cerrado .hora{ color:var(--stamp); font-weight:600; }
+  @media (prefers-color-scheme: dark){
+    .horario-fila{ border-bottom-color:#444; }
+    .horario-fila .hora{ color:var(--ink-soft); }
+  }
   .map-embed{ position:relative; border-radius:8px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 44px -18px rgba(31,36,32,0.25); height:400px; }
   .map-embed::before{
     content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
@@ -795,9 +806,22 @@
             <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.68 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0122 16.92z"/></svg></div>
             <div><div class="label">011 6169-1209</div><div class="sub">Pedidos por WhatsApp</div></div>
           </li>
-          <li>
+          <li class="horario-item">
             <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-            <div><div class="label">Lunes a sábado</div><div class="sub">Hasta las 20:30 hs</div></div>
+            <div class="horario-tabla">
+              <div class="horario-fila">
+                <span class="dia">Lun - Vie</span>
+                <span class="hora">9:00–13:00 | 16:30–20:30</span>
+              </div>
+              <div class="horario-fila">
+                <span class="dia">Sábado</span>
+                <span class="hora">9:00–14:00</span>
+              </div>
+              <div class="horario-fila cerrado">
+                <span class="dia">Domingo</span>
+                <span class="hora">Cerrado</span>
+              </div>
+            </div>
           </li>
         </ul>
         <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener">Cómo llegar</a>
