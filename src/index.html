@@ -657,6 +657,15 @@ section{ padding-block:var(--s9); }
 .loc-list .label a:hover{ color:var(--brand); }
 .loc-list .sub{ color:var(--text-2); font-size:.875rem; margin-top:1px; }
 
+/* Las filas de dos líneas (la dirección) alinean el icono con la primera, que
+   es lo correcto. Las de una sola (el teléfono) no: contra un icono de 42px el
+   texto queda flotando por encima de su centro. Ahí se centra, y se le da más
+   cuerpo porque además es el dato que la gente viene a buscar.
+   Donde :has() no llegue, la fila queda como estaba: alineada arriba y
+   perfectamente legible. */
+.loc-list li:not(:has(.sub)){ align-items:center; }
+.loc-list li:not(:has(.sub)) .label{ font-size:1.3125rem; letter-spacing:-.025em; }
+
 /* --- HORARIOS ---------------------------------------------------------
    Tabla real, dividida con --border (visible en los dos modos por
    construcción). El cuerpo lo escribe el script desde una única fuente de
