@@ -55,7 +55,7 @@ son las que hay que leer y mantener.
 | Campo | Valor |
 |---|---|
 | Dirección | Peña 3102, CABA |
-| Teléfono | 011 6169-1209 |
+| Teléfono | +54 9 11 6169-1209 (solo WhatsApp) |
 | WhatsApp | [wa.me/5491161691209](https://wa.me/5491161691209) |
 | Horario | Lunes a sábado, 9:00 – 20:30 |
 | Google | 4,4 ★ · 97 reseñas |

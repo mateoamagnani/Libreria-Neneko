@@ -98,7 +98,8 @@ footer, links de `wa.me` y de Maps). **Si cambia uno, hay que cambiarlos todos**
 en el Google Business Profile. Las inconsistencias bajan el posicionamiento local.
 
 - Peña 3102, CABA
-- 011 6169-1209 · `https://wa.me/5491161691209`
+- +54 9 11 6169-1209 · `https://wa.me/5491161691209`
+  Es un número **solo de WhatsApp**: no se atienden llamadas, así que no va con `tel:`.
 - Lunes a viernes 9:00–13:00 y 16:30–20:30 · Sábado 9:00–14:00 · Domingo cerrado
 
 El horario **no se escribe a mano** en la página: sale de la constante `HORARIOS` del
