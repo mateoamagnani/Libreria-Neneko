@@ -18,7 +18,8 @@ En el formulario, completá:
 - **Nombre del negocio:** Librería Neneko
 - **Categoría principal:** Papelería y escritorio (o "Librería")
 - **Dirección completa:** Peña 3102, Ciudad Autónoma de Buenos Aires, CABA
-- **Teléfono:** 011 6169-1209 (sin +54 aquí, solo así)
+- **Teléfono:** +54 9 11 6169-1209
+- **Dirección:** Peña 3102, esquina Billinghurst (a metros de Coronel Díaz)
 - **Sitio web:** https://mateoamagnani.github.io/Libreria-Neneko/
 
 **⚠️ CRÍTICO:** Los datos tienen que coincidir exactamente con:

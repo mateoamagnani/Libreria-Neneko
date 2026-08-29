@@ -9,8 +9,8 @@ Documento de referencia del sitio que vive en `src/index.html`.
 | Campo | Valor |
 |---|---|
 | **Nombre** | Librería Neneko |
-| **Dirección** | Peña 3102, CABA (esquina Agüero, a metros de Santa Fe) |
-| **Teléfono** | 011 6169-1209 |
+| **Dirección** | Peña 3102, CABA (esquina Billinghurst, a metros de Coronel Díaz) |
+| **Teléfono** | +54 9 11 6169-1209 (solo WhatsApp, no se atienden llamadas) |
 | **WhatsApp** | `https://wa.me/5491161691209` |
 | **Horario** | Lun a vie 9:00–13:00 y 16:30–20:30 · Sáb 9:00–14:00 · Dom cerrado |
 | **Reseñas** | 4,4 ★ · 97 reseñas en Google |
