@@ -133,8 +133,17 @@
   color-scheme: light;
 }
 
+/* El tema tiene tres estados, no dos:
+     - sin atributo  → sigue al sistema operativo (es como entra todo el mundo)
+     - data-theme="dark"  → el visitante eligió oscuro, gane lo que gane el SO
+     - data-theme="light" → el visitante eligió claro
+   Por eso el bloque del sistema se limita con :not([data-theme="light"]): sin
+   eso, un SO en oscuro le ganaría a alguien que pidió claro a propósito.
+   La paleta oscura va escrita dos veces porque CSS plano no tiene forma de
+   reusar un bloque de declaraciones, y este proyecto no tiene build step.
+   Hay un test que verifica que las dos copias sean idénticas. */
 @media (prefers-color-scheme: dark){
-  :root{
+  :root:not([data-theme="light"]){
     --bg:            #12161B;
     --surface:       #1A1F26;
     --surface-2:     #232932;
@@ -167,6 +176,36 @@
 
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"]{
+  --bg:            #12161B;
+  --surface:       #1A1F26;
+  --surface-2:     #232932;
+  --surface-inv:   #0C1015;
+
+  --border:        #39434F;
+  --border-strong: #4E5B6C;
+
+  --text:          #ECE7DE;
+  --text-2:        #B4AEA3;
+  --text-3:        #8B8579;
+  --text-inv:      #ECE7DE;
+  --text-inv-2:    #9AA5B3;
+
+  --brand:         #E0B36A;
+  --brand-bright:  #E8C286;
+  --ok:            #4ECB93;
+  --closed:        #F0846A;
+  --wa:            #25D366;
+
+  --btn-bg:        #ECE7DE;
+  --btn-bg-hover:  #FFFFFF;
+  --btn-text:      #12161B;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 16px 40px -16px rgba(0,0,0,.6);
+
+  color-scheme: dark;
 }
 
 /* ==========================================================================
@@ -302,10 +341,35 @@ section{ padding-block:var(--s9); }
 }
 .brand img{ width:40px; height:40px; object-fit:contain; flex-shrink:0; }
 
-/* La barra lleva solo la marca y el CTA. La navegación por secciones vive en
-   el footer y en el botón "Ver productos" del hero: en una página de un solo
-   scroll, tres links arriba competían con el único CTA que importa. */
+/* La barra lleva la marca, el cambio de tema y el CTA. La navegación por
+   secciones vive en el footer y en el botón "Ver productos" del hero: en una
+   página de un solo scroll, tres links arriba competían con el CTA. */
 .nav-cta{ min-height:42px; padding:var(--s2) var(--s4); font-size:.875rem; }
+.nav-right{ display:flex; align-items:center; gap:var(--s3); }
+
+/* Botón de tema: discreto a propósito. Es una preferencia, no una acción del
+   negocio, así que no compite con el CTA de WhatsApp. */
+.tema-btn{
+  display:flex; align-items:center; justify-content:center;
+  width:42px; height:42px; flex-shrink:0;
+  background:transparent; border:1.5px solid var(--border-strong);
+  border-radius:var(--r-full); color:var(--text-2);
+  cursor:pointer; padding:0;
+  transition:color .15s ease, border-color .15s ease, background .15s ease;
+}
+.tema-btn:hover{ color:var(--text); border-color:var(--text); background:var(--surface); }
+.tema-btn svg{ width:18px; height:18px; }
+/* Se muestra el icono del tema al que se va a cambiar, no el actual: es lo que
+   dice qué pasa al tocarlo. */
+.tema-btn .luna{ display:none; }
+:root[data-theme="dark"] .tema-btn .luna{ display:block; }
+:root[data-theme="dark"] .tema-btn .sol{ display:none; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .tema-btn .luna{ display:block; }
+  :root:not([data-theme="light"]) .tema-btn .sol{ display:none; }
+}
+:root[data-theme="light"] .tema-btn .luna{ display:none; }
+:root[data-theme="light"] .tema-btn .sol{ display:block; }
 
 @media (max-width:860px){
   .brand{ font-size:1.1875rem; }
@@ -540,10 +604,13 @@ section{ padding-block:var(--s9); }
 .product-thumb.tone-terra  { background:color-mix(in srgb, #B5654A 12%, var(--surface-2)); color:#B5654A; }
 .product-thumb.tone-sage   { background:color-mix(in srgb, #4F8A6B 12%, var(--surface-2)); color:#4F8A6B; }
 @media (prefers-color-scheme: dark){
-  .product-thumb.tone-navy   { color:#8FB0DE; }
-  .product-thumb.tone-terra  { color:#E09577; }
-  .product-thumb.tone-sage   { color:#78C79E; }
+  :root:not([data-theme="light"]) .product-thumb.tone-navy   { color:#8FB0DE; }
+  :root:not([data-theme="light"]) .product-thumb.tone-terra  { color:#E09577; }
+  :root:not([data-theme="light"]) .product-thumb.tone-sage   { color:#78C79E; }
 }
+:root[data-theme="dark"] .product-thumb.tone-navy   { color:#8FB0DE; }
+:root[data-theme="dark"] .product-thumb.tone-terra  { color:#E09577; }
+:root[data-theme="dark"] .product-thumb.tone-sage   { color:#78C79E; }
 
 .product-info{
   display:flex; flex-direction:column; flex:1;
@@ -734,11 +801,12 @@ section{ padding-block:var(--s9); }
   overflow:hidden; box-shadow:var(--shadow-sm);
 }
 .map iframe{ width:100%; height:100%; border:0; }
+/* El iframe de Google Maps no tiene modo oscuro: bajarle un poco el brillo
+   evita el rectángulo blanco que encandila en una página oscura. */
 @media (prefers-color-scheme: dark){
-  /* El iframe de Google Maps no tiene modo oscuro: bajarle un poco el brillo
-     evita el rectángulo blanco que encandila en una página oscura. */
-  .map iframe{ filter:brightness(.86) contrast(1.05); }
+  :root:not([data-theme="light"]) .map iframe{ filter:brightness(.86) contrast(1.05); }
 }
+:root[data-theme="dark"] .map iframe{ filter:brightness(.86) contrast(1.05); }
 
 @media (max-width:960px){
   .loc-grid{ grid-template-columns:1fr; gap:var(--s7); }
@@ -819,10 +887,16 @@ section{ padding-block:var(--s9); }
       <img src="logo.png" alt="" width="40" height="40" onerror="this.remove()">
       <span>Librería Neneko</span>
     </a>
+    <div class="nav-right">
+    <button class="tema-btn" id="temaBtn" type="button" aria-label="Cambiar entre modo claro y oscuro" aria-pressed="false">
+      <svg class="sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+      <svg class="luna" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 019.7 3.5a8.5 8.5 0 1010.8 10.8z"/></svg>
+    </button>
     <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
       <span class="txt">Escribinos</span>
     </a>
+    </div>
   </div>
 </header>
 
@@ -1232,6 +1306,59 @@ section{ padding-block:var(--s9); }
   //
   // Paso a paso completo en docs/catalogo-google-sheets.md
   // ============================================================
+  // ============================================================
+  // TEMA CLARO / OSCURO
+  //
+  // Por defecto la página sigue al sistema operativo, que es lo que espera
+  // la mayoría. El botón de la barra guarda una elección explícita que le
+  // gana al sistema, y queda guardada para las próximas visitas.
+  //
+  // Todo va dentro de try/catch: en ventana privada o con las cookies
+  // bloqueadas, localStorage tira excepción al leerlo. Si eso pasa, el tema
+  // igual funciona en la sesión; lo único que se pierde es recordarlo.
+  // ============================================================
+  const CLAVE_TEMA = 'neneko-tema';
+  const raiz = document.documentElement;
+
+  const temaGuardado = (() => {
+    try{ return localStorage.getItem(CLAVE_TEMA); }catch{ return null; }
+  })();
+  if(temaGuardado === 'dark' || temaGuardado === 'light'){
+    raiz.setAttribute('data-theme', temaGuardado);
+  }
+
+  // Cuál se está viendo ahora mismo, haya elección explícita o no.
+  function temaActivo(){
+    const elegido = raiz.getAttribute('data-theme');
+    if(elegido) return elegido;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  const temaBtn = document.getElementById('temaBtn');
+  if(temaBtn){
+    const sincronizarBoton = () => {
+      const oscuro = temaActivo() === 'dark';
+      temaBtn.setAttribute('aria-pressed', String(oscuro));
+      temaBtn.setAttribute('aria-label',
+        oscuro ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+    };
+    sincronizarBoton();
+
+    temaBtn.addEventListener('click', () => {
+      const nuevo = temaActivo() === 'dark' ? 'light' : 'dark';
+      raiz.setAttribute('data-theme', nuevo);
+      try{ localStorage.setItem(CLAVE_TEMA, nuevo); }catch{}
+      sincronizarBoton();
+    });
+
+    // Si el visitante nunca eligió, seguimos al sistema en vivo: cambiar el
+    // tema del SO con la pestaña abierta tiene que verse al instante.
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', () => {
+        if(!raiz.getAttribute('data-theme')) sincronizarBoton();
+      });
+  }
+
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
 
   const WHATSAPP = "https://wa.me/5491161691209";

@@ -238,8 +238,22 @@ const tokensDe = (bloque) =>
     .map((m) => [m[1], m[2].trim()]));
 
 const rootClaro = tokensDe(html.match(/:root\{([^}]*)\}/)[1]);
-const rootOscuro = tokensDe(
-  html.slice(html.indexOf('@media (prefers-color-scheme: dark)')).match(/:root\{([^}]*)\}/)[1]);
+
+// La paleta oscura está escrita dos veces, porque CSS plano no permite reusar
+// un bloque de declaraciones y el proyecto no tiene build step. Las llaves
+// pegadas al selector son a propósito: así estos regex no matchean los
+// bloques de componentes, que llevan un descendiente antes de la llave.
+const rootOscuro = tokensDe(       // el que sigue al sistema operativo
+  html.match(/:root:not\(\[data-theme="light"\]\)\{([^}]*)\}/)[1]);
+const rootOscuroElegido = tokensDe( // el de la elección explícita del visitante
+  html.match(/:root\[data-theme="dark"\]\{([^}]*)\}/)[1]);
+
+test('las dos copias de la paleta oscura son idénticas', () => {
+  // Si alguien retoca un color en una sola, el sitio se ve distinto según si
+  // el visitante tocó el botón de tema o no. Es imposible de notar mirando.
+  assert.deepEqual(rootOscuroElegido, rootOscuro,
+    'la paleta de :root[data-theme="dark"] se despegó de la del sistema');
+});
 
 test('todo color del modo claro tiene su par en el modo oscuro', () => {
   // Este es el test que evita el bug que volvió tres veces: un borde definido
