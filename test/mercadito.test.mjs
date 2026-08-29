@@ -34,6 +34,11 @@ const ctx = {
   requestAnimationFrame: (f) => f(),
   IntersectionObserver: class { observe() {} unobserve() {} },
   setTimeout, clearTimeout, AbortController,
+  // No-op a propósito: la página refresca el cartel de "abierto ahora" cada
+  // minuto. Con el setInterval real el proceso de tests quedaría con un timer
+  // vivo y no terminaría nunca.
+  setInterval: () => 0, clearInterval: () => {},
+  Intl,
   fetch: async () => { throw new Error('sin red en los tests'); },
 };
 vm.createContext(ctx);
