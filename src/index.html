@@ -449,11 +449,6 @@ section{ padding-block:var(--s9); }
   flex:1; background:#1F2C34; color:#8696A0;
   border-radius:var(--r-full); padding:9px var(--s4); font-size:.8125rem;
 }
-.phone-caption{
-  text-align:center; margin-top:var(--s4);
-  font-family:'IBM Plex Mono', monospace; font-size:.75rem;
-  color:var(--text-3);
-}
 
 @media (max-width:960px){
   .hero{ padding-block:var(--s7) var(--s7); }
@@ -871,26 +866,23 @@ section{ padding-block:var(--s9); }
       </div>
 
       <div class="phone-wrap">
-        <div>
-          <div class="phone">
-            <div class="phone-screen">
-              <div class="notch" aria-hidden="true"></div>
-              <div class="wa-bar">
-                <div class="wa-bar-inner">
-                  <div class="wa-avatar" aria-hidden="true">LN</div>
-                  <div>
-                    <div class="wa-name">Librería Neneko</div>
-                    <div class="wa-sub">en línea</div>
-                  </div>
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="notch" aria-hidden="true"></div>
+            <div class="wa-bar">
+              <div class="wa-bar-inner">
+                <div class="wa-avatar" aria-hidden="true">LN</div>
+                <div>
+                  <div class="wa-name">Librería Neneko</div>
+                  <div class="wa-sub">en línea</div>
                 </div>
               </div>
-              <div class="chat-body" id="chatBody" aria-hidden="true"></div>
-              <div class="wa-input" aria-hidden="true">
-                <span>Escribí un mensaje…</span>
-              </div>
+            </div>
+            <div class="chat-body" id="chatBody" aria-hidden="true"></div>
+            <div class="wa-input" aria-hidden="true">
+              <span>Escribí un mensaje…</span>
             </div>
           </div>
-          <p class="phone-caption">Así de simple: escribís y te respondemos.</p>
         </div>
       </div>
     </div>
