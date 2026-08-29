@@ -98,14 +98,18 @@ test('el domingo queda sin bloques, que es como se dibuja "Cerrado"', () => {
 // Abierto / cerrado
 // ---------------------------------------------------------------------------
 
-test('martes 10:00 — abierto, y dice hasta cuándo', () => {
-  const { estadoDelLocal } = enElMomento('Tue', 10, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: true, texto: 'Abierto ahora · hasta 13:00' });
+test('martes 14:00 — abierto, y dice hasta cuándo', () => {
+  const { estadoDelLocal } = enElMomento('Tue', 14, 0);
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: true, texto: 'Abierto ahora · hasta 20:30' });
 });
 
-test('martes 14:00 — cerrado al mediodía, avisa que reabre a la tarde', () => {
-  const { estadoDelLocal } = enElMomento('Tue', 14, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre 16:30' });
+test('martes 11:00 — todavía no abrió, avisa a qué hora abre', () => {
+  const { estadoDelLocal } = enElMomento('Tue', 11, 0);
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre 11:30' });
+});
+
+test('martes 11:30 — el minuto de apertura ya cuenta como abierto', () => {
+  assert.equal(enElMomento('Tue', 11, 30).estadoDelLocal().abierto, true);
 });
 
 test('martes 20:29 — todavía abierto un minuto antes de cerrar', () => {
@@ -118,17 +122,23 @@ test('martes 20:30 — la hora de cierre ya cuenta como cerrado', () => {
 
 test('martes 21:00 — cerrado por hoy, abre mañana', () => {
   const { estadoDelLocal } = enElMomento('Tue', 21, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 09:00' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 11:30' });
 });
 
-test('sábado 15:00 — ya cerró y el domingo no abre, así que salta al lunes', () => {
-  const { estadoDelLocal } = enElMomento('Sat', 15, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre lunes 09:00' });
+// El sábado cierra más temprano que el resto: vale la pena afirmar su borde
+// aparte del de los días de semana.
+test('sábado 15:29 — todavía abierto un minuto antes de cerrar', () => {
+  assert.equal(enElMomento('Sat', 15, 29).estadoDelLocal().abierto, true);
+});
+
+test('sábado 16:00 — ya cerró y el domingo no abre, así que salta al lunes', () => {
+  const { estadoDelLocal } = enElMomento('Sat', 16, 0);
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre lunes 11:30' });
 });
 
 test('domingo al mediodía — cerrado, abre mañana', () => {
   const { estadoDelLocal } = enElMomento('Sun', 12, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 09:00' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 11:30' });
 });
 
 test('si el navegador no soporta la zona horaria, no explota', () => {
@@ -160,8 +170,8 @@ test('el domingo se dibuja como Cerrado, no como una celda vacía', () => {
 
 test('los horarios salen con dos dígitos, para que la columna quede alineada', () => {
   const tabla = enElMomento('Wed', 10, 0).tablaRenderizada;
-  assert.match(tabla, /<span>09:00 – 13:00<\/span>/);
-  assert.match(tabla, /<span>16:30 – 20:30<\/span>/);
+  assert.match(tabla, /<span>11:30 – 20:30<\/span>/);
+  assert.match(tabla, /<span>11:30 – 15:30<\/span>/);
 });
 
 // El respaldo del HTML es lo que se ve si el JS no llega a correr. Si alguien
@@ -178,6 +188,41 @@ test('el horario escrito a mano en el HTML coincide con el que calcula el script
       assert.ok(respaldo.includes('Cerrado'), 'falta el "Cerrado" del día sin horario');
     }
   });
+});
+
+// El JSON-LD es lo que lee Google, y vive en el <head>, fuera del JS: es el
+// único lugar del horario que HORARIOS no puede mantener al día solo. Sin este
+// test, cambiar el horario y olvidarse del JSON-LD deja al sitio diciendo una
+// cosa y a Google otra, que es exactamente lo que rompe el SEO local.
+test('el horario del JSON-LD coincide con HORARIOS', () => {
+  const { filasDeHorario } = enElMomento('Wed', 12, 0);
+  const ld = JSON.parse(
+    html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+
+  const DIAS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const aMinutos = (hhmm) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+
+  // Lo que declara el JSON-LD, aplanado a: día -> [[desde, hasta], ...]
+  const declarado = {};
+  ld.openingHoursSpecification.forEach((spec) => {
+    spec.dayOfWeek.forEach((nombre) => {
+      const d = DIAS.indexOf(nombre);
+      assert.ok(d >= 0, `día desconocido en el JSON-LD: ${nombre}`);
+      (declarado[d] ??= []).push([aMinutos(spec.opens), aMinutos(spec.closes)]);
+    });
+  });
+
+  // Lo que dice la fuente de verdad, en la misma forma.
+  const real = {};
+  filasDeHorario().forEach(({ dias, bloques }) => {
+    if(bloques.length) dias.forEach((d) => { real[d] = plano(bloques); });
+  });
+
+  const orden = (o) => JSON.stringify(
+    Object.fromEntries(Object.keys(o).sort().map((k) => [k, o[k].slice().sort()])));
+
+  assert.equal(orden(declarado), orden(real),
+    'el openingHoursSpecification del <head> quedó desfasado de HORARIOS');
 });
 
 // ---------------------------------------------------------------------------

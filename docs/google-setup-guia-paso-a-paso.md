@@ -32,8 +32,8 @@ Si hay inconsistencia, Google baja el ranking. Este es el "NAP" (Name, Address, 
 
 ### Paso 1.3: Horarios
 Clickeá **"Agregar horarios"** y poné:
-- **Lunes a viernes:** 09:00 – 13:00 y 16:30 – 20:30
-- **Sábado:** 09:00 – 14:00
+- **Lunes a viernes:** 11:30 – 20:30
+- **Sábado:** 11:30 – 15:30
 - **Domingo:** Cerrado
 
 (Si después cambia el horario, lo updatea acá. Google lo ve.)

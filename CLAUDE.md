@@ -100,7 +100,7 @@ en el Google Business Profile. Las inconsistencias bajan el posicionamiento loca
 - Peña 3102, CABA
 - +54 9 11 6169-1209 · `https://wa.me/5491161691209`
   Es un número **solo de WhatsApp**: no se atienden llamadas, así que no va con `tel:`.
-- Lunes a viernes 9:00–13:00 y 16:30–20:30 · Sábado 9:00–14:00 · Domingo cerrado
+- Lunes a viernes 11:30–20:30 · Sábado 11:30–15:30 · Domingo cerrado
 
 El horario **no se escribe a mano** en la página: sale de la constante `HORARIOS` del
 `<script>`, y de ahí se arman la tabla de la sección Ubicación, el cartel de "abierto

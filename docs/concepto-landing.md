@@ -12,7 +12,7 @@ Documento de referencia del sitio que vive en `src/index.html`.
 | **Dirección** | Peña 3102, CABA (esquina Billinghurst, a metros de Coronel Díaz) |
 | **Teléfono** | +54 9 11 6169-1209 (solo WhatsApp, no se atienden llamadas) |
 | **WhatsApp** | `https://wa.me/5491161691209` |
-| **Horario** | Lun a vie 9:00–13:00 y 16:30–20:30 · Sáb 9:00–14:00 · Dom cerrado |
+| **Horario** | Lun a vie 11:30–20:30 · Sáb 11:30–15:30 · Dom cerrado |
 | **Reseñas** | 4,4 ★ · 97 reseñas en Google |
 
 > La consistencia NAP es un requisito de SEO local (ver
@@ -123,8 +123,6 @@ Hecho:
 
 Pendiente:
 
-- [ ] **Confirmar el horario real con la dueña.** El horario partido que está hoy en el
-      sitio se cargó sin confirmar. Es el dato que más caro sale tener mal.
 - [ ] Sin fotos reales del local ni de los productos (los thumbs son SVG genéricos). El
       material de marketing indica que las fotos reales convierten mejor en negocios físicos.
 - [ ] Falta `geo` (latitud y longitud) en el JSON-LD.

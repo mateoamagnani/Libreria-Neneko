@@ -59,20 +59,14 @@
     {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-      "opens": "09:00",
-      "closes": "13:00"
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-      "opens": "16:30",
+      "opens": "11:30",
       "closes": "20:30"
     },
     {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Saturday"],
-      "opens": "09:00",
-      "closes": "14:00"
+      "opens": "11:30",
+      "closes": "15:30"
     }
   ],
   "aggregateRating": {
@@ -1149,8 +1143,8 @@ section{ padding-block:var(--s9); }
             <table>
               <caption class="sr-only">Horarios de atención de Librería Neneko</caption>
               <tbody id="horariosBody">
-                <tr><th scope="row">Lunes a viernes</th><td><span>09:00 – 13:00</span><span>16:30 – 20:30</span></td></tr>
-                <tr><th scope="row">Sábado</th><td><span>09:00 – 14:00</span></td></tr>
+                <tr><th scope="row">Lunes a viernes</th><td><span>11:30 – 20:30</span></td></tr>
+                <tr><th scope="row">Sábado</th><td><span>11:30 – 15:30</span></td></tr>
                 <tr><th scope="row">Domingo</th><td class="cerrado">Cerrado</td></tr>
               </tbody>
             </table>
@@ -1417,12 +1411,12 @@ section{ padding-block:var(--s9); }
   // ============================================================
   const HORARIOS = [
     { dia: 'Domingo',   bloques: [] },
-    { dia: 'Lunes',     bloques: [[540, 780], [990, 1230]] },
-    { dia: 'Martes',    bloques: [[540, 780], [990, 1230]] },
-    { dia: 'Miércoles', bloques: [[540, 780], [990, 1230]] },
-    { dia: 'Jueves',    bloques: [[540, 780], [990, 1230]] },
-    { dia: 'Viernes',   bloques: [[540, 780], [990, 1230]] },
-    { dia: 'Sábado',    bloques: [[540, 840]] },
+    { dia: 'Lunes',     bloques: [[690, 1230]] },
+    { dia: 'Martes',    bloques: [[690, 1230]] },
+    { dia: 'Miércoles', bloques: [[690, 1230]] },
+    { dia: 'Jueves',    bloques: [[690, 1230]] },
+    { dia: 'Viernes',   bloques: [[690, 1230]] },
+    { dia: 'Sábado',    bloques: [[690, 930]] },
   ];
 
   const hhmm = min =>
@@ -1541,7 +1535,7 @@ section{ padding-block:var(--s9); }
   // DEMO DEL CHAT (decorativa)
   // ============================================================
   const SEQUENCE = [
-    { user: "Hola! ¿qué horarios tienen hoy?", bot: "¡Hola! Hoy abrimos de 9 a 13 y de 16:30 a 20:30 🕐" },
+    { user: "Hola! ¿qué horarios tienen hoy?", bot: "¡Hola! Hoy abrimos de 11:30 a 20:30 🕐" },
     { user: "¿Tienen anillado?", bot: "Sí! Anillamos en el momento, hasta 100 hojas 📎" },
     { user: "¿Tienen témperas Alba?", bot: "Tenemos témperas Alba x12 colores. Te las separamos 🎨" }
   ];

@@ -57,7 +57,7 @@ son las que hay que leer y mantener.
 | Dirección | Peña 3102, CABA |
 | Teléfono | +54 9 11 6169-1209 (solo WhatsApp) |
 | WhatsApp | [wa.me/5491161691209](https://wa.me/5491161691209) |
-| Horario | Lunes a sábado, 9:00 – 20:30 |
+| Horario | Lun a vie 11:30–20:30 · Sáb 11:30–15:30 · Dom cerrado |
 | Google | 4,4 ★ · 97 reseñas |
 
 > Estos datos tienen que ser **idénticos** en el sitio, en Google Maps y en cualquier
