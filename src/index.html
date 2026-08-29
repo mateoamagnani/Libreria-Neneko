@@ -135,6 +135,7 @@
   --shadow-md: 0 4px 12px rgba(28,37,54,.07), 0 12px 32px -12px rgba(28,37,54,.16);
 
   --maxw:1200px;
+  --nav-h:72px;   /* lo usa el hero para calcular cuánto le queda de pantalla */
   color-scheme: light;
 }
 
@@ -297,7 +298,7 @@ section{ padding-block:var(--s9); }
 }
 .nav-inner{
   display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
-  height:72px;
+  height:var(--nav-h);
 }
 .brand{
   display:flex; align-items:center; gap:var(--s3);
@@ -315,7 +316,9 @@ section{ padding-block:var(--s9); }
 @media (max-width:860px){
   .brand{ font-size:1.1875rem; }
   .brand img{ width:34px; height:34px; }
-  .nav-inner{ height:62px; }
+  /* Se cambia el token, no la altura suelta: así el calc del hero sigue
+     dando bien sin que haya que acordarse de tocarlo en dos lados. */
+  :root{ --nav-h:62px; }
 }
 @media (max-width:520px){
   /* Sin esto "Librería Neneko" parte en dos líneas y descuadra la barra:
@@ -330,7 +333,20 @@ section{ padding-block:var(--s9); }
 /* ==========================================================================
    HERO
    ========================================================================== */
-.hero{ padding-block:var(--s9) var(--s8); }
+/* El hero ocupa lo que queda de pantalla debajo de la barra, así la franja de
+   servicios arranca recién pasado el pliegue y aparece al scrollear en vez de
+   asomar desde el principio.
+   svh y no vh: en el celular vh mide la ventana con la barra del navegador
+   escondida, que es más alto que lo que se ve al entrar, y la franja terminaba
+   asomando igual. El calc con vh queda de respaldo para navegadores sin svh.
+   El contenido se centra vertical en ese alto; el padding es el aire mínimo
+   cuando la ventana es baja y el hero crece más que la pantalla. */
+.hero{
+  padding-block:var(--s7);
+  min-height:calc(100vh - var(--nav-h));
+  min-height:calc(100svh - var(--nav-h));
+  display:flex; flex-direction:column; justify-content:center;
+}
 .hero-grid{
   display:grid; grid-template-columns:1.05fr .95fr;
   gap:var(--s8); align-items:center;
