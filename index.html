@@ -421,61 +421,63 @@
   .horario-card{
     align-items:stretch !important; padding:0 !important;
     background:var(--card); border:1px solid var(--line); border-radius:8px;
-    overflow:hidden;
+    overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);
   }
   .horario-header{
     display:flex; align-items:center; gap:12px;
-    padding:16px 14px 12px;
-    border-bottom:1.5px solid var(--line);
+    padding:18px 16px;
+    border-bottom:2px solid var(--line);
     background:var(--card);
   }
   .horario-header .icon-wrap{
-    width:32px; height:32px; flex-shrink:0;
+    width:36px; height:36px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
     color:var(--mustard-ink);
   }
-  .horario-header .icon-wrap svg{ width:20px; height:20px; }
-  .horario-header h3{ font-size:1.02rem; font-weight:600; margin:0; color:var(--ink); }
+  .horario-header .icon-wrap svg{ width:22px; height:22px; }
+  .horario-header h3{ font-size:1.1rem; font-weight:600; margin:0; color:var(--ink); }
 
   .horario-tabla{
     display:flex; flex-direction:column;
     background:var(--card);
   }
   .horario-fila{
-    display:grid; grid-template-columns:1fr 1.2fr;
-    gap:12px; align-items:center;
-    padding:13px 14px;
-    border-bottom:1px solid var(--line);
-    font-size:0.92rem;
+    display:grid; grid-template-columns:0.8fr 1.2fr;
+    gap:16px; align-items:center; justify-items:start;
+    padding:16px 16px;
+    border-bottom:1.5px solid var(--line);
+    font-size:0.95rem;
   }
   .horario-fila:last-child{ border-bottom:none; }
 
   .hora-dia{ display:flex; align-items:center; }
   .hora-dia .dia{
     font-weight:600; color:var(--ink);
-    font-size:0.93rem;
+    font-size:0.96rem; letter-spacing:-0.3px;
   }
 
   .hora-tiempo{
-    display:flex; flex-direction:column; gap:4px;
-    text-align:right;
+    display:flex; flex-direction:column; gap:6px;
+    text-align:left;
   }
   .bloque{
-    color:var(--ink-soft); font-size:0.88rem;
+    color:var(--ink-soft); font-size:0.89rem;
     font-family:'IBM Plex Mono', monospace;
-    font-weight:500;
+    font-weight:500; letter-spacing:0.5px;
   }
   .horario-fila.cerrado .bloque,
   .horario-fila.cerrado .estado{
-    color:var(--stamp); font-weight:600;
+    color:var(--stamp); font-weight:700; font-size:0.91rem;
   }
 
   @media (prefers-color-scheme: dark){
-    .horario-card{ border-color:#444; }
-    .horario-header{ border-bottom-color:#444; background:var(--card); }
-    .horario-fila{ border-bottom-color:#444; }
-    .hora-dia .dia{ color:var(--ink); }
-    .bloque{ color:var(--ink-soft); }
+    .horario-card{ border-color:#555; background:#15191F; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+    .horario-header{ border-bottom-color:#666; background:#15191F; }
+    .horario-header h3{ color:#E8E4DC; }
+    .horario-header .icon-wrap{ color:#D4A574; }
+    .horario-fila{ border-bottom-color:#555; }
+    .hora-dia .dia{ color:#E8E4DC; }
+    .bloque{ color:#A8A098; }
   }
 
   .map-embed{ position:relative; border-radius:8px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 44px -18px rgba(31,36,32,0.25); height:400px; }
