@@ -417,15 +417,15 @@
   .loc-list .label{ font-weight:600; margin-bottom:2px; font-family:'Bricolage Grotesque', sans-serif; }
   .loc-list .sub{ color:var(--ink-soft); font-size:0.88rem; }
 
-  /* HORARIOS — Professional Schedule Component */
+  /* HORARIOS — Professional Schedule with Real Table */
   .horario-card{
     align-items:stretch !important; padding:0 !important;
     background:var(--card); border:1px solid var(--line); border-radius:8px;
-    overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    overflow:hidden;
   }
   .horario-header{
     display:flex; align-items:center; gap:12px;
-    padding:18px 16px;
+    padding:18px 16px 14px;
     border-bottom:2px solid var(--line);
     background:var(--card);
   }
@@ -435,49 +435,50 @@
     color:var(--mustard-ink);
   }
   .horario-header .icon-wrap svg{ width:22px; height:22px; }
-  .horario-header h3{ font-size:1.1rem; font-weight:600; margin:0; color:var(--ink); }
+  .horario-header h3{ font-size:1.08rem; font-weight:700; margin:0; color:var(--ink); letter-spacing:-0.3px; }
 
   .horario-tabla{
-    display:flex; flex-direction:column;
-    background:var(--card);
+    width:100%; border-collapse:collapse;
+    background:var(--card); font-size:0.93rem;
   }
-  .horario-fila{
-    display:grid; grid-template-columns:0.8fr 1.2fr;
-    gap:16px; align-items:center; justify-items:start;
-    padding:16px 16px;
+  .horario-row{
     border-bottom:1.5px solid var(--line);
-    font-size:0.95rem;
   }
-  .horario-fila:last-child{ border-bottom:none; }
-
-  .hora-dia{ display:flex; align-items:center; }
-  .hora-dia .dia{
-    font-weight:600; color:var(--ink);
-    font-size:0.96rem; letter-spacing:-0.3px;
+  .horario-row:last-child{
+    border-bottom:none;
   }
-
-  .hora-tiempo{
-    display:flex; flex-direction:column; gap:6px;
-    text-align:left;
+  .dia-cell{
+    padding:14px 16px; font-weight:700; color:var(--ink);
+    text-align:left; width:40%; font-size:0.94rem; letter-spacing:-0.2px;
   }
-  .bloque{
-    color:var(--ink-soft); font-size:0.89rem;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:500; letter-spacing:0.5px;
+  .hora-cell{
+    padding:14px 16px; color:var(--ink-soft);
+    text-align:left; font-family:'IBM Plex Mono', monospace;
+    font-size:0.88rem; font-weight:500; letter-spacing:0.3px;
   }
-  .horario-fila.cerrado .bloque,
-  .horario-fila.cerrado .estado{
-    color:var(--stamp); font-weight:700; font-size:0.91rem;
+  .hora-cell div{
+    margin-bottom:6px;
+  }
+  .hora-cell div:last-child{
+    margin-bottom:0;
+  }
+  .horario-row.closed .dia-cell{
+    color:var(--ink);
+  }
+  .hora-cell.closed-text{
+    color:var(--stamp) !important; font-weight:700 !important; font-size:0.91rem !important;
   }
 
   @media (prefers-color-scheme: dark){
-    .horario-card{ border-color:#555; background:#15191F; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
-    .horario-header{ border-bottom-color:#666; background:#15191F; }
+    .horario-card{ border-color:#666; }
+    .horario-header{ border-bottom-color:#777; }
     .horario-header h3{ color:#E8E4DC; }
     .horario-header .icon-wrap{ color:#D4A574; }
-    .horario-fila{ border-bottom-color:#555; }
-    .hora-dia .dia{ color:#E8E4DC; }
-    .bloque{ color:#A8A098; }
+    .horario-tabla{ background:#15191F; }
+    .horario-row{ border-bottom-color:#666; }
+    .dia-cell{ color:#E8E4DC; }
+    .hora-cell{ color:#B0A89F; }
+    .hora-cell.closed-text{ color:#E07856 !important; }
   }
 
   .map-embed{ position:relative; border-radius:8px; overflow:hidden; border:1px solid var(--line); box-shadow:0 20px 44px -18px rgba(31,36,32,0.25); height:400px; }
@@ -838,25 +839,22 @@
           <li class="horario-card">
             <div class="horario-header">
               <div class="icon-wrap"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-              <h3>Horarios de atención</h3>
+              <h3>Horarios</h3>
             </div>
-            <div class="horario-tabla">
-              <div class="horario-fila">
-                <div class="hora-dia"><span class="dia">Lunes - Viernes</span></div>
-                <div class="hora-tiempo">
-                  <span class="bloque">9:00 – 13:00</span>
-                  <span class="bloque">16:30 – 20:30</span>
-                </div>
-              </div>
-              <div class="horario-fila">
-                <div class="hora-dia"><span class="dia">Sábado</span></div>
-                <div class="hora-tiempo"><span class="bloque">9:00 – 14:00</span></div>
-              </div>
-              <div class="horario-fila cerrado">
-                <div class="hora-dia"><span class="dia">Domingo</span></div>
-                <div class="hora-tiempo"><span class="estado">Cerrado</span></div>
-              </div>
-            </div>
+            <table class="horario-tabla">
+              <tr class="horario-row">
+                <td class="dia-cell">Lun - Vie</td>
+                <td class="hora-cell"><div>9:00 – 13:00</div><div>16:30 – 20:30</div></td>
+              </tr>
+              <tr class="horario-row">
+                <td class="dia-cell">Sábado</td>
+                <td class="hora-cell">9:00 – 14:00</td>
+              </tr>
+              <tr class="horario-row closed">
+                <td class="dia-cell">Domingo</td>
+                <td class="hora-cell closed-text">Cerrado</td>
+              </tr>
+            </table>
           </li>
         </ul>
         <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener">Cómo llegar</a>
