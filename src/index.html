@@ -447,12 +447,43 @@ section{ padding-block:var(--s9); }
   display:grid; grid-template-columns:1.05fr .95fr;
   gap:var(--s8); align-items:center;
 }
-.hero h1{
-  font-size:clamp(2.25rem, 1.3rem + 4vw, 3.9rem);
-  font-weight:600; letter-spacing:-.035em;
-  margin-bottom:var(--s5); max-width:16ch;
+.hero-text-container{
+  margin-bottom:var(--s6);
 }
-.hero h1 em{ font-style:normal; color:var(--brand); }
+.hero-title{
+  font-size:1rem; font-weight:400; letter-spacing:0;
+  margin-bottom:var(--s5); line-height:1.2;
+  position:relative; padding-top:var(--s4);
+}
+/* Detalle decorativo arriba del título */
+.hero-title::before{
+  content:'✦ ✦ ✦'; display:block; margin-bottom:var(--s3);
+  font-size:0.875rem; letter-spacing:0.3em;
+  color:var(--brand-bright); font-weight:300;
+}
+.hero-welcome{
+  display:block; font-family:Georgia, 'Times New Roman', serif;
+  font-size:clamp(1.25rem, 0.8rem + 2vw, 1.75rem);
+  font-style:italic; color:var(--surface-inv);
+  font-weight:400; letter-spacing:0.05em;
+  margin-bottom:var(--s2);
+}
+.hero-doors{
+  display:block; font-family:'Bricolage Grotesque', sans-serif;
+  font-size:clamp(3.5rem, 2.5rem + 5vw, 5.5rem);
+  font-weight:800; color:var(--brand-bright);
+  letter-spacing:-0.02em; line-height:1;
+}
+.hero-subtitle{
+  font-size:clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  color:var(--surface-inv); line-height:1.6;
+  max-width:50ch; text-wrap:pretty; margin-top:var(--s5);
+}
+.hero-subtitle strong{
+  font-weight:600; color:var(--brand-bright);
+  border-bottom:3px solid var(--brand-bright);
+  padding-bottom:2px;
+}
 
 .hero-lead{
   font-size:clamp(1.0625rem, 1rem + .3vw, 1.1875rem);
@@ -563,6 +594,8 @@ section{ padding-block:var(--s9); }
      apoyo, no la portada. */
   .phone{ width:250px; padding:9px; border-radius:40px; }
   .phone-screen{ height:420px; border-radius:32px; }
+  .hero-title::before{ font-size:0.75rem; margin-bottom:var(--s2); }
+  .hero-doors{ margin-top:var(--s2); }
 }
 
 /* ==========================================================================
@@ -949,11 +982,13 @@ section{ padding-block:var(--s9); }
     <div class="container hero-grid">
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
-        <h1>Tu librería del barrio, <em>a un mensaje</em> de distancia.</h1>
-        <p class="hero-lead">
-          Fotocopias, impresiones, anillados y todos los útiles de siempre.
-          Nos escribís, te lo dejamos preparado y pasás a retirarlo.
-        </p>
+        <div class="hero-text-container">
+          <h1 class="hero-title">
+            <span class="hero-welcome">Abrimos nuestras</span><br>
+            <span class="hero-doors">puertas</span>
+          </h1>
+          <p class="hero-subtitle">Los esperamos en nuestro <strong>Local Neneko</strong></p>
+        </div>
 
         <div class="hero-ctas">
           <a class="btn btn-primary btn-lg" href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20hacer%20una%20consulta" target="_blank" rel="noopener">
