@@ -451,45 +451,28 @@ section{ padding-block:var(--s9); }
   margin-bottom:var(--s6);
 }
 .hero-title{
-  font-size:1rem; font-weight:400; letter-spacing:0;
-  margin-bottom:var(--s5); line-height:1.2;
-  position:relative; padding-top:var(--s4);
-}
-/* Detalle decorativo arriba del título */
-.hero-title::before{
-  content:'✦ ✦ ✦'; display:block; margin-bottom:var(--s3);
-  font-size:0.875rem; letter-spacing:0.3em;
-  color:var(--brand-bright); font-weight:300;
+  margin-bottom:0.5rem; line-height:1.1;
 }
 .hero-welcome{
-  display:block; font-family:Georgia, 'Times New Roman', serif;
-  font-size:clamp(1.25rem, 0.8rem + 2vw, 1.75rem);
-  font-style:italic; color:var(--surface-inv);
-  font-weight:400; letter-spacing:0.05em;
-  margin-bottom:var(--s2);
+  display:block; font-family:'IBM Plex Sans', sans-serif;
+  font-size:2.5rem; font-weight:600; color:var(--surface-inv);
+  margin-bottom:0;
 }
 .hero-doors{
-  display:block; font-family:'Bricolage Grotesque', sans-serif;
-  font-size:clamp(3.5rem, 2.5rem + 5vw, 5.5rem);
-  font-weight:800; color:var(--brand-bright);
-  letter-spacing:-0.02em; line-height:1;
+  display:block; font-family:'IBM Plex Sans', sans-serif;
+  font-size:4rem; font-weight:800; color:var(--brand-bright);
+  letter-spacing:-1px; line-height:1;
 }
 .hero-subtitle{
-  font-size:clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
-  color:var(--surface-inv); line-height:1.6;
-  max-width:50ch; text-wrap:pretty; margin-top:var(--s5);
+  font-size:1.25rem; color:var(--surface-inv);
+  line-height:1.6; max-width:50ch; text-wrap:pretty;
+  margin-top:0.5rem; margin-bottom:2rem;
 }
 .hero-subtitle strong{
-  font-weight:600; color:var(--brand-bright);
-  border-bottom:3px solid var(--brand-bright);
-  padding-bottom:2px;
+  font-weight:bold; color:var(--brand-bright);
+  text-decoration:none; border:none;
 }
 
-.hero-lead{
-  font-size:clamp(1.0625rem, 1rem + .3vw, 1.1875rem);
-  color:var(--text-2); max-width:44ch; margin-bottom:var(--s6);
-  text-wrap:pretty;
-}
 .hero-ctas{ display:flex; flex-wrap:wrap; gap:var(--s3); margin-bottom:var(--s6); }
 
 /* Fila de confianza: rating + estado en vivo, pegada al CTA.
