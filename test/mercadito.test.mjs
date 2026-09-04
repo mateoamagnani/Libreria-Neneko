@@ -269,11 +269,11 @@ function correrConFondo(seccionAlFondo) {
 }
 
 test('con el footer al fondo, la barra del navegador se pone oscura', () => {
-  assert.equal(correrConFondo('site-footer').valor, '#1C2536');
+  assert.equal(correrConFondo('site-footer').valor, '#243C54');
 });
 
 test('con la sección de reseñas al fondo, también', () => {
-  assert.equal(correrConFondo('trust').valor, '#1C2536');
+  assert.equal(correrConFondo('trust').valor, '#243C54');
 });
 
 test('con una sección clara al fondo, la barra vuelve a clara', () => {

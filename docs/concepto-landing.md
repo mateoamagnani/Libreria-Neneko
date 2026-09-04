@@ -60,6 +60,13 @@ evita que un borde quede con el valor del modo claro y desaparezca de noche.
 | Bordes | `--border`, `--border-strong` | Divisiones finas y bordes de énfasis |
 | Texto | `--text`, `--text-2`, `--text-3` | Los tres a contraste AA sobre `--bg` en ambos modos |
 | Marca | `--brand`, `--brand-bright` | Acentos, rating, etiqueta de "hoy" |
+
+**La paleta sale del logo**, muestreado del archivo: navy `#243C54` (el texto y los
+contornos) y ámbar `#D8843C` (el gato y el libro), sobre el crema del círculo.
+El navy va tal cual en `--surface-inv` y en el botón primario. El ámbar no puede ir tal
+cual en texto: sobre el crema da 2,6:1. Por eso `--brand` es ese mismo ámbar oscurecido
+(mismo tono y saturación) hasta llegar a AA, y `--brand-bright` es una versión aclarada
+que solo se usa sobre las bandas oscuras. Los tests verifican los dos.
 | Estado | `--ok`, `--closed` | Abierto / cerrado |
 | Botón | `--btn-bg`, `--btn-bg-hover`, `--btn-text` | CTA primario |
 | Espaciado | `--s1`…`--s10` | Escala base 4 |

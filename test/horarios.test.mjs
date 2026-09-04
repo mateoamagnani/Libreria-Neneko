@@ -320,6 +320,18 @@ test('el texto secundario también llega a AA', () => {
   });
 });
 
+// --brand-bright vive solo sobre las bandas oscuras (--surface-inv): el
+// puntaje de Google, las estrellas de las reseñas y el hover del footer. Las
+// estrellas son texto normal, así que necesitan AA completo, no el 3:1 de
+// texto grande. Con el ámbar del logo sin aclarar daba 3,9:1.
+test('el acento se lee sobre la banda oscura, en los dos modos', () => {
+  [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
+    const ratio = contraste(t['--brand-bright'], t['--surface-inv']);
+    assert.ok(ratio >= 4.5,
+      `--brand-bright sobre --surface-inv en modo ${modo}: ${ratio.toFixed(2)}:1`);
+  });
+});
+
 test('el botón primario tiene contraste suficiente entre su fondo y su texto', () => {
   [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
     const ratio = contraste(t['--btn-text'], t['--btn-bg']);
