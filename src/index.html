@@ -450,21 +450,43 @@ section{ padding-block:var(--s9); }
 .hero-text-container{
   margin-bottom:var(--s6);
 }
-.hero-title{
-  font-family:'Playfair Display', 'Merriweather', Georgia, serif;
-  font-size:3.5rem;
+.hero-eyebrow{
+  font-size:0.85rem;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:#6BC2C2;
   font-weight:700;
-  color:#243C54;
-  line-height:1.1;
   margin-bottom:1rem;
+  display:block;
+}
+.hero-title{
+  line-height:0.95;
+  margin-bottom:1.5rem;
+  font-family:system-ui, -apple-system, sans-serif;
+}
+.hero-light{
+  font-size:2.5rem;
+  font-weight:300;
+  color:#4A5568;
   letter-spacing:-1px;
+  display:block;
+  margin-bottom:-5px;
+}
+.hero-bold{
+  font-size:4.5rem;
+  font-weight:900;
+  color:#243C54;
+  letter-spacing:-2px;
+  text-transform:uppercase;
 }
 .hero-subtitle{
   font-family:system-ui, -apple-system, sans-serif;
-  font-size:1.25rem;
+  font-size:1.15rem;
   color:#4A5568;
-  margin-bottom:2rem;
+  margin-bottom:2.5rem;
   line-height:1.5;
+  border-left:4px solid #6BC2C2;
+  padding-left:1rem;
 }
 .hero-subtitle strong{
   color:#6BC2C2;
@@ -962,7 +984,11 @@ section{ padding-block:var(--s9); }
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
         <div class="hero-text-container">
-          <h1 class="hero-title">Abrimos nuestras<br>puertas</h1>
+          <span class="hero-eyebrow">¡Hola! Bienvenidos 👋</span>
+          <h1 class="hero-title">
+            <span class="hero-light">Abrimos nuestras</span><br>
+            <span class="hero-bold">PUERTAS</span>
+          </h1>
           <p class="hero-subtitle">Los esperamos en nuestro <strong>Local Neneko</strong></p>
         </div>
 
