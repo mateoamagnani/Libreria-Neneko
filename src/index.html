@@ -837,29 +837,34 @@ section{ padding-block:var(--s9); }
 
 .product-info{
   display:flex; flex-direction:column; flex:1;
-  padding:var(--s4);
+  padding:var(--s3);
+  gap:var(--s2);
+}
+.product-header{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:var(--s2);
 }
 .product-info h4{
   font-size:.9375rem; font-weight:600; line-height:1.25;
-  margin-bottom:var(--s1);
+  margin:0; flex:1;
 }
 .product-detalle{
   font-size:.8125rem; color:var(--text-2); line-height:1.4;
-  margin-bottom:var(--s2);
+  margin:0;
 }
 .product-info .price{
   font-family:'IBM Plex Mono', monospace;
   font-size:.8125rem; font-weight:600; color:var(--brand);
-  margin-bottom:var(--s3);
+  white-space:nowrap; flex-shrink:0;
 }
 .product-info a{
-  margin-top:auto;
   display:flex; align-items:center; justify-content:center; gap:6px;
   min-height:44px;
   font-size:.8125rem; font-weight:600; text-decoration:none;
   background:var(--btn-bg); color:var(--btn-text);
   border:1.5px solid transparent; border-radius:var(--r-sm);
   transition:background .15s ease, color .15s ease, border-color .15s ease;
+  margin-top:auto;
 }
 .product-info a:hover{ background:var(--btn-bg-hover); }
 
@@ -1846,9 +1851,11 @@ section{ padding-block:var(--s9); }
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
-            <h4>${esc(p.nombre)}</h4>
+            <div class="product-header">
+              <h4>${esc(p.nombre)}</h4>
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            </div>
             ${detalle}
-            <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
           </div>
@@ -1904,9 +1911,11 @@ section{ padding-block:var(--s9); }
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
-            <h4>${esc(p.nombre)}</h4>
+            <div class="product-header">
+              <h4>${esc(p.nombre)}</h4>
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            </div>
             ${detalle}
-            <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
           </div>
