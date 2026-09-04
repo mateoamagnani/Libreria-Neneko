@@ -1625,6 +1625,17 @@ section{ padding-block:var(--s9); }
   const linkConsulta = nombre =>
     `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería pedir info sobre ' + nombre)}`;
 
+  // Procesar URLs de Google Drive a formato directo
+  const limpiarUrlImagen = url => {
+    if(!url) return '';
+    // Detectar Google Drive: /file/d/ID o ?id=ID
+    const matchFileD = url.match(/\/file\/d\/([^/?]+)/);
+    if(matchFileD) return `https://lh3.googleusercontent.com/d/${matchFileD[1]}`;
+    const matchId = url.match(/[\?&]id=([^&]+)/);
+    if(matchId) return `https://lh3.googleusercontent.com/d/${matchId[1]}`;
+    return url;
+  };
+
   // Generar acordeón dinámico de categorías y subcategorías desde Google Sheets
   function actualizarCategoriesEnMenu(categoriasMap){
     const menuNav = document.querySelector('.menu-nav');
@@ -1825,9 +1836,10 @@ section{ padding-block:var(--s9); }
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
-        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
-        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+        const imagenLimpia = limpiarUrlImagen(p.imagen);
+        const toneClass = (imagenLimpia && imagenLimpia.startsWith('http')) ? '' : ` tone-${tone}`;
+        const thumbContent = (imagenLimpia && imagenLimpia.startsWith('http'))
+          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy">`
           : iconoDe(p.nombre);
 
         const searchText = `${p.nombre} ${p.detalle || ''} ${categoria}`.toLowerCase();
@@ -1882,9 +1894,10 @@ section{ padding-block:var(--s9); }
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
-        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
-        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+        const imagenLimpia = limpiarUrlImagen(p.imagen);
+        const toneClass = (imagenLimpia && imagenLimpia.startsWith('http')) ? '' : ` tone-${tone}`;
+        const thumbContent = (imagenLimpia && imagenLimpia.startsWith('http'))
+          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy">`
           : iconoDe(p.nombre);
 
         const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName}`.toLowerCase();
