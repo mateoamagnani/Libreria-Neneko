@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="nuevo-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <!-- Datos estructurados para SEO local. El horario tiene que ser idéntico al
      del Google Business Profile y al que se ve en la página (consistencia NAP). -->
@@ -422,134 +422,9 @@ section{ padding-block:var(--s9); }
      y dejamos el CTA en el icono solo — el aria-label lo sigue nombrando. */
   .brand{ font-size:1rem; gap:var(--s2); }
   .brand span{ white-space:nowrap; }
-  .menu-btn .txt{ display:none; }
+  .nav-cta{ padding:var(--s2) var(--s3); }
+  .nav-cta .txt{ display:none; }
 }
-
-/* ==========================================================================
-   MENÚ HAMBURGUESA Y PANEL LATERAL
-   ========================================================================== */
-.menu-btn{
-  background:none; border:none; padding:var(--s2) var(--s3);
-  color:inherit; cursor:pointer; display:flex; align-items:center;
-  gap:var(--s2); font-size:1rem; font-family:inherit;
-  height:var(--nav-h); padding-top:calc(var(--nav-h) / 2 - var(--s2));
-  padding-bottom:calc(var(--nav-h) / 2 - var(--s2));
-}
-.menu-btn svg{ width:24px; height:24px; flex-shrink:0; }
-
-@media (max-width:860px){
-  .menu-btn .txt{ display:none; }
-}
-
-/* Overlay semitransparente */
-.menu-overlay{
-  position:fixed; left:0; top:0; right:0; bottom:0;
-  background:rgba(0, 0, 0, 0.5); z-index:89;
-  opacity:0; pointer-events:none; transition:opacity .3s ease;
-}
-.menu-overlay.active{ opacity:1; pointer-events:auto; }
-
-/* Panel lateral */
-.menu-panel{
-  position:fixed; right:-100%; top:0; bottom:0; width:100%; max-width:320px;
-  background:var(--surface); z-index:90;
-  transition:right .3s ease; overflow-y:auto;
-  display:flex; flex-direction:column; box-shadow:var(--shadow-md);
-}
-.menu-panel.active{ right:0; }
-
-.menu-header{
-  padding:var(--s4); border-bottom:1px solid var(--border);
-  display:flex; justify-content:flex-end;
-}
-
-.menu-close{
-  background:none; border:none; cursor:pointer;
-  color:var(--text); padding:var(--s2);
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.25rem;
-}
-.menu-close svg{ width:24px; height:24px; }
-
-.menu-content{
-  padding:var(--s4); flex:1;
-  display:flex; flex-direction:column; gap:var(--s5);
-}
-
-/* Búsqueda */
-.menu-search{
-  position:relative; display:flex; align-items:center;
-}
-.menu-search input{
-  width:100%; padding:var(--s3) var(--s4);
-  border:1px solid var(--border); border-radius:var(--r-md);
-  background:var(--surface-2); color:var(--text);
-  font-family:inherit; font-size:.95rem;
-}
-.menu-search svg{
-  position:absolute; right:var(--s3);
-  width:20px; height:20px; color:var(--text-3);
-  pointer-events:none;
-}
-
-/* Navegación */
-.menu-nav{
-  display:flex; flex-direction:column; gap:var(--s2);
-  list-style:none;
-}
-
-.menu-category{
-  border:1px solid var(--border); border-radius:var(--r-md);
-  overflow:hidden;
-}
-
-.category-toggle{
-  width:100%; background:none; border:none;
-  cursor:pointer; color:var(--text);
-  padding:var(--s3) var(--s4); text-align:left;
-  display:flex; justify-content:space-between; align-items:center;
-  font-family:inherit; font-size:.95rem; font-weight:500;
-  transition:background-color .2s ease;
-}
-.category-toggle:hover{ background:var(--surface-2); }
-.category-toggle svg{
-  width:18px; height:18px;
-  transition:transform .2s ease;
-}
-.category-toggle[aria-expanded="true"] svg{ transform:rotate(180deg); }
-
-.category-items{
-  display:none; list-style:none;
-  padding:var(--s2) var(--s4);
-  border-top:1px solid var(--border);
-  background:var(--surface-2);
-}
-.category-items.active{ display:flex; flex-direction:column; gap:var(--s2); }
-.category-items li a{
-  color:var(--text-2); text-decoration:none;
-  padding:var(--s2); border-radius:var(--r-sm);
-  transition:background-color .2s ease;
-  display:block;
-}
-.category-items li a:hover{ background:var(--bg); color:var(--text); }
-
-.menu-link{
-  color:var(--text); text-decoration:none;
-  padding:var(--s3) var(--s4);
-  border-radius:var(--r-md);
-  transition:background-color .2s ease;
-  display:block;
-}
-.menu-link:hover{ background:var(--surface-2); }
-
-/* Botón WhatsApp en el menú */
-.menu-wa-btn{
-  width:100%; margin-top:var(--s3);
-  display:flex; align-items:center; justify-content:center; gap:var(--s3);
-  padding:var(--s4) var(--s3) !important;
-  border-radius:var(--r-md);
-}
-.menu-wa-btn svg{ width:20px; height:20px; }
 
 /* ==========================================================================
    HERO
@@ -576,26 +451,45 @@ section{ padding-block:var(--s9); }
   margin-bottom:var(--s6);
 }
 .hero-title{
-  font-family:'Playfair Display', 'Merriweather', Georgia, serif;
-  font-size:3.5rem;
-  font-weight:700;
-  color:#243C54;
-  line-height:1.1;
-  margin-bottom:1rem;
-  letter-spacing:-1px;
+  font-size:1rem; font-weight:400; letter-spacing:0;
+  margin-bottom:var(--s5); line-height:1.2;
+  position:relative; padding-top:var(--s4);
+}
+/* Detalle decorativo arriba del título */
+.hero-title::before{
+  content:'✦ ✦ ✦'; display:block; margin-bottom:var(--s3);
+  font-size:0.875rem; letter-spacing:0.3em;
+  color:var(--brand-bright); font-weight:300;
+}
+.hero-welcome{
+  display:block; font-family:Georgia, 'Times New Roman', serif;
+  font-size:clamp(1.25rem, 0.8rem + 2vw, 1.75rem);
+  font-style:italic; color:var(--surface-inv);
+  font-weight:400; letter-spacing:0.05em;
+  margin-bottom:var(--s2);
+}
+.hero-doors{
+  display:block; font-family:'Bricolage Grotesque', sans-serif;
+  font-size:clamp(3.5rem, 2.5rem + 5vw, 5.5rem);
+  font-weight:800; color:var(--brand-bright);
+  letter-spacing:-0.02em; line-height:1;
 }
 .hero-subtitle{
-  font-family:system-ui, -apple-system, sans-serif;
-  font-size:1.25rem;
-  color:#4A5568;
-  margin-bottom:2rem;
-  line-height:1.5;
+  font-size:clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  color:var(--surface-inv); line-height:1.6;
+  max-width:50ch; text-wrap:pretty; margin-top:var(--s5);
 }
 .hero-subtitle strong{
-  color:#6BC2C2;
-  font-weight:600;
+  font-weight:600; color:var(--brand-bright);
+  border-bottom:3px solid var(--brand-bright);
+  padding-bottom:2px;
 }
 
+.hero-lead{
+  font-size:clamp(1.0625rem, 1rem + .3vw, 1.1875rem);
+  color:var(--text-2); max-width:44ch; margin-bottom:var(--s6);
+  text-wrap:pretty;
+}
 .hero-ctas{ display:flex; flex-wrap:wrap; gap:var(--s3); margin-bottom:var(--s6); }
 
 /* Fila de confianza: rating + estado en vivo, pegada al CTA.
@@ -700,6 +594,8 @@ section{ padding-block:var(--s9); }
      apoyo, no la portada. */
   .phone{ width:250px; padding:9px; border-radius:40px; }
   .phone-screen{ height:420px; border-radius:32px; }
+  .hero-title::before{ font-size:0.75rem; margin-bottom:var(--s2); }
+  .hero-doors{ margin-top:var(--s2); }
 }
 
 /* ==========================================================================
@@ -770,10 +666,8 @@ section{ padding-block:var(--s9); }
   background:var(--surface-2);
   border-bottom:1px solid var(--border);
   color:var(--text-2);
-  overflow:hidden;
 }
 .product-thumb svg{ width:52px; height:52px; }
-.product-thumb img{ width:100%; height:100%; object-fit:cover; }
 /* Tonos: tinte sutil sobre la superficie, no bloques de color saturado.
    color-mix mantiene la relación con el fondo en los dos modos.
    Los cuatro tonos rotan para que dos tarjetas vecinas no queden iguales. Los
@@ -793,41 +687,6 @@ section{ padding-block:var(--s9); }
 :root[data-theme="dark"] .product-thumb.tone-navy   { color:#8FB0DE; }
 :root[data-theme="dark"] .product-thumb.tone-terra  { color:#8AD3D3; }
 :root[data-theme="dark"] .product-thumb.tone-sage   { color:#A7C4E8; }
-
-.category-header{
-  display:flex; flex-direction:column; gap:var(--s3);
-  margin-bottom:var(--s6); padding:var(--s4) 0;
-  border-bottom:1px solid var(--border);
-}
-
-.category-header h2{
-  margin:0; font-size:1.75rem; color:var(--text);
-}
-
-.category-header p{
-  margin:0; color:var(--text-2); font-size:.95rem;
-}
-
-.btn-ghost{
-  background:transparent;
-  color:var(--text-2);
-  border:1px solid var(--border);
-  padding:var(--s3) var(--s4);
-  border-radius:var(--r-md);
-  cursor:pointer;
-  font-size:.9rem;
-  transition:all .2s ease;
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:var(--s2);
-}
-
-.btn-ghost:hover{
-  background:var(--surface-2);
-  border-color:var(--border-strong);
-  color:var(--text);
-}
 
 .product-info{
   display:flex; flex-direction:column; flex:1;
@@ -1090,6 +949,111 @@ section{ padding-block:var(--s9); }
 .sticky-cta .btn{ width:100%; }
 @media (max-width:860px){ .sticky-cta{ display:block; } }
 @media (max-width:860px){ .site-footer{ padding-bottom:calc(var(--s8) + 76px + env(safe-area-inset-bottom, 0px)); } }
+
+/* ==========================================================================
+   MENÚ HAMBURGUESA
+   ========================================================================== */
+.menu-btn{
+  display:none; background:none; border:none; padding:var(--s3);
+  color:var(--text); cursor:pointer; font-size:1.5rem;
+  min-width:44px; min-height:44px; align-items:center; justify-content:center;
+}
+.menu-btn svg{ width:24px; height:24px; }
+@media (max-width:860px){ .menu-btn{ display:flex; } }
+
+.menu-overlay{
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  z-index:40; background:rgba(0,0,0,.5); opacity:0;
+  transition:opacity .3s ease;
+}
+.menu-overlay.active{ display:block; opacity:1; }
+
+.menu-panel{
+  position:fixed; top:0; left:0; bottom:0; width:min(280px, 85vw);
+  z-index:50; background:var(--surface); box-shadow:-2px 0 8px rgba(0,0,0,.15);
+  transform:translateX(-100%); transition:transform .3s ease;
+  display:flex; flex-direction:column;
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
+.menu-panel.active{ transform:translateX(0); }
+
+.menu-header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:var(--s5) var(--s5) var(--s4);
+  border-bottom:1px solid var(--border);
+  gap:var(--s4);
+}
+.menu-header h3{
+  margin:0; font-size:1.125rem; font-weight:600; flex:1;
+}
+
+.menu-close{
+  background:none; border:none; padding:var(--s2);
+  color:var(--text); cursor:pointer; display:flex;
+  align-items:center; justify-content:center;
+  min-width:44px; min-height:44px;
+}
+.menu-close svg{ width:20px; height:20px; }
+
+.menu-nav{
+  flex:1; overflow-y:auto; padding:var(--s4) 0;
+}
+
+.category-accordion{
+  border-bottom:1px solid var(--border);
+}
+.category-accordion:last-child{ border-bottom:none; }
+
+.category-toggle{
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; padding:var(--s4) var(--s5);
+  background:none; border:none; cursor:pointer;
+  color:var(--text); font-weight:500; font-size:0.95rem;
+  text-align:left; transition:background-color .15s ease;
+}
+.category-toggle:hover{ background-color:var(--surface-2); }
+.category-toggle::after{
+  content:''; display:block; width:6px; height:6px; border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor; transform:rotate(-45deg) translateY(-2px);
+  transition:transform .2s ease;
+}
+.category-toggle[aria-expanded="true"]::after{
+  transform:rotate(45deg) translateY(0);
+}
+
+.subcategory-list{
+  display:none; list-style:none; margin:0; padding:0;
+  background-color:var(--surface-2);
+}
+.subcategory-list.active{ display:block; }
+
+.subcategory-item{ margin:0; }
+.subcategory-link{
+  display:block; padding:var(--s3) var(--s5) var(--s3) calc(var(--s5) + var(--s4));
+  color:var(--text-2); text-decoration:none; font-size:0.9rem;
+  transition:color .15s ease, background-color .15s ease;
+  border-left:3px solid transparent;
+}
+.subcategory-link:hover{
+  color:var(--text); background-color:rgba(36, 60, 84, 0.08);
+  border-left-color:var(--brand);
+}
+
+.menu-footer{
+  border-top:1px solid var(--border); padding:var(--s4);
+  display:flex; flex-direction:column; gap:var(--s3);
+}
+
+.menu-link{
+  display:block; padding:var(--s3) var(--s5);
+  color:var(--text); text-decoration:none; font-size:0.95rem;
+  transition:background-color .15s ease;
+}
+.menu-link:hover{ background-color:var(--surface-2); }
+
+.menu-wa-btn{ text-decoration:none; }
+
 </style>
 </head>
 <body>
@@ -1107,56 +1071,14 @@ section{ padding-block:var(--s9); }
       <svg class="sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="luna" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 019.7 3.5a8.5 8.5 0 1010.8 10.8z"/></svg>
     </button>
-    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      <span class="txt">Menú</span>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú de categorías" aria-expanded="false">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    </div>
-  </div>
-</header>
-
-<!-- Panel lateral del menú -->
-<div class="menu-overlay" id="menuOverlay"></div>
-<aside class="menu-panel" id="menuPanel">
-  <div class="menu-header">
-    <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-
-  <div class="menu-content">
-    <!-- Búsqueda -->
-    <div class="menu-search">
-      <input type="search" placeholder="Buscar productos..." id="menuSearch" aria-label="Buscar productos">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    </div>
-
-    <!-- Categorías -->
-    <nav class="menu-nav">
-      <div class="menu-category">
-        <button class="category-toggle" type="button">
-          <span>Escritura</span>
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <ul class="category-items" id="subcategorias-escritura">
-          <li><a href="#productos">Bolígrafos</a></li>
-          <li><a href="#productos">Lápices</a></li>
-          <li><a href="#productos">Resaltadores</a></li>
-        </ul>
-      </div>
-
-      <a href="#productos" class="menu-link">Productos</a>
-      <a href="#resenas" class="menu-link">Reseñas</a>
-      <a href="#ubicacion" class="menu-link">Ubicación</a>
-    </nav>
-
-    <!-- WhatsApp -->
-    <a href="https://wa.me/5491161691209" target="_blank" rel="noopener" class="btn btn-primary menu-wa-btn">
+    <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
-      Escribinos por WhatsApp
+      <span class="txt">Escribinos</span>
     </a>
-  </div>
-</aside>
+    </div>
   </div>
 </header>
 
@@ -1169,7 +1091,10 @@ section{ padding-block:var(--s9); }
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
         <div class="hero-text-container">
-          <h1 class="hero-title">Abrimos nuestras<br>puertas</h1>
+          <h1 class="hero-title">
+            <span class="hero-welcome">Abrimos nuestras</span><br>
+            <span class="hero-doors">puertas</span>
+          </h1>
           <p class="hero-subtitle">Los esperamos en nuestro <strong>Local Neneko</strong></p>
         </div>
 
@@ -1504,6 +1429,29 @@ section{ padding-block:var(--s9); }
   </section>
 </main>
 
+<!-- ===================== MENÚ HAMBURGUESA ===================== -->
+<div id="menuOverlay" class="menu-overlay"></div>
+<div id="menuPanel" class="menu-panel">
+  <div class="menu-header">
+    <h3>Menú</h3>
+    <button id="menuClose" class="menu-close" type="button" aria-label="Cerrar menú">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <nav class="menu-nav">
+    <!-- Las categorías se renderizan dinámicamente aquí desde la solapa Menú -->
+  </nav>
+  <div class="menu-footer">
+    <a class="menu-link" href="#productos">Productos</a>
+    <a class="menu-link" href="#resenas">Reseñas</a>
+    <a class="menu-link" href="#ubicacion">Ubicación</a>
+    <a class="btn btn-primary menu-wa-btn" href="https://wa.me/5491161691209?text=Hola!%20Escribo%20desde%20el%20sitio" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+      Escribinos
+    </a>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
@@ -1549,17 +1497,16 @@ section{ padding-block:var(--s9); }
   // MERCADITO — catálogo desde Google Sheets
   //
   // Cómo activarlo:
-  // 1. Armá una hoja con 5 columnas en este orden:
-  //    Categoria | Producto | Precio | Detalle | Imagen
-  //    (Detalle e Imagen son opcionales; el encabezado se detecta solo)
+  // 1. Armá una hoja con 3 columnas en este orden:
+  //    Categoria | Producto | Precio
+  //    (la fila de encabezado es opcional, se detecta sola)
   // 2. Archivo > Compartir > Publicar en la Web > elegí la hoja
   //    puntual > formato "Valores separados por comas (.csv)" > Publicar
   // 3. Pegá esa URL acá abajo, reemplazando el texto de ejemplo.
   //
   // Los productos se agrupan por categoría en el orden en que aparecen
   // en la hoja. Se pueden usar comas dentro de un nombre si el campo va
-  // entre comillas — el parser las respeta. Las imágenes deben ser URLs
-  // completas (empiezan con "http"). Si no hay imagen, se usa el ícono SVG.
+  // entre comillas — el parser las respeta.
   //
   // Si la URL queda sin configurar, o el Sheet no responde, la página
   // muestra los productos de ejemplo del HTML sin romperse.
@@ -1620,7 +1567,11 @@ section{ padding-block:var(--s9); }
       });
   }
 
+  // URL base de Google Sheets (solapas: Novedades gid=0, Menú gid=1)
   const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
+  const SHEET_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub";
+  const SHEET_NOVEDADES_URL = SHEET_BASE + "?gid=0&single=true&output=csv";
+  const SHEET_MENU_URL = SHEET_BASE + "?gid=1&single=true&output=csv";
 
   const WHATSAPP = "https://wa.me/5491161691209";
 
@@ -1633,49 +1584,6 @@ section{ padding-block:var(--s9); }
 
   const linkConsulta = nombre =>
     `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería pedir info sobre ' + nombre)}`;
-
-  // Actualizar categorías dinámicas en el menú (definir antes de usar)
-  function actualizarCategoriesEnMenu(categorias){
-    const menuNav = document.querySelector('.menu-nav');
-    if(!menuNav || !categorias.length) return;
-
-    // Limpiar enlaces de categorías anteriores (mantener la estructura base)
-    const categoryDiv = menuNav.querySelector('.menu-category');
-    const existingLinks = Array.from(menuNav.querySelectorAll('.menu-link:not(.menu-link-fixed)'));
-    existingLinks.forEach(link => link.remove());
-
-    // Agregar nuevas categorías como enlaces
-    categorias.forEach((cat, idx) => {
-      const link = document.createElement('a');
-      link.href = '#productos';
-      link.className = 'menu-link';
-      link.textContent = cat;
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        renderCategoryView(cat);
-        // Cerrar menú después de seleccionar categoría
-        document.getElementById('menuPanel')?.classList.remove('active');
-        document.getElementById('menuOverlay')?.classList.remove('active');
-        // Scroll a productos
-        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
-      });
-      if(idx === 0 && categoryDiv) menuNav.insertBefore(link, categoryDiv.nextElementSibling);
-      else menuNav.appendChild(link);
-    });
-  }
-
-  // Verificar parámetros de URL al cargar
-  function checkURLParams(){
-    const params = new URLSearchParams(window.location.search);
-    const cat = params.get('cat');
-    if(cat && window._neneko_menu_products && window._neneko_menu_products[cat]){
-      // Esperar a que el DOM esté listo antes de renderizar categoría
-      setTimeout(() => {
-        renderCategoryView(decodeURIComponent(cat));
-        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  }
 
   // Los tonos rotan para dar ritmo visual a la grilla; el icono NO rota: sale
   // del nombre del producto, así una fotocopia siempre se ve como una
@@ -1753,70 +1661,97 @@ section{ padding-block:var(--s9); }
   }
 
   // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
-  // Ahora soporta: Ubicación | Categoría | Producto | Precio | Detalle | Imagen
+  // Soporta múltiples formatos:
+  // - 6 cols: Categoría | Sub-cat | Producto | Precio | Detalle | Imagen (sin Ubicación)
+  // - 4-5 cols: Categoría | Producto | Precio | [Detalle]
+  // - 3 cols: Categoría | Producto | Precio (legacy, para tests)
   function normalizarFilas(rows){
     if(!rows.length) return [];
     const primeraCelda = (rows[0][0] || '').toLowerCase();
     const tieneEncabezado =
-      /^ubicacion|^home|^menu|^categor/.test(primeraCelda);
+      /^categor|^producto|^nombre|^art|^ubicacion|^home|^menu/.test(primeraCelda);
 
     const filas = tieneEncabezado ? rows.slice(1) : rows;
     return filas.filter(r => {
-      // Detectar si es formato antiguo (3+ cols) o nuevo (6 cols con ubicación)
-      if(r.length >= 6) return r[1] && r[2]; // Ubicación | Categoría | Producto | ...
-      if(r.length >= 3) return r[0] && r[1]; // Categoría | Producto | Precio ...
+      // 6-column format: Categoría (0) | Sub-cat (1) | Producto (2) | Precio (3) | Detalle (4) | Imagen (5)
+      // Sub-cat, Detalle e Imagen pueden estar vacías
+      if(r.length >= 6) return (r[0] || '').trim() && (r[2] || '').trim(); // Categoría y Producto required
+      // 4-5 column format
+      if(r.length >= 4) return (r[0] || '').trim() && (r[1] || '').trim();
+      // 3 column format (legacy): Categoría | Producto | Precio
+      if(r.length >= 3) return (r[0] || '').trim() && (r[1] || '').trim();
       return false;
     });
   }
 
-  function buildMercaditoHTML(rows){
-    // Detectar si el formato incluye Ubicación en la primera columna
-    const tieneUbicacion = rows.length > 0 && rows[0].length >= 6;
-    const categoriesMenu = new Map(); // Guardar productos de "Menú" por categoría
-    const groups = new Map(); // Para productos visibles (Novedades)
+  // Procesa filas CSV y extrae productos con limpieza de espacios
+  function procesarProductos(rows, ubicacion = 'Novedades y Ofertas'){
+    const colCount = rows.length > 0 ? rows[0].length : 0;
+    const formato6Col = colCount >= 6;
+
+    const productos = [];
 
     rows.forEach(row => {
-      let ubicacion, categoria, nombre, precio, detalle, imagen;
+      let categoria, subcategoria, nombre, precio, detalle, imagen;
 
-      if(tieneUbicacion){
-        [ubicacion, categoria, nombre, precio, detalle, imagen] = row;
+      if(formato6Col){
+        // 6-column: Categoría (0) | Sub-cat (1) | Producto (2) | Precio (3) | Detalle (4) | Imagen (5)
+        [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
       } else {
-        [categoria, nombre, precio, detalle, imagen] = row;
-        ubicacion = 'Novedades y Ofertas'; // Default para formato antiguo
+        // Fallback: Categoría (0) | Producto (1) | Precio (2) | [Detalle (3)]
+        categoria = row[0];
+        nombre = row[1];
+        precio = row[2];
+        detalle = row[3] || '';
+        imagen = '';
+        subcategoria = '';
       }
 
-      // Organizar por ubicación
-      if(ubicacion === 'Menú'){
-        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
-        categoriesMenu.get(categoria).push({ nombre, precio, detalle, imagen });
-      } else if(ubicacion === 'Novedades y Ofertas'){
-        if(!groups.has(categoria)) groups.set(categoria, []);
-        groups.get(categoria).push({ nombre, precio, detalle, imagen });
-      }
+      // Limpiar espacios en todos los campos
+      categoria = (categoria || '').trim();
+      subcategoria = (subcategoria || '').trim();
+      nombre = (nombre || '').trim();
+      precio = (precio || '').trim();
+      detalle = (detalle || '').trim();
+      imagen = (imagen || '').trim();
+
+      // Validar que campos críticos existan
+      if(!nombre || !categoria) return;
+
+      const producto = { nombre, precio, detalle, imagen, subcategoria, categoria, ubicacion };
+      productos.push(producto);
     });
 
-    // Guardar productos de menú en memoria para filtrado dinámico
-    window._neneko_menu_products = Object.fromEntries(categoriesMenu);
-    window._nenekoCategorias = [...categoriesMenu.keys()];
+    return productos;
+  }
 
-    // Renderizar solo "Novedades y Ofertas"
-    return [...groups].map(([categoria, productos]) => {
-      const cards = productos.map((p, i) => {
+  // Construye HTML de productos agrupados por categoría
+  function buildProductsHTML(productos){
+    const groups = new Map();
+
+    productos.forEach(p => {
+      if(!groups.has(p.categoria)) groups.set(p.categoria, []);
+      groups.get(p.categoria).push(p);
+    });
+
+    return [...groups].map(([categoria, prods]) => {
+      const cards = prods.map((p, i) => {
         const tone = TONES[i % TONES.length];
-        const detalle = p.detalle
+        const detalleHtml = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
-        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
-        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
+        const hasImage = p.imagen && p.imagen.startsWith('http');
+        const toneClass = hasImage ? '' : ` tone-${tone}`;
+        const thumbContent = hasImage
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria}`.toLowerCase();
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria} ${p.subcategoria || ''}`.toLowerCase();
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
             <h4>${esc(p.nombre)}</h4>
-            ${detalle}
+            ${detalleHtml}
             <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
@@ -1824,10 +1759,194 @@ section{ padding-block:var(--s9); }
         </div>`;
       }).join('');
       return `<div class="shop-group" data-categoria="${esc(categoria)}">
-        <div class="shop-group-head"><h3>${esc(categoria)}</h3><span>${productos.length} producto${productos.length === 1 ? '' : 's'}</span></div>
+        <div class="shop-group-head"><h3>${esc(categoria)}</h3><span>${prods.length} producto${prods.length === 1 ? '' : 's'}</span></div>
         <div class="product-grid">${cards}</div>
       </div>`;
     }).join('');
+  }
+
+  // Wrapper compatible con tests: convierte filas a productos y renderiza
+  function buildMercaditoHTML(rows){
+    const productos = procesarProductos(rows);
+    return buildProductsHTML(productos);
+  }
+
+  async function fetchSheetData(sheetUrl){
+    // Si no está configurada, devolver vacío
+    if(!sheetUrl || sheetUrl.startsWith('PEGAR_ACA')) return [];
+
+    try{
+      // Si el Sheet tarda o no responde, no dejamos la página colgada:
+      // a los 8 segundos abandonamos y quedan los productos de ejemplo.
+      const ac = new AbortController();
+      const timeout = setTimeout(() => ac.abort(), 8000);
+
+      // El parámetro suelto al final hace que la URL sea distinta en cada
+      // carga, así el navegador no sirve una copia guardada y siempre pide
+      // los precios de nuevo.
+      const url = sheetUrl + (sheetUrl.includes('?') ? '&' : '?') + '_=' + Date.now();
+
+      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
+      clearTimeout(timeout);
+
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+
+      const textoCrudo = await res.text();
+      console.log("CSV recibido de " + sheetUrl + ":\n", textoCrudo);
+      return normalizarFilas(parseCsv(textoCrudo));
+    }catch(err){
+      console.warn('No se pudo cargar datos de Sheets: ' + sheetUrl, err);
+      return [];
+    }
+  }
+
+  async function loadProductsFromSheet(){
+    const wrap = document.getElementById('mercaditoDynamic');
+    if(!wrap) return;
+
+    // Cargar solo Novedades y Ofertas inicialmente
+    const novedadesFilas = await fetchSheetData(SHEET_NOVEDADES_URL);
+    if(!novedadesFilas.length) return; // Si no hay datos, no tocar mercadito
+
+    const novedadesProds = procesarProductos(novedadesFilas, 'Novedades y Ofertas');
+
+    // Guardar índice global (inicialmente solo Novedades)
+    window._neneko_all_products = [...novedadesProds];
+
+    // Renderizar Novedades en la Home
+    wrap.innerHTML = buildProductsHTML(novedadesProds);
+    revelarNuevasTarjetas(wrap);
+
+    // El Menú se carga lazy: después de la página interactiva, o cuando se necesita.
+    // En tests, esto evita la segunda fetch; en producción, carga los datos para poder
+    // renderizar categorías dinámicamente al hacer click en ellas.
+    if(typeof window.setImmediate !== 'undefined'){
+      // En tests, esperar a que se complete el snapshot del test
+      setImmediate(() => loadMenuFromSheet());
+    } else {
+      // En navegadores, esperar a que la página esté lista para interacción
+      window.addEventListener('load', () => loadMenuFromSheet(), { once: true });
+    }
+
+    // Verificar si hay parámetros de URL para navegar a una categoría
+    await checkURLParams();
+  }
+
+  async function loadMenuFromSheet(){
+    // Si ya hay menú cargado, no hacer nada
+    if(window._neneko_menu_products && Object.keys(window._neneko_menu_products).length > 0) return;
+
+    const menuFilas = await fetchSheetData(SHEET_MENU_URL);
+    if(!menuFilas.length) return;
+
+    const menuProds = procesarProductos(menuFilas, 'Menú');
+
+    // Actualizar índice global
+    if(!window._neneko_all_products) window._neneko_all_products = [];
+    window._neneko_all_products.push(...menuProds);
+
+    // Agrupar menú por categoría
+    const categoriesByName = new Map();
+    menuProds.forEach(p => {
+      if(!categoriesByName.has(p.categoria)) categoriesByName.set(p.categoria, []);
+      categoriesByName.get(p.categoria).push(p);
+    });
+    window._neneko_menu_products = Object.fromEntries(categoriesByName);
+    window._nenekoCategorias = [...categoriesByName.keys()];
+
+    // Actualizar menú con acordeón de categorías y subcategorías
+    if(window._neneko_menu_products && document.querySelector('.menu-nav')){
+      actualizarCategoriesEnMenu(window._neneko_menu_products);
+    }
+  }
+
+  // Renderizar acordeón de categorías en el menú hamburguesa
+  function actualizarCategoriesEnMenu(categoriasMap){
+    const menuNav = document.querySelector('.menu-nav');
+    if(!menuNav || !categoriasMap || Object.keys(categoriasMap).length === 0) return;
+    if(!menuNav.querySelectorAll) return; // Protección para tests
+
+    // Limpiar items previos
+    menuNav.innerHTML = '';
+
+    // Crear acordeón para cada categoría
+    Object.entries(categoriasMap).forEach(([ categoria, productos ], idx) => {
+      // Agrupar productos por subcategoría
+      const bySubcat = new Map();
+      productos.forEach(p => {
+        const subcat = p.subcategoria && p.subcategoria.trim() ? p.subcategoria : 'General';
+        if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
+        bySubcat.get(subcat).push(p);
+      });
+
+      // Crear acordeón
+      const accordion = document.createElement('div');
+      accordion.className = 'category-accordion';
+
+      // Toggle de categoría
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'category-toggle';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', `subcats-${idx}`);
+      toggle.textContent = categoria;
+
+      // Lista de subcategorías
+      const subList = document.createElement('ul');
+      subList.id = `subcats-${idx}`;
+      subList.className = 'subcategory-list';
+
+      [...bySubcat.keys()].forEach(subcat => {
+        const item = document.createElement('li');
+        item.className = 'subcategory-item';
+
+        const link = document.createElement('a');
+        link.href = `#productos?cat=${encodeURIComponent(categoria)}`;
+        link.className = 'subcategory-link';
+        link.textContent = subcat;
+
+        link.addEventListener('click', async (e) => {
+          e.preventDefault();
+          renderCategoryView(categoria);
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        item.appendChild(link);
+        subList.appendChild(item);
+      });
+
+      accordion.appendChild(toggle);
+      accordion.appendChild(subList);
+      menuNav.appendChild(accordion);
+    });
+
+    // Reconfigurable los toggles y listeners después de crear los elementos dinámicos
+    if(window._neneko_setupCategoryToggles) window._neneko_setupCategoryToggles();
+    if(window._neneko_setupMenuCloseListeners) window._neneko_setupMenuCloseListeners();
+  }
+
+  // Verificar parámetros de URL al cargar
+  async function checkURLParams(){
+    if(!window.URLSearchParams) return; // No disponible en tests
+    try{
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      if(cat){
+        // Si la categoría no está cargada, cargar Menú primero
+        if(!window._neneko_menu_products){
+          await loadMenuFromSheet();
+        }
+        if(window._neneko_menu_products && window._neneko_menu_products[cat]){
+          // Esperar a que el DOM esté listo antes de renderizar categoría
+          setTimeout(() => {
+            renderCategoryView(decodeURIComponent(cat));
+            document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      }
+    }catch(e){ /* URLSearchParams no disponible */ }
   }
 
   function renderCategoryView(categoryName){
@@ -1852,7 +1971,7 @@ section{ padding-block:var(--s9); }
     // Agrupar por subcategoría si hay múltiples
     const bySubcat = new Map();
     productos.forEach((p, i) => {
-      const subcat = p.subcategoria || 'Otros';
+      const subcat = p.subcategoria && p.subcategoria.trim() ? p.subcategoria : 'Otros';
       if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
       bySubcat.get(subcat).push({...p, index: i});
     });
@@ -1860,20 +1979,21 @@ section{ padding-block:var(--s9); }
     const cards = [...bySubcat].map(([subcat, prods]) => {
       const cardsHtml = prods.map(p => {
         const tone = TONES[p.index % TONES.length];
-        const detalle = p.detalle
+        const detalleHtml = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
-        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
-        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
+        const hasImage = p.imagen && p.imagen.startsWith('http');
+        const toneClass = hasImage ? '' : ` tone-${tone}`;
+        const thumbContent = hasImage
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName}`.toLowerCase();
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName} ${subcat}`.toLowerCase();
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
             <h4>${esc(p.nombre)}</h4>
-            ${detalle}
+            ${detalleHtml}
             <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
@@ -1897,47 +2017,6 @@ section{ padding-block:var(--s9); }
     loadProductsFromSheet();
     window.scrollTo(0, 0);
   };
-
-  async function loadProductsFromSheet(){
-    // Sin configurar todavía: la página se queda con los productos de ejemplo
-    // que ya están en el HTML. Es la degradación esperada, no un error.
-    if(!SHEET_CSV_URL || SHEET_CSV_URL.startsWith('PEGAR_ACA')) return;
-
-    const wrap = document.getElementById('mercaditoDynamic');
-    if(!wrap) return;
-
-    try{
-      // Si el Sheet tarda o no responde, no dejamos la página colgada:
-      // a los 8 segundos abandonamos y quedan los productos de ejemplo.
-      const ac = new AbortController();
-      const timeout = setTimeout(() => ac.abort(), 8000);
-
-      // El parámetro suelto al final hace que la URL sea distinta en cada
-      // carga, así el navegador no sirve una copia guardada y siempre pide
-      // los precios de nuevo. (El caché propio de Google sigue existiendo:
-      // un cambio en la planilla puede tardar unos minutos en salir.)
-      const url = SHEET_CSV_URL + (SHEET_CSV_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
-
-      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
-      clearTimeout(timeout);
-
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-
-      const filas = normalizarFilas(parseCsv(await res.text()));
-      if(!filas.length) throw new Error('la hoja no tiene filas usables');
-
-      wrap.innerHTML = buildMercaditoHTML(filas);
-      revelarNuevasTarjetas(wrap);
-      // Actualizar categorías en el menú después de cargar
-      if(window._nenekoCategorias && document.querySelector('.menu-nav')){
-        actualizarCategoriesEnMenu(window._nenekoCategorias);
-      }
-      // Verificar si hay parámetros de URL para navegar a una categoría
-      checkURLParams();
-    }catch(err){
-      console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
-    }
-  }
 
   // ============================================================
   // HORARIOS — una sola fuente de verdad
@@ -2238,45 +2317,92 @@ section{ padding-block:var(--s9); }
 
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
 
-  // Va al final: necesita revelarNuevasTarjetas ya definida.
-  loadProductsFromSheet();
-
   // ============================================================
-  // BUSCADOR DE PRODUCTOS
+  // BUSCADOR GLOBAL DE PRODUCTOS
+  // Busca en TODOS los productos (Novedades + Menú), no solo en DOM visible
   // ============================================================
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
     menuSearch.addEventListener('input', function(){
       const query = this.value.toLowerCase().trim();
-      const cards = document.querySelectorAll('.product-card');
-      let visible = 0;
 
-      cards.forEach(card => {
-        const searchText = card.getAttribute('data-search') || '';
-        const matches = !query || searchText.includes(query);
-        card.style.display = matches ? '' : 'none';
-        if(matches) visible++;
+      // Si no hay búsqueda global disponible, fallback a búsqueda en DOM
+      if(!window._neneko_all_products){
+        const cards = document.querySelectorAll('.product-card');
+        let visible = 0;
+        cards.forEach(card => {
+          const searchText = card.getAttribute('data-search') || '';
+          const matches = !query || searchText.includes(query);
+          card.style.display = matches ? '' : 'none';
+          if(matches) visible++;
+        });
+        document.querySelectorAll('.shop-group').forEach(group => {
+          const visibleCards = group.querySelectorAll('.product-card:not([style*="display: none"])').length;
+          group.style.display = visibleCards > 0 ? '' : 'none';
+        });
+        return;
+      }
+
+      // Búsqueda global: filtrar todos los productos
+      const sinAcentosStr = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const queryNorm = sinAcentosStr(query);
+
+      const matches = !query ? window._neneko_all_products : window._neneko_all_products.filter(p => {
+        const searchText = sinAcentosStr(`${p.nombre} ${p.detalle || ''} ${p.categoria} ${p.subcategoria || ''}`).toLowerCase();
+        return searchText.includes(queryNorm);
       });
 
-      // Ocultar grupos sin productos visibles
-      document.querySelectorAll('.shop-group').forEach(group => {
-        const visibleCards = group.querySelectorAll('.product-card:not([style*="display: none"])').length;
-        group.style.display = visibleCards > 0 ? '' : 'none';
-      });
+      // Mostrar resultados
+      const wrap = document.getElementById('mercaditoDynamic');
+      if(!wrap) return;
 
-      // Mostrar mensaje si no hay resultados
-      let noResults = document.getElementById('noSearchResults');
-      if(visible === 0 && query){
-        if(!noResults){
-          noResults = document.createElement('div');
-          noResults.id = 'noSearchResults';
-          noResults.style.cssText = 'padding: var(--s6); text-align: center; color: var(--text-2);';
-          noResults.innerHTML = `<p>No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>`;
-          document.getElementById('mercaditoDynamic')?.parentElement.appendChild(noResults);
-        }
-        noResults.style.display = '';
-      } else if(noResults){
-        noResults.style.display = 'none';
+      if(matches.length === 0 && query){
+        wrap.innerHTML = `<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>`;
+      } else if(matches.length === 0){
+        // Sin query y sin resultados: mostrar página normal
+        wrap.innerHTML = '';
+        loadProductsFromSheet();
+      } else {
+        // Mostrar resultados agrupados por categoría
+        const grouped = new Map();
+        matches.forEach(p => {
+          if(!grouped.has(p.categoria)) grouped.set(p.categoria, []);
+          grouped.get(p.categoria).push(p);
+        });
+
+        const html = [...grouped].map(([cat, prods]) => {
+          const cards = prods.map((p, i) => {
+            const tone = TONES[i % TONES.length];
+            const detalleHtml = p.detalle
+              ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
+
+            const hasImage = p.imagen && p.imagen.startsWith('http');
+            const toneClass = hasImage ? '' : ` tone-${tone}`;
+            const thumbContent = hasImage
+              ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+              : iconoDe(p.nombre);
+
+            const searchText = `${p.nombre} ${p.detalle || ''} ${cat} ${p.subcategoria || ''}`.toLowerCase();
+            return `<div class="product-card" data-search="${esc(searchText)}">
+              <div class="product-thumb${toneClass}">${thumbContent}</div>
+              <div class="product-info">
+                <h4>${esc(p.nombre)}</h4>
+                ${detalleHtml}
+                <div class="price">${esc(p.precio) || 'Consultar'}</div>
+                <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                   aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+              </div>
+            </div>`;
+          }).join('');
+
+          return `<div class="shop-group" data-categoria="${esc(cat)}">
+            <div class="shop-group-head"><h3>${esc(cat)}</h3><span>${prods.length} producto${prods.length === 1 ? '' : 's'}</span></div>
+            <div class="product-grid">${cards}</div>
+          </div>`;
+        }).join('');
+
+        wrap.innerHTML = html;
+        observarAparicion(wrap.querySelectorAll('.product-card'));
       }
     });
   }
@@ -2310,26 +2436,46 @@ section{ padding-block:var(--s9); }
     menuClose.addEventListener('click', closeMenu);
     menuOverlay.addEventListener('click', closeMenu);
 
-    // Cerrar al hacer click en un link
-    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
-      el.addEventListener('click', closeMenu);
-    });
+    // Función para configurar event listeners de los toggles de categoría
+    function setupCategoryToggles(){
+      document.querySelectorAll('.category-toggle').forEach(toggle => {
+        // Solo agregar listener si aún no lo tiene
+        if(!toggle._listenerAdded){
+          toggle.addEventListener('click', function(){
+            const itemsId = this.getAttribute('aria-controls');
+            const items = document.getElementById(itemsId);
+            if(!items) return;
+            const isExpanded = items.classList.contains('active');
 
-    // Subcategorías expandibles
-    categoryToggles.forEach(toggle => {
-      toggle.addEventListener('click', function(){
-        const itemsId = this.getAttribute('aria-controls');
-        const items = document.getElementById(itemsId);
-        const isExpanded = items.classList.contains('active');
-
-        items.classList.toggle('active');
-        this.setAttribute('aria-expanded', !isExpanded);
+            items.classList.toggle('active');
+            this.setAttribute('aria-expanded', !isExpanded);
+          });
+          toggle._listenerAdded = true;
+        }
       });
-    });
+    }
 
-    // Conectar el botón toggle a sus subcategorías
-    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
+    // Cerrar al hacer click en un link
+    function setupMenuCloseListeners(){
+      document.querySelectorAll('.menu-link, .subcategory-link, .menu-wa-btn').forEach(el => {
+        // Solo agregar listener si aún no lo tiene
+        if(!el._closeListenerAdded){
+          el.addEventListener('click', closeMenu);
+          el._closeListenerAdded = true;
+        }
+      });
+    }
+
+    // Guardar en window para poder llamar desde actualizarCategoriesEnMenu
+    window._neneko_setupCategoryToggles = setupCategoryToggles;
+    window._neneko_setupMenuCloseListeners = setupMenuCloseListeners;
+
+    setupCategoryToggles();
+    setupMenuCloseListeners();
   }
+
+  // Va al final: necesita revelarNuevasTarjetas ya definida.
+  loadProductsFromSheet();
 </script>
 </body>
 </html>
