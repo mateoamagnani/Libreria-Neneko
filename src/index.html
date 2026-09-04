@@ -1526,40 +1526,106 @@ section{ padding-block:var(--s9); }
   }
 
   // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
+  // Soporta: Ubicación | Categoría | Sub-categoría | Producto | Precio | Detalle | Imagen (7 cols)
   function normalizarFilas(rows){
     if(!rows.length) return [];
-    const [cat, prod] = rows[0].map(c => c.toLowerCase());
+    const primeraCelda = (rows[0][0] || '').toLowerCase();
     const tieneEncabezado =
-      /^categor/.test(cat || '') && /^(producto|nombre|art)/.test(prod || '');
-    return (tieneEncabezado ? rows.slice(1) : rows)
-      .filter(r => r.length >= 3 && r[0] && r[1]);
+      /^ubicacion|^home|^menu|^categor/.test(primeraCelda);
+
+    const filas = tieneEncabezado ? rows.slice(1) : rows;
+    return filas.filter(r => {
+      // 7-column format: Ubicación (0) | Categoría (1) | Sub-cat (2) | Producto (3) | Precio (4) | Detalle (5) | Imagen (6)
+      if(r.length >= 7) return r[0] && r[1] && r[3]; // Ubicación, Categoría, Producto required
+      // Fallback: older formats with 5-6 columns
+      if(r.length >= 5) return r[0] && r[1] && r[2]; // Ubicación, Categoría, Producto required
+      // Legacy: 3-4 column format (Categoría | Producto | Precio | ...)
+      if(r.length >= 3) return r[0] && r[1];
+      return false;
+    });
   }
 
   function buildMercaditoHTML(rows){
-    const groups = new Map();
-    // La cuarta columna (Detalle) es opcional: una hoja de tres columnas
-    // sigue funcionando igual.
-    rows.forEach(([categoria, nombre, precio, detalle]) => {
-      if(!groups.has(categoria)) groups.set(categoria, []);
-      groups.get(categoria).push({ nombre, precio, detalle });
+    if(!rows.length) return '';
+
+    // Detectar formato basado en cantidad de columnas
+    const colCount = rows[0].length;
+    const formato7Col = colCount >= 7;
+    const formato5Col = colCount >= 5 && colCount < 7;
+
+    const categoriesMenu = new Map(); // Productos de "Menú" por categoría
+    const allProducts = [];            // Índice global para búsqueda
+    const groups = new Map();          // Productos visibles (Novedades)
+
+    rows.forEach(row => {
+      let ubicacion, categoria, subcategoria, nombre, precio, detalle, imagen;
+
+      if(formato7Col){
+        // 7-column: Ubicación (0) | Categoría (1) | Sub-cat (2) | Producto (3) | Precio (4) | Detalle (5) | Imagen (6)
+        [ubicacion, categoria, subcategoria, nombre, precio, detalle, imagen] = row;
+      } else if(formato5Col){
+        // 5-6 column: Ubicación (0) | Categoría (1) | Producto (2) | Precio (3) | Detalle (4) | [Imagen (5)]
+        [ubicacion, categoria, nombre, precio, detalle, imagen] = row;
+        subcategoria = '';
+      } else {
+        // Legacy 3-4 col: Categoría (0) | Producto (1) | Precio (2) | [Detalle (3)]
+        categoria = row[0];
+        nombre = row[1];
+        precio = row[2];
+        detalle = row[3] || '';
+        imagen = '';
+        ubicacion = 'Novedades y Ofertas';
+        subcategoria = '';
+      }
+
+      // Validar que campos críticos existan
+      if(!nombre || !categoria) return;
+
+      const producto = { nombre, precio, detalle, imagen, subcategoria, categoria, ubicacion };
+      allProducts.push(producto);
+
+      // Organizar por ubicación
+      if(ubicacion === 'Menú'){
+        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
+        categoriesMenu.get(categoria).push(producto);
+      } else if(!ubicacion || ubicacion === 'Novedades y Ofertas'){
+        if(!groups.has(categoria)) groups.set(categoria, []);
+        groups.get(categoria).push(producto);
+      }
     });
+
+    // Guardar índice global para búsqueda
+    window._neneko_all_products = allProducts;
+    // Guardar productos de menú para navegación dinámica
+    window._neneko_menu_products = Object.fromEntries(categoriesMenu);
+    window._nenekoCategorias = [...categoriesMenu.keys()];
+
+    // Renderizar solo "Novedades y Ofertas"
     return [...groups].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
-        const detalle = p.detalle
+        const detalleHtml = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
-        return `<div class="product-card">
-          <div class="product-thumb tone-${tone}">${iconoDe(p.nombre)}</div>
+
+        const hasImage = p.imagen && p.imagen.startsWith('http');
+        const toneClass = hasImage ? '' : ` tone-${tone}`;
+        const thumbContent = hasImage
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+          : iconoDe(p.nombre);
+
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria} ${p.subcategoria || ''}`.toLowerCase();
+        return `<div class="product-card" data-search="${esc(searchText)}">
+          <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
             <h4>${esc(p.nombre)}</h4>
-            ${detalle}
+            ${detalleHtml}
             <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
           </div>
         </div>`;
       }).join('');
-      return `<div class="shop-group">
+      return `<div class="shop-group" data-categoria="${esc(categoria)}">
         <div class="shop-group-head"><h3>${esc(categoria)}</h3><span>${productos.length} producto${productos.length === 1 ? '' : 's'}</span></div>
         <div class="product-grid">${cards}</div>
       </div>`;
@@ -1596,10 +1662,128 @@ section{ padding-block:var(--s9); }
 
       wrap.innerHTML = buildMercaditoHTML(filas);
       revelarNuevasTarjetas(wrap);
+      // Actualizar categorías en el menú después de cargar
+      if(window._nenekoCategorias && document.querySelector('.menu-nav')){
+        actualizarCategoriesEnMenu(window._nenekoCategorias);
+      }
+      // Verificar si hay parámetros de URL para navegar a una categoría
+      checkURLParams();
     }catch(err){
       console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
     }
   }
+
+  // Actualizar categorías dinámicas en el menú hamburguesa
+  function actualizarCategoriesEnMenu(categorias){
+    const menuNav = document.querySelector('.menu-nav');
+    if(!menuNav || !categorias.length) return;
+
+    // Limpiar items previos (excepto el toggle de categorías si existe)
+    const categoryDiv = document.querySelector('.category-toggle');
+    const prevItems = menuNav.querySelectorAll('.menu-link');
+    prevItems.forEach(el => el.remove());
+
+    // Agregar cada categoría como link
+    categorias.forEach((cat, idx) => {
+      const link = document.createElement('a');
+      link.href = '#productos';
+      link.className = 'menu-link';
+      link.textContent = cat;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        renderCategoryView(cat);
+        // Cerrar menú después de seleccionar categoría
+        document.getElementById('menuPanel')?.classList.remove('active');
+        document.getElementById('menuOverlay')?.classList.remove('active');
+        // Scroll a productos
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+      });
+      if(idx === 0 && categoryDiv) menuNav.insertBefore(link, categoryDiv.nextElementSibling);
+      else menuNav.appendChild(link);
+    });
+  }
+
+  // Verificar parámetros de URL al cargar
+  function checkURLParams(){
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    if(cat && window._neneko_menu_products && window._neneko_menu_products[cat]){
+      // Esperar a que el DOM esté listo antes de renderizar categoría
+      setTimeout(() => {
+        renderCategoryView(decodeURIComponent(cat));
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }
+
+  function renderCategoryView(categoryName){
+    const wrap = document.getElementById('mercaditoDynamic');
+    if(!wrap || !window._neneko_menu_products) return;
+
+    const productos = window._neneko_menu_products[categoryName] || [];
+    if(!productos.length){
+      wrap.innerHTML = '<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No hay productos en esta categoría.</p>';
+      return;
+    }
+
+    // Crear HTML con botón de vuelta
+    const backBtn = `<div style="margin-bottom: var(--s5);">
+      <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
+        ← Volver al inicio
+      </button>
+      <h2 style="margin: 0; margin-bottom: var(--s2);">${esc(categoryName)}</h2>
+      <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
+    </div>`;
+
+    // Agrupar por subcategoría si hay múltiples
+    const bySubcat = new Map();
+    productos.forEach((p, i) => {
+      const subcat = p.subcategoria && p.subcategoria.trim() ? p.subcategoria : 'Otros';
+      if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
+      bySubcat.get(subcat).push({...p, index: i});
+    });
+
+    const cards = [...bySubcat].map(([subcat, prods]) => {
+      const cardsHtml = prods.map(p => {
+        const tone = TONES[p.index % TONES.length];
+        const detalleHtml = p.detalle
+          ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
+
+        const hasImage = p.imagen && p.imagen.startsWith('http');
+        const toneClass = hasImage ? '' : ` tone-${tone}`;
+        const thumbContent = hasImage
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+          : iconoDe(p.nombre);
+
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName} ${subcat}`.toLowerCase();
+        return `<div class="product-card" data-search="${esc(searchText)}">
+          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          <div class="product-info">
+            <h4>${esc(p.nombre)}</h4>
+            ${detalleHtml}
+            <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+          </div>
+        </div>`;
+      }).join('');
+
+      return `<div class="shop-group" data-categoria="${esc(categoryName)}">
+        <div class="shop-group-head"><h3>${esc(subcat)}</h3><span>${prods.length}</span></div>
+        <div class="product-grid">${cardsHtml}</div>
+      </div>`;
+    }).join('');
+
+    wrap.innerHTML = backBtn + cards;
+    observarAparicion(wrap.querySelectorAll('.product-card'));
+  }
+
+  window.neneko_backToHome = function(){
+    // Limpiar parámetros de URL y recargar vista
+    window.history.replaceState({}, '', window.location.pathname);
+    loadProductsFromSheet();
+    window.scrollTo(0, 0);
+  };
 
   // ============================================================
   // HORARIOS — una sola fuente de verdad
@@ -1899,6 +2083,146 @@ section{ padding-block:var(--s9); }
   }
 
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
+
+  // ============================================================
+  // BUSCADOR GLOBAL DE PRODUCTOS
+  // Busca en TODOS los productos (Novedades + Menú), no solo en DOM visible
+  // ============================================================
+  const menuSearch = document.getElementById('menuSearch');
+  if(menuSearch){
+    menuSearch.addEventListener('input', function(){
+      const query = this.value.toLowerCase().trim();
+
+      // Si no hay búsqueda global disponible, fallback a búsqueda en DOM
+      if(!window._neneko_all_products){
+        const cards = document.querySelectorAll('.product-card');
+        let visible = 0;
+        cards.forEach(card => {
+          const searchText = card.getAttribute('data-search') || '';
+          const matches = !query || searchText.includes(query);
+          card.style.display = matches ? '' : 'none';
+          if(matches) visible++;
+        });
+        document.querySelectorAll('.shop-group').forEach(group => {
+          const visibleCards = group.querySelectorAll('.product-card:not([style*="display: none"])').length;
+          group.style.display = visibleCards > 0 ? '' : 'none';
+        });
+        return;
+      }
+
+      // Búsqueda global: filtrar todos los productos
+      const sinAcentosStr = str => str.normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const queryNorm = sinAcentosStr(query);
+
+      const matches = !query ? window._neneko_all_products : window._neneko_all_products.filter(p => {
+        const searchText = sinAcentosStr(`${p.nombre} ${p.detalle || ''} ${p.categoria} ${p.subcategoria || ''}`).toLowerCase();
+        return searchText.includes(queryNorm);
+      });
+
+      // Mostrar resultados
+      const wrap = document.getElementById('mercaditoDynamic');
+      if(!wrap) return;
+
+      if(matches.length === 0 && query){
+        wrap.innerHTML = `<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>`;
+      } else if(matches.length === 0){
+        // Sin query y sin resultados: mostrar página normal
+        wrap.innerHTML = '';
+        loadProductsFromSheet();
+      } else {
+        // Mostrar resultados agrupados por categoría
+        const grouped = new Map();
+        matches.forEach(p => {
+          if(!grouped.has(p.categoria)) grouped.set(p.categoria, []);
+          grouped.get(p.categoria).push(p);
+        });
+
+        const html = [...grouped].map(([cat, prods]) => {
+          const cards = prods.map((p, i) => {
+            const tone = TONES[i % TONES.length];
+            const detalleHtml = p.detalle
+              ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
+
+            const hasImage = p.imagen && p.imagen.startsWith('http');
+            const toneClass = hasImage ? '' : ` tone-${tone}`;
+            const thumbContent = hasImage
+              ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+              : iconoDe(p.nombre);
+
+            const searchText = `${p.nombre} ${p.detalle || ''} ${cat} ${p.subcategoria || ''}`.toLowerCase();
+            return `<div class="product-card" data-search="${esc(searchText)}">
+              <div class="product-thumb${toneClass}">${thumbContent}</div>
+              <div class="product-info">
+                <h4>${esc(p.nombre)}</h4>
+                ${detalleHtml}
+                <div class="price">${esc(p.precio) || 'Consultar'}</div>
+                <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                   aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+              </div>
+            </div>`;
+          }).join('');
+
+          return `<div class="shop-group" data-categoria="${esc(cat)}">
+            <div class="shop-group-head"><h3>${esc(cat)}</h3><span>${prods.length} producto${prods.length === 1 ? '' : 's'}</span></div>
+            <div class="product-grid">${cards}</div>
+          </div>`;
+        }).join('');
+
+        wrap.innerHTML = html;
+        observarAparicion(wrap.querySelectorAll('.product-card'));
+      }
+    });
+  }
+
+  // ============================================================
+  // MENÚ HAMBURGUESA
+  // ============================================================
+  if(document.getElementById('menuBtn')){
+    const menuBtn = document.getElementById('menuBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuClose = document.getElementById('menuClose');
+    const categoryToggles = document.querySelectorAll('.category-toggle');
+
+    function toggleMenu(){
+      menuPanel.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', menuPanel.classList.contains('active'));
+    }
+
+    function closeMenu(){
+      menuPanel.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Botón hamburguesa
+    menuBtn.addEventListener('click', toggleMenu);
+
+    // Cerrar menú
+    menuClose.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', closeMenu);
+
+    // Cerrar al hacer click en un link
+    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
+      el.addEventListener('click', closeMenu);
+    });
+
+    // Subcategorías expandibles
+    categoryToggles.forEach(toggle => {
+      toggle.addEventListener('click', function(){
+        const itemsId = this.getAttribute('aria-controls');
+        const items = document.getElementById(itemsId);
+        const isExpanded = items.classList.contains('active');
+
+        items.classList.toggle('active');
+        this.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+
+    // Conectar el botón toggle a sus subcategorías
+    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
+  }
 
   // Va al final: necesita revelarNuevasTarjetas ya definida.
   loadProductsFromSheet();
