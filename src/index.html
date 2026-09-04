@@ -1780,54 +1780,46 @@ section{ padding-block:var(--s9); }
   }
 
   // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
-  // Ahora soporta: Ubicación | Categoría | Producto | Precio | Detalle | Imagen
   function normalizarFilas(rows){
     if(!rows.length) return [];
     const primeraCelda = (rows[0][0] || '').toLowerCase();
     const tieneEncabezado =
-      /^ubicacion|^home|^menu|^categor/.test(primeraCelda);
+      /^ubicacion|^home|^menu|^categor|^sub/.test(primeraCelda);
 
     const filas = tieneEncabezado ? rows.slice(1) : rows;
     return filas.filter(r => {
-      // Detectar si es formato antiguo (3+ cols) o nuevo (6 cols con ubicación)
-      if(r.length >= 6) return r[1] && r[2]; // Ubicación | Categoría | Producto | ...
-      if(r.length >= 3) return r[0] && r[1]; // Categoría | Producto | Precio ...
+      // Soporta: 6 cols (Cat|SubCat|Prod|Price|Detail|Image) o 3-5 cols (Cat|Prod|Price[|Detail[|Image]])
+      if(r.length >= 6) return r[0] && r[2]; // Nueva: Categoría | Sub-Categoría | Producto | ...
+      if(r.length >= 3) return r[0] && r[1]; // Antigua: Categoría | Producto | ...
       return false;
     });
   }
 
   function buildMercaditoHTML(rows){
-    // Detectar si el formato incluye Ubicación en la primera columna
-    const tieneUbicacion = rows.length > 0 && rows[0].length >= 6;
-    const categoriesMenu = new Map(); // Guardar productos de "Menú" por categoría
-    const groups = new Map(); // Para productos visibles (Novedades)
+    // Detectar formato: 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
+    const tieneSeis = rows.length > 0 && rows[0].length >= 6;
+    const grupos = new Map();
 
     rows.forEach(row => {
-      let ubicacion, categoria, nombre, precio, detalle, imagen;
+      let categoria, subcategoria, nombre, precio, detalle, imagen;
 
-      if(tieneUbicacion){
-        [ubicacion, categoria, nombre, precio, detalle, imagen] = row;
+      if(tieneSeis){
+        // Formato nuevo (6 cols): Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen
+        [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
       } else {
+        // Formato antiguo (3-5 cols): Categoría | Producto | Precio [| Detalle [| Imagen]]
         [categoria, nombre, precio, detalle, imagen] = row;
-        ubicacion = 'Novedades y Ofertas'; // Default para formato antiguo
+        subcategoria = '';
       }
 
-      // Organizar por ubicación
-      if(ubicacion === 'Menú'){
-        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
-        categoriesMenu.get(categoria).push({ nombre, precio, detalle, imagen });
-      } else if(ubicacion === 'Novedades y Ofertas'){
-        if(!groups.has(categoria)) groups.set(categoria, []);
-        groups.get(categoria).push({ nombre, precio, detalle, imagen });
-      }
+      if(!categoria || !nombre) return;
+
+      if(!grupos.has(categoria)) grupos.set(categoria, []);
+      grupos.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen });
     });
 
-    // Guardar productos de menú en memoria para filtrado dinámico
-    window._neneko_menu_products = Object.fromEntries(categoriesMenu);
-    window._nenekoCategorias = [...categoriesMenu.keys()];
-
-    // Renderizar solo "Novedades y Ofertas"
-    return [...groups].map(([categoria, productos]) => {
+    // Renderizar todos los productos agrupados por Categoría
+    return [...grupos].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
         const detalle = p.detalle
@@ -1977,26 +1969,27 @@ section{ padding-block:var(--s9); }
 
       // Detectar y saltar encabezado
       const primeraCelda = (rows[0][0] || '').toLowerCase();
-      const tieneEncabezado = /^categor|^nombre|^menu|^producto/.test(primeraCelda);
+      const tieneEncabezado = /^categor|^nombre|^menu|^producto|^sub/.test(primeraCelda);
       const filas = tieneEncabezado ? rows.slice(1) : rows;
 
       if(!filas.length) return;
 
-      // Procesar los productos del Menú (esperado: Categoría, Nombre, Precio, Detalle, Imagen)
+      // Procesar los productos del Menú: Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen
       const categoriesMenu = new Map();
       filas.forEach(row => {
-        if(!row[0] || !row[1]) return;  // Saltar filas incompletas
+        if(row.length < 6) return; // Necesita las 6 columnas
 
         const categoria = String(row[0] || '').trim();
-        const nombre = String(row[1] || '').trim();
-        const precio = String(row[2] || '').trim();
-        const detalle = String(row[3] || '').trim();
-        const imagen = String(row[4] || '').trim();
+        const subcategoria = String(row[1] || '').trim();
+        const nombre = String(row[2] || '').trim();
+        const precio = String(row[3] || '').trim();
+        const detalle = String(row[4] || '').trim();
+        const imagen = String(row[5] || '').trim();
 
         if(!categoria || !nombre) return;
 
         if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
-        categoriesMenu.get(categoria).push({ nombre, precio, detalle, imagen });
+        categoriesMenu.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen });
       });
 
       if(categoriesMenu.size === 0) return;
