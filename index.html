@@ -91,39 +91,41 @@
    ========================================================================== */
 :root{
   /* --- Superficies, de atrás hacia adelante --- */
-  --bg:            #F7F2E7;   /* fondo de página */
-  --surface:       #FFFDF8;   /* tarjetas */
-  --surface-2:     #EFE8D8;   /* bloques hundidos / thumbs */
-  --surface-inv:   #243C54;   /* bandas oscuras: el navy exacto del logo */
+  --bg:            #F8F9FA;   /* fondo de página */
+  --surface:       #FFFFFF;   /* tarjetas: blancas para que resalten sobre --bg */
+  --surface-2:     #E9ECEF;   /* bloques hundidos / thumbs */
+  --surface-inv:   #243C54;   /* bandas oscuras: el navy del logo */
 
   /* --- Bordes: el token crítico --- */
-  --border:        #DCD0B6;   /* divisiones finas */
-  --border-strong: #BFAE8C;   /* bordes de énfasis y de tarjetas */
+  --border:        #CBD3DA;   /* divisiones finas — 1.5:1 sobre --surface */
+  --border-strong: #A6B1BA;   /* bordes de énfasis y de tarjetas */
 
   /* --- Texto --- */
-  --text:          #221E17;   /* 14.9:1 sobre --bg */
-  --text-2:        #5C5445;   /*  7.1:1 sobre --bg */
-  --text-3:        #726858;   /*  4.9:1 sobre --bg — mínimo AA */
-  --text-inv:      #F2EEE6;
-  --text-inv-2:    #A9B4C2;
+  --text:          #333333;   /* 12.0:1 sobre --bg */
+  --text-2:        #5A6169;   /*  6.0:1 sobre --bg */
+  --text-3:        #696F77;   /*  4.8:1 sobre --bg — mínimo AA */
+  --text-inv:      #F2F5F6;
+  --text-inv-2:    #A9B8C2;   /*  5.6:1 sobre --surface-inv */
 
   /* --- Marca y estados --- */
-  /* El ámbar del logo es #D8843C, pero sobre el crema da 2,6:1 y es
-     ilegible como texto. --brand es ese mismo ámbar oscurecido (mismo tono
-     y saturación, menos luz) hasta llegar a AA; --brand-bright sí es el
-     ámbar tal cual, porque solo se usa sobre superficies oscuras. */
-  --brand:         #9A5A1E;   /* 4.9:1 sobre --bg */
-  --brand-bright:  #E19A5A;   /* el ámbar del logo aclarado: sobre la banda
-                                 navy el #D8843C daba 3,9:1 y las estrellas
-                                 de las reseñas son texto normal. */
+  /* El turquesa de marca es #6BC2C2. Como TEXTO sobre el fondo claro da
+     2,0:1 y es ilegible, así que --brand es ese mismo tono y saturación
+     bajado de luz hasta AA, y es el que usan links, iconos y acentos.
+     --brand-bright sí es el #6BC2C2 exacto: vive sobre las bandas navy
+     (navbar, reseñas, footer), donde da 5,5:1. */
+  --brand:         #3F7575;   /* 5.0:1 sobre --bg */
+  --brand-bright:  #6BC2C2;   /* el turquesa de marca, tal cual */
   --ok:            #17795F;   /* abierto */
   --closed:        #A8452A;   /* cerrado */
   --wa:            #1FA855;   /* verde WhatsApp legible sobre claro */
 
   /* --- Botón primario --- */
-  --btn-bg:        #243C54;   /* navy del logo; blanco encima da 11,3:1 */
-  --btn-bg-hover:  #31506E;
-  --btn-text:      #FFFDF8;
+  /* Turquesa con texto oscuro, no blanco: el blanco sobre #6BC2C2 da 2,1:1
+     y sobre el hover #56A4A4 da 2,9:1, muy por debajo del 4,5:1 que pide
+     AA. Con #2B2B2B da 6,8:1 en reposo y 4,9:1 en hover. */
+  --btn-bg:        #6BC2C2;
+  --btn-bg-hover:  #56A4A4;
+  --btn-text:      #2B2B2B;
 
   /* --- Escala de espaciado (base 4) --- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
@@ -161,21 +163,26 @@
     --border:        #39434F;
     --border-strong: #4E5B6C;
 
-    --text:          #ECE7DE;   /* 14.6:1 */
-    --text-2:        #B4AEA3;   /*  8.0:1 */
-    --text-3:        #8B8579;   /*  5.0:1 */
-    --text-inv:      #ECE7DE;
+    --text:          #E8ECEF;   /* 15.3:1 */
+    --text-2:        #B0B7BE;   /*  9.0:1 */
+    --text-3:        #8A9199;   /*  5.7:1 */
+    --text-inv:      #E8ECEF;
     --text-inv-2:    #9AA5B3;
 
-    --brand:         #E2954F;   /* el ámbar del logo, aclarado: 7,5:1 */
-    --brand-bright:  #EDB077;
+    /* Acá el turquesa de marca sí puede ir como texto: sobre el fondo
+       oscuro da 8,8:1. --brand-bright se aclara un paso más porque encima
+       tiene la banda navy, que en oscuro también bajó de luz. */
+    --brand:         #6BC2C2;
+    --brand-bright:  #8AD3D3;
     --ok:            #4ECB93;
     --closed:        #F0846A;
     --wa:            #25D366;
 
-    --btn-bg:        #ECE7DE;
-    --btn-bg-hover:  #FFFFFF;
-    --btn-text:      #12161B;
+    /* El botón no se invierte con el tema: es el chip de marca, y turquesa
+       con texto oscuro funciona igual de bien sobre el fondo oscuro. */
+    --btn-bg:        #6BC2C2;
+    --btn-bg-hover:  #56A4A4;
+    --btn-text:      #2B2B2B;
 
     --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
     --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 16px 40px -16px rgba(0,0,0,.6);
@@ -192,21 +199,21 @@
   --border:        #39434F;
   --border-strong: #4E5B6C;
 
-  --text:          #ECE7DE;
-  --text-2:        #B4AEA3;
-  --text-3:        #8B8579;
-  --text-inv:      #ECE7DE;
+  --text:          #E8ECEF;
+  --text-2:        #B0B7BE;
+  --text-3:        #8A9199;
+  --text-inv:      #E8ECEF;
   --text-inv-2:    #9AA5B3;
 
-  --brand:         #E2954F;
-  --brand-bright:  #EDB077;
+  --brand:         #6BC2C2;
+  --brand-bright:  #8AD3D3;
   --ok:            #4ECB93;
   --closed:        #F0846A;
   --wa:            #25D366;
 
-  --btn-bg:        #ECE7DE;
-  --btn-bg-hover:  #FFFFFF;
-  --btn-text:      #12161B;
+  --btn-bg:        #6BC2C2;
+  --btn-bg-hover:  #56A4A4;
+  --btn-text:      #2B2B2B;
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
   --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 16px 40px -16px rgba(0,0,0,.6);
@@ -505,7 +512,7 @@ section{ padding-block:var(--s9); }
 .wa-bar-inner{ display:flex; align-items:center; gap:var(--s3); }
 .wa-avatar{
   width:32px; height:32px; border-radius:50%; flex-shrink:0;
-  background:var(--brand-bright); color:#243C54;
+  background:var(--brand-bright); color:var(--surface-inv);
   display:flex; align-items:center; justify-content:center;
   font-weight:700; font-size:.75rem;
 }
@@ -629,19 +636,24 @@ section{ padding-block:var(--s9); }
 }
 .product-thumb svg{ width:52px; height:52px; }
 /* Tonos: tinte sutil sobre la superficie, no bloques de color saturado.
-   color-mix mantiene la relación con el fondo en los dos modos. */
-.product-thumb.tone-navy   { background:color-mix(in srgb, #243C54 12%, var(--surface-2)); color:#2E4C6B; }
-.product-thumb.tone-mustard{ background:color-mix(in srgb, #D8843C 14%, var(--surface-2)); color:var(--brand); }
-.product-thumb.tone-terra  { background:color-mix(in srgb, #B5654A 12%, var(--surface-2)); color:#B5654A; }
-.product-thumb.tone-sage   { background:color-mix(in srgb, #4F8A6B 12%, var(--surface-2)); color:#4F8A6B; }
+   color-mix mantiene la relación con el fondo en los dos modos.
+   Los cuatro tonos rotan para que dos tarjetas vecinas no queden iguales. Los
+   nombres son históricos: hoy son cuatro pasos de la misma paleta —dos del
+   turquesa de marca y dos del navy— y no los colores que dicen. Se conservan
+   porque los usa el rotador del catálogo y las tarjetas de respaldo del HTML.
+   Ninguno baja de 3:1 sobre el thumb, que es lo que pide un icono. */
+.product-thumb.tone-navy   { background:color-mix(in srgb, var(--surface-inv) 12%, var(--surface-2)); color:var(--surface-inv); }
+.product-thumb.tone-mustard{ background:color-mix(in srgb, var(--brand) 14%, var(--surface-2));      color:var(--brand); }
+.product-thumb.tone-terra  { background:color-mix(in srgb, #4A8C8C 12%, var(--surface-2));           color:#4A8C8C; }
+.product-thumb.tone-sage   { background:color-mix(in srgb, #2E4C6B 12%, var(--surface-2));           color:#2E4C6B; }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]) .product-thumb.tone-navy   { color:#8FB0DE; }
-  :root:not([data-theme="light"]) .product-thumb.tone-terra  { color:#E09577; }
-  :root:not([data-theme="light"]) .product-thumb.tone-sage   { color:#78C79E; }
+  :root:not([data-theme="light"]) .product-thumb.tone-terra  { color:#8AD3D3; }
+  :root:not([data-theme="light"]) .product-thumb.tone-sage   { color:#A7C4E8; }
 }
 :root[data-theme="dark"] .product-thumb.tone-navy   { color:#8FB0DE; }
-:root[data-theme="dark"] .product-thumb.tone-terra  { color:#E09577; }
-:root[data-theme="dark"] .product-thumb.tone-sage   { color:#78C79E; }
+:root[data-theme="dark"] .product-thumb.tone-terra  { color:#8AD3D3; }
+:root[data-theme="dark"] .product-thumb.tone-sage   { color:#A7C4E8; }
 
 .product-info{
   display:flex; flex-direction:column; flex:1;
@@ -665,13 +677,11 @@ section{ padding-block:var(--s9); }
   display:flex; align-items:center; justify-content:center; gap:6px;
   min-height:44px;
   font-size:.8125rem; font-weight:600; text-decoration:none;
-  color:var(--text);
-  border:1.5px solid var(--border-strong); border-radius:var(--r-sm);
+  background:var(--btn-bg); color:var(--btn-text);
+  border:1.5px solid transparent; border-radius:var(--r-sm);
   transition:background .15s ease, color .15s ease, border-color .15s ease;
 }
-.product-info a:hover{
-  background:var(--btn-bg); color:var(--btn-text); border-color:var(--btn-bg);
-}
+.product-info a:hover{ background:var(--btn-bg-hover); }
 
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }

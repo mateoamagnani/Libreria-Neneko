@@ -32,9 +32,9 @@ es **un mensaje de WhatsApp**, no una venta online: el cliente pide y retira en 
 
 1. **Navbar sticky** — logo + CTA de WhatsApp siempre visible, sobre el navy del logo
    (`--surface-inv`, la misma superficie que la banda de reseñas y el footer). Ahí el CTA
-   no puede ser el botón primario, que también es navy: va en `--brand-bright`, el ámbar
-   del logo. En pantallas chicas queda como icono solo, para que el nombre del negocio no
-   parta en dos líneas.
+   no puede ser el botón primario en su versión de texto oscuro sobre navy: va en
+   `--brand-bright`, el turquesa de marca. En pantallas chicas queda como icono solo, para
+   que el nombre del negocio no parta en dos líneas.
 2. **Hero** — dirección, headline, propuesta de valor, CTA primario de WhatsApp, CTA
    secundario al catálogo, y una fila de confianza con el rating de Google y el estado
    **"abierto ahora / cerrado"** calculado en vivo. A la derecha, una maqueta de iPhone con
@@ -64,12 +64,21 @@ evita que un borde quede con el valor del modo claro y desaparezca de noche.
 | Texto | `--text`, `--text-2`, `--text-3` | Los tres a contraste AA sobre `--bg` en ambos modos |
 | Marca | `--brand`, `--brand-bright` | Acentos, rating, etiqueta de "hoy" |
 
-**La paleta sale del logo**, muestreado del archivo: navy `#243C54` (el texto y los
-contornos) y ámbar `#D8843C` (el gato y el libro), sobre el crema del círculo.
-El navy va tal cual en `--surface-inv` y en el botón primario. El ámbar no puede ir tal
-cual en texto: sobre el crema da 2,6:1. Por eso `--brand` es ese mismo ámbar oscurecido
-(mismo tono y saturación) hasta llegar a AA, y `--brand-bright` es una versión aclarada
-que solo se usa sobre las bandas oscuras. Los tests verifican los dos.
+**La paleta es turquesa sobre gris claro, con el navy del logo en las bandas oscuras.**
+El turquesa de marca es `#6BC2C2` y va tal cual en `--btn-bg` y en `--brand-bright`;
+el navy `#243C54`, muestreado del logo, se queda en `--surface-inv` (navbar, banda de
+reseñas y footer), que es lo que mantiene el puente visual con el logo.
+
+Dos cosas que la paleta no puede hacer, y por qué:
+
+- **El turquesa no sirve como texto sobre el fondo claro**: `#6BC2C2` sobre `#F8F9FA` da
+  2,0:1. Por eso `--brand` (links, iconos, acentos) es ese mismo tono y saturación bajado
+  de luz hasta `#3F7575`, que llega a 5,0:1.
+- **El texto de los botones no es blanco.** Blanco sobre `#6BC2C2` da 2,1:1 y sobre el
+  hover `#56A4A4` da 2,9:1; los dos están muy por debajo del 4,5:1 de AA. Va en `#2B2B2B`,
+  que da 6,8:1 en reposo y 4,9:1 en hover.
+
+Los tests verifican los dos casos, así que no se pueden romper en silencio.
 | Estado | `--ok`, `--closed` | Abierto / cerrado |
 | Botón | `--btn-bg`, `--btn-bg-hover`, `--btn-text` | CTA primario |
 | Espaciado | `--s1`…`--s10` | Escala base 4 |
