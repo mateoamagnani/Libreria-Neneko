@@ -422,9 +422,134 @@ section{ padding-block:var(--s9); }
      y dejamos el CTA en el icono solo — el aria-label lo sigue nombrando. */
   .brand{ font-size:1rem; gap:var(--s2); }
   .brand span{ white-space:nowrap; }
-  .nav-cta{ padding:var(--s2) var(--s3); }
-  .nav-cta .txt{ display:none; }
+  .menu-btn .txt{ display:none; }
 }
+
+/* ==========================================================================
+   MENÚ HAMBURGUESA Y PANEL LATERAL
+   ========================================================================== */
+.menu-btn{
+  background:none; border:none; padding:var(--s2) var(--s3);
+  color:inherit; cursor:pointer; display:none; align-items:center;
+  gap:var(--s2); font-size:1rem; font-family:inherit;
+  height:var(--nav-h); padding-top:calc(var(--nav-h) / 2 - var(--s2));
+  padding-bottom:calc(var(--nav-h) / 2 - var(--s2));
+}
+.menu-btn svg{ width:24px; height:24px; flex-shrink:0; }
+
+@media (max-width:860px){
+  .menu-btn{ display:flex; }
+}
+
+/* Overlay semitransparente */
+.menu-overlay{
+  position:fixed; left:0; top:0; right:0; bottom:0;
+  background:rgba(0, 0, 0, 0.5); z-index:89;
+  opacity:0; pointer-events:none; transition:opacity .3s ease;
+}
+.menu-overlay.active{ opacity:1; pointer-events:auto; }
+
+/* Panel lateral */
+.menu-panel{
+  position:fixed; right:-100%; top:0; bottom:0; width:100%; max-width:320px;
+  background:var(--surface); z-index:90;
+  transition:right .3s ease; overflow-y:auto;
+  display:flex; flex-direction:column; box-shadow:var(--shadow-md);
+}
+.menu-panel.active{ right:0; }
+
+.menu-header{
+  padding:var(--s4); border-bottom:1px solid var(--border);
+  display:flex; justify-content:flex-end;
+}
+
+.menu-close{
+  background:none; border:none; cursor:pointer;
+  color:var(--text); padding:var(--s2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25rem;
+}
+.menu-close svg{ width:24px; height:24px; }
+
+.menu-content{
+  padding:var(--s4); flex:1;
+  display:flex; flex-direction:column; gap:var(--s5);
+}
+
+/* Búsqueda */
+.menu-search{
+  position:relative; display:flex; align-items:center;
+}
+.menu-search input{
+  width:100%; padding:var(--s3) var(--s4);
+  border:1px solid var(--border); border-radius:var(--r-md);
+  background:var(--surface-2); color:var(--text);
+  font-family:inherit; font-size:.95rem;
+}
+.menu-search svg{
+  position:absolute; right:var(--s3);
+  width:20px; height:20px; color:var(--text-3);
+  pointer-events:none;
+}
+
+/* Navegación */
+.menu-nav{
+  display:flex; flex-direction:column; gap:var(--s2);
+  list-style:none;
+}
+
+.menu-category{
+  border:1px solid var(--border); border-radius:var(--r-md);
+  overflow:hidden;
+}
+
+.category-toggle{
+  width:100%; background:none; border:none;
+  cursor:pointer; color:var(--text);
+  padding:var(--s3) var(--s4); text-align:left;
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:inherit; font-size:.95rem; font-weight:500;
+  transition:background-color .2s ease;
+}
+.category-toggle:hover{ background:var(--surface-2); }
+.category-toggle svg{
+  width:18px; height:18px;
+  transition:transform .2s ease;
+}
+.category-toggle[aria-expanded="true"] svg{ transform:rotate(180deg); }
+
+.category-items{
+  display:none; list-style:none;
+  padding:var(--s2) var(--s4);
+  border-top:1px solid var(--border);
+  background:var(--surface-2);
+}
+.category-items.active{ display:flex; flex-direction:column; gap:var(--s2); }
+.category-items li a{
+  color:var(--text-2); text-decoration:none;
+  padding:var(--s2); border-radius:var(--r-sm);
+  transition:background-color .2s ease;
+  display:block;
+}
+.category-items li a:hover{ background:var(--bg); color:var(--text); }
+
+.menu-link{
+  color:var(--text); text-decoration:none;
+  padding:var(--s3) var(--s4);
+  border-radius:var(--r-md);
+  transition:background-color .2s ease;
+  display:block;
+}
+.menu-link:hover{ background:var(--surface-2); }
+
+/* Botón WhatsApp en el menú */
+.menu-wa-btn{
+  width:100%; margin-top:var(--s3);
+  display:flex; align-items:center; justify-content:center; gap:var(--s3);
+  padding:var(--s4) var(--s3) !important;
+  border-radius:var(--r-md);
+}
+.menu-wa-btn svg{ width:20px; height:20px; }
 
 /* ==========================================================================
    HERO
@@ -945,11 +1070,56 @@ section{ padding-block:var(--s9); }
       <svg class="sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="luna" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 019.7 3.5a8.5 8.5 0 1010.8 10.8z"/></svg>
     </button>
-    <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
-      <span class="txt">Escribinos</span>
-    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      <span class="txt">Menú</span>
+    </button>
     </div>
+  </div>
+</header>
+
+<!-- Panel lateral del menú -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<aside class="menu-panel" id="menuPanel">
+  <div class="menu-header">
+    <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="menu-content">
+    <!-- Búsqueda -->
+    <div class="menu-search">
+      <input type="search" placeholder="Buscar productos..." id="menuSearch" aria-label="Buscar productos">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </div>
+
+    <!-- Categorías -->
+    <nav class="menu-nav">
+      <div class="menu-category">
+        <button class="category-toggle" type="button">
+          <span>Escritura</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <ul class="category-items" id="subcategorias-escritura">
+          <li><a href="#productos">Bolígrafos</a></li>
+          <li><a href="#productos">Lápices</a></li>
+          <li><a href="#productos">Resaltadores</a></li>
+        </ul>
+      </div>
+
+      <a href="#productos" class="menu-link">Productos</a>
+      <a href="#resenas" class="menu-link">Reseñas</a>
+      <a href="#ubicacion" class="menu-link">Ubicación</a>
+    </nav>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/5491161691209" target="_blank" rel="noopener" class="btn btn-primary menu-wa-btn">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+      Escribinos por WhatsApp
+    </a>
+  </div>
+</aside>
   </div>
 </header>
 
@@ -1878,6 +2048,56 @@ section{ padding-block:var(--s9); }
 
   // Va al final: necesita revelarNuevasTarjetas ya definida.
   loadProductsFromSheet();
+
+  // ============================================================
+  // MENÚ HAMBURGUESA
+  // ============================================================
+  if(document.getElementById('menuBtn')){
+    const menuBtn = document.getElementById('menuBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuClose = document.getElementById('menuClose');
+    const categoryToggles = document.querySelectorAll('.category-toggle');
+
+    function toggleMenu(){
+      menuPanel.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', menuPanel.classList.contains('active'));
+    }
+
+    function closeMenu(){
+      menuPanel.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Botón hamburguesa
+    menuBtn.addEventListener('click', toggleMenu);
+
+    // Cerrar menú
+    menuClose.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', closeMenu);
+
+    // Cerrar al hacer click en un link
+    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
+      el.addEventListener('click', closeMenu);
+    });
+
+    // Subcategorías expandibles
+    categoryToggles.forEach(toggle => {
+      toggle.addEventListener('click', function(){
+        const itemsId = this.getAttribute('aria-controls');
+        const items = document.getElementById(itemsId);
+        const isExpanded = items.classList.contains('active');
+
+        items.classList.toggle('active');
+        this.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+
+    // Conectar el botón toggle a sus subcategorías
+    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
+  }
 </script>
 </body>
 </html>
