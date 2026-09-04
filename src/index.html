@@ -1609,9 +1609,9 @@ section{ padding-block:var(--s9); }
   }
 
   // Dos solapas del mismo archivo: gid=0 (Novedades), gid=1 (Menú)
-  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
-  const SHEET_NOVEDADES_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
-  const SHEET_MENU_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=1&single=true&output=csv";
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
+  const SHEET_NOVEDADES_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
+  const SHEET_MENU_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=1186742453&single=true&output=csv";
 
   const WHATSAPP = "https://wa.me/5491161691209";
 
@@ -1972,21 +1972,40 @@ section{ padding-block:var(--s9); }
 
       if(!res.ok) throw new Error('HTTP ' + res.status);
 
-      const filas = normalizarFilas(parseCsv(await res.text()));
-      if(!filas.length) return;  // Si está vacía, no hay menú, sin error
+      const rows = parseCsv(await res.text());
+      if(!rows.length) return;
 
-      // Procesar solo los productos de Menú
+      // Detectar y saltar encabezado
+      const primeraCelda = (rows[0][0] || '').toLowerCase();
+      const tieneEncabezado = /^categor|^nombre|^menu|^producto/.test(primeraCelda);
+      const filas = tieneEncabezado ? rows.slice(1) : rows;
+
+      if(!filas.length) return;
+
+      // Procesar los productos del Menú (esperado: Categoría, Nombre, Precio, Detalle, Imagen)
       const categoriesMenu = new Map();
       filas.forEach(row => {
-        const [categoria, nombre, precio, detalle, imagen] = row;
+        if(!row[0] || !row[1]) return;  // Saltar filas incompletas
+
+        const categoria = String(row[0] || '').trim();
+        const nombre = String(row[1] || '').trim();
+        const precio = String(row[2] || '').trim();
+        const detalle = String(row[3] || '').trim();
+        const imagen = String(row[4] || '').trim();
+
+        if(!categoria || !nombre) return;
+
         if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
         categoriesMenu.get(categoria).push({ nombre, precio, detalle, imagen });
       });
 
+      if(categoriesMenu.size === 0) return;
+
       window._neneko_menu_products = Object.fromEntries(categoriesMenu);
 
       // Actualizar el menú si ya está en la página
-      if(document.querySelector('.menu-nav')){
+      const menuNav = document.querySelector('.menu-nav');
+      if(menuNav){
         actualizarCategoriesEnMenu(window._neneko_menu_products);
       }
     }catch(err){
