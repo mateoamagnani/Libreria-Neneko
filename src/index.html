@@ -8,7 +8,7 @@
 <title>Librería Neneko — Fotocopias, anillados y útiles en Recoleta, CABA</title>
 <meta name="description" content="Librería Neneko: fotocopias, anillados, impresiones y útiles escolares y de oficina en Peña 3102, CABA. Pedís por WhatsApp y retirás en el local.">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#F7F2E7">
+<meta name="theme-color" content="#243C54">
 <link rel="canonical" href="https://mateoamagnani.github.io/Libreria-Neneko/">
 
 <!-- Open Graph: controla cómo se ve el link al compartirlo por WhatsApp -->
@@ -270,7 +270,10 @@ img{ max-width:100%; height:auto; display:block; }
 
 .skip-link{
   position:absolute; left:var(--s3); top:-80px; z-index:200;
-  background:var(--btn-bg); color:var(--btn-text);
+  /* Aparece encima del navbar, que es navy: con --btn-bg (también navy) el
+     recuadro se perdía y quedaba texto flotando. Va en el ámbar, igual que el
+     CTA de la barra, para que se lea como un control y no como un glitch. */
+  background:var(--brand-bright); color:var(--surface-inv);
   padding:var(--s3) var(--s5); border-radius:0 0 var(--r-sm) var(--r-sm);
   text-decoration:none; font-weight:600; transition:top .15s ease;
 }
@@ -328,13 +331,21 @@ section{ padding-block:var(--s9); }
 /* ==========================================================================
    NAVBAR
    ========================================================================== */
+/* La barra va en el navy del logo: la misma superficie que la banda de reseñas
+   y el footer, así el color de marca es lo primero y lo último que se ve.
+   Sólida y no traslúcida a propósito: con alpha, el crema de la página se
+   filtraba por abajo y la barra quedaba en un navy más claro (#354B60) que las
+   otras dos bandas — y esa diferencia se nota. Sin traslucidez tampoco hace
+   falta el backdrop-filter, que es lo más caro de pintar en cada scroll. */
 .navbar{
   position:sticky; top:0; z-index:60;
-  background:color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter:saturate(1.6) blur(12px);
-  -webkit-backdrop-filter:saturate(1.6) blur(12px);
-  border-bottom:1px solid var(--border);
+  background:var(--surface-inv);
+  color:var(--text-inv);
+  border-bottom:1px solid rgba(255,255,255,.12);
 }
+/* Sobre el navy, el foco naranja de --brand da 2,1:1 y no se ve. Dentro de la
+   barra usamos la versión clara, que es la que existe justamente para esto. */
+.navbar :focus-visible{ outline-color:var(--brand-bright); }
 .nav-inner{
   display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
   height:var(--nav-h);
@@ -350,7 +361,15 @@ section{ padding-block:var(--s9); }
 /* La barra lleva la marca, el cambio de tema y el CTA. La navegación por
    secciones vive en el footer y en el botón "Ver productos" del hero: en una
    página de un solo scroll, tres links arriba competían con el CTA. */
-.nav-cta{ min-height:42px; padding:var(--s2) var(--s4); font-size:.875rem; }
+/* El CTA de la barra no puede ser el primario: ese es navy, y sobre la barra
+   navy desaparece. Va en el ámbar del logo, que es el otro color de la marca
+   y es lo que más salta ahí arriba — que es exactamente lo que buscamos. */
+.nav-cta{
+  min-height:42px; padding:var(--s2) var(--s4); font-size:.875rem;
+  background:var(--brand-bright); color:var(--surface-inv);
+  box-shadow:none;
+}
+.nav-cta:hover{ background:color-mix(in srgb, var(--brand-bright) 85%, var(--text-inv)); }
 .nav-right{ display:flex; align-items:center; gap:var(--s3); }
 
 /* Botón de tema: discreto a propósito. Es una preferencia, no una acción del
@@ -358,12 +377,18 @@ section{ padding-block:var(--s9); }
 .tema-btn{
   display:flex; align-items:center; justify-content:center;
   width:42px; height:42px; flex-shrink:0;
-  background:transparent; border:1.5px solid var(--border-strong);
-  border-radius:var(--r-full); color:var(--text-2);
+  /* Blancos con alpha y no --border-strong: ese token es un arena cálido
+     pensado para el papel, y sobre el navy leería como una mancha. Es la misma
+     convención que ya usan la banda de reseñas y el footer. */
+  background:transparent; border:1.5px solid rgba(255,255,255,.22);
+  border-radius:var(--r-full); color:var(--text-inv-2);
   cursor:pointer; padding:0;
   transition:color .15s ease, border-color .15s ease, background .15s ease;
 }
-.tema-btn:hover{ color:var(--text); border-color:var(--text); background:var(--surface); }
+.tema-btn:hover{
+  color:var(--text-inv); border-color:rgba(255,255,255,.45);
+  background:rgba(255,255,255,.08);
+}
 .tema-btn svg{ width:18px; height:18px; }
 /* Se muestra el icono del tema al que se va a cambiar, no el actual: es lo que
    dice qué pasa al tocarlo. */
@@ -1355,13 +1380,14 @@ section{ padding-block:var(--s9); }
       raiz.setAttribute('data-theme', nuevo);
       try{ localStorage.setItem(CLAVE_TEMA, nuevo); }catch{}
       sincronizarBoton();
+      actualizarColorDeBarra();
     });
 
     // Si el visitante nunca eligió, seguimos al sistema en vivo: cambiar el
     // tema del SO con la pestaña abierta tiene que verse al instante.
     window.matchMedia('(prefers-color-scheme: dark)')
       .addEventListener('change', () => {
-        if(!raiz.getAttribute('data-theme')) sincronizarBoton();
+        if(!raiz.getAttribute('data-theme')){ sincronizarBoton(); actualizarColorDeBarra(); }
       });
   }
 
@@ -1737,22 +1763,18 @@ section{ padding-block:var(--s9); }
   // ------------------------------------------------------------
   // Color de las barras del navegador en el teléfono
   // ------------------------------------------------------------
-  // Safari en iOS pinta sus barras con el theme-color de la página. Con un
-  // valor fijo crema, al llegar al footer oscuro quedaba una franja clara
-  // abajo, justo donde está la barra de direcciones. Poner theme-color en
-  // oscuro tampoco sirve: rompería la barra de arriba, que acompaña al
-  // navbar claro. Así que lo movemos según qué sección toca el borde de
-  // abajo de la pantalla.
+  // Safari en iOS pinta sus barras con el theme-color de la página. Antes esto
+  // seguía a la sección que tocaba el borde de abajo de la pantalla, porque
+  // arriba había una barra clara y abajo un footer oscuro y ningún valor fijo
+  // servía para los dos. Ahora la barra es navy y el footer también, así que
+  // alcanza con un color por tema: el mismo --surface-inv de cada paleta.
+  // Un test verifica que estos dos valores no se despeguen de los tokens.
   const metaTema = document.querySelector('meta[name="theme-color"]');
-  const TEMA_CLARO = '#F7F2E7';
-  const TEMA_OSCURO = '#243C54';
+  const BARRA = { light: '#243C54', dark: '#16283A' };   // = --surface-inv
 
   function actualizarColorDeBarra(){
     if(!metaTema) return;
-    const alFondo = document.elementFromPoint(
-      Math.round(window.innerWidth / 2), window.innerHeight - 1);
-    const esOscuro = !!(alFondo && alFondo.closest('.trust, .site-footer'));
-    const color = esOscuro ? TEMA_OSCURO : TEMA_CLARO;
+    const color = BARRA[temaActivo()] || BARRA.light;
     // Escribir el mismo valor una y otra vez hace parpadear la barra en iOS.
     if(metaTema.getAttribute('content') !== color){
       metaTema.setAttribute('content', color);
@@ -1766,15 +1788,14 @@ section{ padding-block:var(--s9); }
     if(scrollPendiente) return;
     scrollPendiente = true;
     requestAnimationFrame(() => {
-      if(navbar) navbar.style.boxShadow = window.scrollY > 8 ? '0 4px 18px rgba(28,37,54,.09)' : 'none';
-      actualizarColorDeBarra();
+      // Más opaca que antes: una sombra al 9% debajo de una barra navy sobre
+      // el crema no se ve, y es lo único que despega la barra del contenido.
+      if(navbar) navbar.style.boxShadow = window.scrollY > 8 ? '0 4px 18px rgba(0,0,0,.22)' : 'none';
       scrollPendiente = false;
     });
   }, { passive: true });
 
-  // Al cargar y al girar el teléfono, que arranque con el color correcto.
   actualizarColorDeBarra();
-  window.addEventListener('resize', actualizarColorDeBarra, { passive: true });
 
   // ============================================================
   // BARRA FIJA DE WHATSAPP

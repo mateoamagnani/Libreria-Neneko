@@ -30,8 +30,11 @@ es **un mensaje de WhatsApp**, no una venta online: el cliente pide y retira en 
 
 ## Estructura de la página
 
-1. **Navbar sticky** — logo + CTA de WhatsApp siempre visible. En pantallas chicas el CTA
-   queda como icono solo, para que el nombre del negocio no parta en dos líneas.
+1. **Navbar sticky** — logo + CTA de WhatsApp siempre visible, sobre el navy del logo
+   (`--surface-inv`, la misma superficie que la banda de reseñas y el footer). Ahí el CTA
+   no puede ser el botón primario, que también es navy: va en `--brand-bright`, el ámbar
+   del logo. En pantallas chicas queda como icono solo, para que el nombre del negocio no
+   parta en dos líneas.
 2. **Hero** — dirección, headline, propuesta de valor, CTA primario de WhatsApp, CTA
    secundario al catálogo, y una fila de confianza con el rating de Google y el estado
    **"abierto ahora / cerrado"** calculado en vivo. A la derecha, una maqueta de iPhone con

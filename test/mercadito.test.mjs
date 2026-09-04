@@ -28,9 +28,11 @@ const ctx = {
     querySelectorAll: () => [],
     elementFromPoint: () => null,
     addEventListener() {},
+    // El script lee data-theme de acá para saber qué tema está activo.
+    documentElement: { getAttribute: () => null, setAttribute() {} },
     hidden: false,
   },
-  window: { matchMedia: () => ({ matches: false }), addEventListener() {} },
+  window: { matchMedia: () => ({ matches: false, addEventListener() {} }), addEventListener() {} },
   requestAnimationFrame: (f) => f(),
   IntersectionObserver: class { observe() {} unobserve() {} },
   setTimeout, clearTimeout, AbortController,
@@ -245,11 +247,12 @@ test('el HTML de respaldo no trae precios inventados', () => {
 // Color de las barras del navegador en el teléfono
 // ---------------------------------------------------------------------------
 
-// Corre el script con un theme-color falso y control sobre qué hay al fondo
-// de la pantalla, para poder afirmar de qué color queda la barra.
-function correrConFondo(seccionAlFondo) {
+// Corre el script con un theme-color falso y control sobre el tema activo,
+// para poder afirmar de qué color queda la barra del navegador.
+//   elegido: 'light' | 'dark' | null (sin elección: manda el sistema)
+function correrConTema(elegido, sistemaOscuro = false) {
   const meta = {
-    valor: '#F7F2E7',
+    valor: '',
     getAttribute: () => meta.valor,
     setAttribute: (_, v) => { meta.valor = v; },
   };
@@ -257,10 +260,12 @@ function correrConFondo(seccionAlFondo) {
     ...ctx,
     document: {
       ...ctx.document,
+      documentElement: { getAttribute: () => elegido, setAttribute() {} },
       querySelector: (sel) => (sel.includes('theme-color') ? meta : { style: {} }),
-      elementFromPoint: () => ({
-        closest: (sel) => (sel.includes(seccionAlFondo) ? {} : null),
-      }),
+    },
+    window: {
+      matchMedia: () => ({ matches: sistemaOscuro, addEventListener() {} }),
+      addEventListener() {},
     },
   };
   vm.createContext(c);
@@ -268,19 +273,20 @@ function correrConFondo(seccionAlFondo) {
   return meta;
 }
 
-test('con el footer al fondo, la barra del navegador se pone oscura', () => {
-  assert.equal(correrConFondo('site-footer').valor, '#243C54');
+test('en modo claro la barra del navegador toma el navy del navbar', () => {
+  assert.equal(correrConTema('light').valor, '#243C54');
 });
 
-test('con la sección de reseñas al fondo, también', () => {
-  assert.equal(correrConFondo('trust').valor, '#243C54');
+test('en modo oscuro toma el navy oscuro', () => {
+  assert.equal(correrConTema('dark').valor, '#16283A');
 });
 
-test('con una sección clara al fondo, la barra vuelve a clara', () => {
-  assert.equal(correrConFondo('mercadito').valor, '#F7F2E7');
+test('sin elección explícita, sigue al sistema', () => {
+  assert.equal(correrConTema(null, true).valor, '#16283A');
+  assert.equal(correrConTema(null, false).valor, '#243C54');
 });
 
-test('el theme-color del HTML arranca claro, como el navbar', () => {
+test('el theme-color del HTML arranca navy, como el navbar', () => {
   const inicial = html.match(/<meta name="theme-color" content="([^"]+)"/)[1];
-  assert.equal(inicial, '#F7F2E7');
+  assert.equal(inicial, '#243C54');
 });

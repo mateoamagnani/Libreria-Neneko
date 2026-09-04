@@ -51,9 +51,10 @@ function enElMomento(weekday, hora, minuto){
       querySelectorAll: () => [],
       elementFromPoint: () => null,
       addEventListener() {},
+      documentElement: { getAttribute: () => null, setAttribute() {} },
       hidden: false,
     },
-    window: { matchMedia: () => ({ matches: false }), addEventListener() {} },
+    window: { matchMedia: () => ({ matches: false, addEventListener() {} }), addEventListener() {} },
     requestAnimationFrame: (f) => f(),
     IntersectionObserver: class { observe() {} unobserve() {} },
     setTimeout, clearTimeout, AbortController,
@@ -329,6 +330,31 @@ test('el acento se lee sobre la banda oscura, en los dos modos', () => {
     const ratio = contraste(t['--brand-bright'], t['--surface-inv']);
     assert.ok(ratio >= 4.5,
       `--brand-bright sobre --surface-inv en modo ${modo}: ${ratio.toFixed(2)}:1`);
+  });
+});
+
+// El navbar es la misma superficie oscura que la banda de reseñas y el footer,
+// y el theme-color del teléfono lo copia con dos literales (BARRA en el
+// script), porque el JS no puede leer un custom property sin un layout real.
+// Este test es lo que impide que se despeguen si mañana cambia la paleta.
+test('el theme-color del teléfono coincide con --surface-inv en los dos modos', () => {
+  const barra = html.match(/const BARRA = \{ light: '([^']+)', dark: '([^']+)' \}/);
+  assert.ok(barra, 'no se encontró la constante BARRA en el script');
+  assert.equal(barra[1].toUpperCase(), rootClaro['--surface-inv'].toUpperCase());
+  assert.equal(barra[2].toUpperCase(), rootOscuro['--surface-inv'].toUpperCase());
+});
+
+// El CTA de la barra no usa --btn-bg (es navy, igual que la barra): va en
+// --brand-bright con el navy como texto. Que siga siendo legible es lo que
+// sostiene la única conversión que le importa al negocio.
+test('el CTA de la barra se lee sobre el navbar, en los dos modos', () => {
+  [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
+    const texto = contraste(t['--surface-inv'], t['--brand-bright']);
+    assert.ok(texto >= 4.5,
+      `texto del CTA de la barra en modo ${modo}: ${texto.toFixed(2)}:1`);
+    const contraLaBarra = contraste(t['--brand-bright'], t['--surface-inv']);
+    assert.ok(contraLaBarra >= 3,
+      `el CTA no se despega de la barra en modo ${modo}: ${contraLaBarra.toFixed(2)}:1`);
   });
 });
 
