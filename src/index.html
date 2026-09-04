@@ -1536,11 +1536,12 @@ section{ padding-block:var(--s9); }
     const filas = tieneEncabezado ? rows.slice(1) : rows;
     return filas.filter(r => {
       // 7-column format: Ubicación (0) | Categoría (1) | Sub-cat (2) | Producto (3) | Precio (4) | Detalle (5) | Imagen (6)
-      if(r.length >= 7) return r[0] && r[1] && r[3]; // Ubicación, Categoría, Producto required
+      // Sub-cat, Detalle e Imagen pueden estar vacías
+      if(r.length >= 7) return (r[0] || '').trim() && (r[1] || '').trim() && (r[3] || '').trim();
       // Fallback: older formats with 5-6 columns
-      if(r.length >= 5) return r[0] && r[1] && r[2]; // Ubicación, Categoría, Producto required
+      if(r.length >= 5) return (r[0] || '').trim() && (r[1] || '').trim() && (r[2] || '').trim();
       // Legacy: 3-4 column format (Categoría | Producto | Precio | ...)
-      if(r.length >= 3) return r[0] && r[1];
+      if(r.length >= 3) return (r[0] || '').trim() && (r[1] || '').trim();
       return false;
     });
   }
@@ -1578,8 +1579,20 @@ section{ padding-block:var(--s9); }
         subcategoria = '';
       }
 
+      // Limpiar espacios en todos los campos
+      ubicacion = (ubicacion || '').trim();
+      categoria = (categoria || '').trim();
+      subcategoria = (subcategoria || '').trim();
+      nombre = (nombre || '').trim();
+      precio = (precio || '').trim();
+      detalle = (detalle || '').trim();
+      imagen = (imagen || '').trim();
+
       // Validar que campos críticos existan
       if(!nombre || !categoria) return;
+
+      // Si ubicación está vacía, asumir "Novedades y Ofertas"
+      if(!ubicacion) ubicacion = 'Novedades y Ofertas';
 
       const producto = { nombre, precio, detalle, imagen, subcategoria, categoria, ubicacion };
       allProducts.push(producto);
@@ -1588,7 +1601,7 @@ section{ padding-block:var(--s9); }
       if(ubicacion === 'Menú'){
         if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
         categoriesMenu.get(categoria).push(producto);
-      } else if(!ubicacion || ubicacion === 'Novedades y Ofertas'){
+      } else if(ubicacion === 'Novedades y Ofertas'){
         if(!groups.has(categoria)) groups.set(categoria, []);
         groups.get(categoria).push(producto);
       }
@@ -1657,7 +1670,9 @@ section{ padding-block:var(--s9); }
 
       if(!res.ok) throw new Error('HTTP ' + res.status);
 
-      const filas = normalizarFilas(parseCsv(await res.text()));
+      const textoCrudo = await res.text();
+      console.log("CSV crudo recibido:\n", textoCrudo);
+      const filas = normalizarFilas(parseCsv(textoCrudo));
       if(!filas.length) throw new Error('la hoja no tiene filas usables');
 
       wrap.innerHTML = buildMercaditoHTML(filas);
