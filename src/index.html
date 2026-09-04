@@ -794,6 +794,41 @@ section{ padding-block:var(--s9); }
 :root[data-theme="dark"] .product-thumb.tone-terra  { color:#8AD3D3; }
 :root[data-theme="dark"] .product-thumb.tone-sage   { color:#A7C4E8; }
 
+.category-header{
+  display:flex; flex-direction:column; gap:var(--s3);
+  margin-bottom:var(--s6); padding:var(--s4) 0;
+  border-bottom:1px solid var(--border);
+}
+
+.category-header h2{
+  margin:0; font-size:1.75rem; color:var(--text);
+}
+
+.category-header p{
+  margin:0; color:var(--text-2); font-size:.95rem;
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--text-2);
+  border:1px solid var(--border);
+  padding:var(--s3) var(--s4);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  font-size:.9rem;
+  transition:all .2s ease;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:var(--s2);
+}
+
+.btn-ghost:hover{
+  background:var(--surface-2);
+  border-color:var(--border-strong);
+  color:var(--text);
+}
+
 .product-info{
   display:flex; flex-direction:column; flex:1;
   padding:var(--s4);
@@ -1606,7 +1641,7 @@ section{ padding-block:var(--s9); }
 
     // Limpiar enlaces de categorías anteriores (mantener la estructura base)
     const categoryDiv = menuNav.querySelector('.menu-category');
-    const existingLinks = Array.from(menuNav.querySelectorAll('.menu-link'));
+    const existingLinks = Array.from(menuNav.querySelectorAll('.menu-link:not(.menu-link-fixed)'));
     existingLinks.forEach(link => link.remove());
 
     // Agregar nuevas categorías como enlaces
@@ -1615,13 +1650,31 @@ section{ padding-block:var(--s9); }
       link.href = '#productos';
       link.className = 'menu-link';
       link.textContent = cat;
-      link.addEventListener('click', () => {
-        const group = document.querySelector(`[data-categoria="${esc(cat)}"]`);
-        if(group) group.scrollIntoView({ behavior: 'smooth' });
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        renderCategoryView(cat);
+        // Cerrar menú después de seleccionar categoría
+        document.getElementById('menuPanel')?.classList.remove('active');
+        document.getElementById('menuOverlay')?.classList.remove('active');
+        // Scroll a productos
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
       });
       if(idx === 0 && categoryDiv) menuNav.insertBefore(link, categoryDiv.nextElementSibling);
       else menuNav.appendChild(link);
     });
+  }
+
+  // Verificar parámetros de URL al cargar
+  function checkURLParams(){
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    if(cat && window._neneko_menu_products && window._neneko_menu_products[cat]){
+      // Esperar a que el DOM esté listo antes de renderizar categoría
+      setTimeout(() => {
+        renderCategoryView(decodeURIComponent(cat));
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
   }
 
   // Los tonos rotan para dar ritmo visual a la grilla; el icono NO rota: sale
@@ -1700,32 +1753,59 @@ section{ padding-block:var(--s9); }
   }
 
   // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
+  // Ahora soporta: Ubicación | Categoría | Producto | Precio | Detalle | Imagen
   function normalizarFilas(rows){
     if(!rows.length) return [];
-    const [cat, prod] = rows[0].map(c => c.toLowerCase());
+    const primeraCelda = (rows[0][0] || '').toLowerCase();
     const tieneEncabezado =
-      /^categor/.test(cat || '') && /^(producto|nombre|art)/.test(prod || '');
-    return (tieneEncabezado ? rows.slice(1) : rows)
-      .filter(r => r.length >= 3 && r[0] && r[1]);
+      /^ubicacion|^home|^menu|^categor/.test(primeraCelda);
+
+    const filas = tieneEncabezado ? rows.slice(1) : rows;
+    return filas.filter(r => {
+      // Detectar si es formato antiguo (3+ cols) o nuevo (6 cols con ubicación)
+      if(r.length >= 6) return r[1] && r[2]; // Ubicación | Categoría | Producto | ...
+      if(r.length >= 3) return r[0] && r[1]; // Categoría | Producto | Precio ...
+      return false;
+    });
   }
 
   function buildMercaditoHTML(rows){
-    const groups = new Map();
-    rows.forEach(([categoria, nombre, precio, detalle, imagen]) => {
-      if(!groups.has(categoria)) groups.set(categoria, []);
-      groups.get(categoria).push({ nombre, precio, detalle, imagen });
+    // Detectar si el formato incluye Ubicación en la primera columna
+    const tieneUbicacion = rows.length > 0 && rows[0].length >= 6;
+    const categoriesMenu = new Map(); // Guardar productos de "Menú" por categoría
+    const groups = new Map(); // Para productos visibles (Novedades)
+
+    rows.forEach(row => {
+      let ubicacion, categoria, nombre, precio, detalle, imagen;
+
+      if(tieneUbicacion){
+        [ubicacion, categoria, nombre, precio, detalle, imagen] = row;
+      } else {
+        [categoria, nombre, precio, detalle, imagen] = row;
+        ubicacion = 'Novedades y Ofertas'; // Default para formato antiguo
+      }
+
+      // Organizar por ubicación
+      if(ubicacion === 'Menú'){
+        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
+        categoriesMenu.get(categoria).push({ nombre, precio, detalle, imagen });
+      } else if(ubicacion === 'Novedades y Ofertas'){
+        if(!groups.has(categoria)) groups.set(categoria, []);
+        groups.get(categoria).push({ nombre, precio, detalle, imagen });
+      }
     });
 
-    // Guardar categorías para actualizar en el menú después
-    window._nenekoCategorias = [...groups.keys()];
+    // Guardar productos de menú en memoria para filtrado dinámico
+    window._neneko_menu_products = Object.fromEntries(categoriesMenu);
+    window._nenekoCategorias = [...categoriesMenu.keys()];
 
+    // Renderizar solo "Novedades y Ofertas"
     return [...groups].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
-        // Si hay imagen válida, mostrarla en el thumbnail; si no, usar ícono SVG
         const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
@@ -1749,6 +1829,74 @@ section{ padding-block:var(--s9); }
       </div>`;
     }).join('');
   }
+
+  function renderCategoryView(categoryName){
+    const wrap = document.getElementById('mercaditoDynamic');
+    if(!wrap || !window._neneko_menu_products) return;
+
+    const productos = window._neneko_menu_products[categoryName] || [];
+    if(!productos.length){
+      wrap.innerHTML = '<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No hay productos en esta categoría.</p>';
+      return;
+    }
+
+    // Crear HTML con botón de vuelta
+    const backBtn = `<div style="margin-bottom: var(--s5);">
+      <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
+        ← Volver al inicio
+      </button>
+      <h2 style="margin: 0; margin-bottom: var(--s2);">${esc(categoryName)}</h2>
+      <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
+    </div>`;
+
+    // Agrupar por subcategoría si hay múltiples
+    const bySubcat = new Map();
+    productos.forEach((p, i) => {
+      const subcat = p.subcategoria || 'Otros';
+      if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
+      bySubcat.get(subcat).push({...p, index: i});
+    });
+
+    const cards = [...bySubcat].map(([subcat, prods]) => {
+      const cardsHtml = prods.map(p => {
+        const tone = TONES[p.index % TONES.length];
+        const detalle = p.detalle
+          ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
+
+        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">`
+          : iconoDe(p.nombre);
+
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName}`.toLowerCase();
+        return `<div class="product-card" data-search="${esc(searchText)}">
+          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          <div class="product-info">
+            <h4>${esc(p.nombre)}</h4>
+            ${detalle}
+            <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+          </div>
+        </div>`;
+      }).join('');
+
+      return `<div class="shop-group" data-categoria="${esc(categoryName)}">
+        <div class="shop-group-head"><h3>${esc(subcat)}</h3><span>${prods.length}</span></div>
+        <div class="product-grid">${cardsHtml}</div>
+      </div>`;
+    }).join('');
+
+    wrap.innerHTML = backBtn + cards;
+    observarAparicion(wrap.querySelectorAll('.product-card'));
+  }
+
+  window.neneko_backToHome = function(){
+    // Limpiar parámetros de URL y recargar vista
+    window.history.replaceState({}, '', window.location.pathname);
+    loadProductsFromSheet();
+    window.scrollTo(0, 0);
+  };
 
   async function loadProductsFromSheet(){
     // Sin configurar todavía: la página se queda con los productos de ejemplo
@@ -1784,6 +1932,8 @@ section{ padding-block:var(--s9); }
       if(window._nenekoCategorias && document.querySelector('.menu-nav')){
         actualizarCategoriesEnMenu(window._nenekoCategorias);
       }
+      // Verificar si hay parámetros de URL para navegar a una categoría
+      checkURLParams();
     }catch(err){
       console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
     }
