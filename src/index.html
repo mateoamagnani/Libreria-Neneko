@@ -1853,7 +1853,8 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria} ${p.keywords || ''}`.toLowerCase();
+        const keywordsList = (p.keywords || '').split(',').map(k => k.trim()).join(' ');
+        const searchText = normalizeText(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -1912,7 +1913,8 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName} ${p.keywords || ''}`.toLowerCase();
+        const keywordsList = (p.keywords || '').split(',').map(k => k.trim()).join(' ');
+        const searchText = normalizeText(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -2339,6 +2341,11 @@ section{ padding-block:var(--s9); }
   // ============================================================
   // BUSCADOR DE PRODUCTOS (E-COMMERCE)
   // ============================================================
+  const normalizeText = str => {
+    if(!str) return '';
+    return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  };
+
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
     function ejecutarBusqueda(query){
@@ -2351,7 +2358,7 @@ section{ padding-block:var(--s9); }
       const wrap = document.getElementById('mercaditoDynamic');
       if(!wrap) return;
 
-      query = query.toLowerCase().trim();
+      const queryNorm = normalizeText(query.trim());
       const allProducts = window._neneko_menu_products
         ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
             prods.map(p => ({...p, categoria: cat}))
@@ -2359,8 +2366,15 @@ section{ padding-block:var(--s9); }
         : [];
 
       const searchResults = allProducts.filter(p => {
-        const texto = `${p.nombre} ${p.detalle || ''} ${p.categoria} ${p.keywords || ''}`.toLowerCase();
-        return texto.includes(query);
+        const nombreNorm = normalizeText(p.nombre);
+        const detalleNorm = normalizeText(p.detalle || '');
+        const categoriaNorm = normalizeText(p.categoria);
+        const keywordsArray = (p.keywords || '').split(',').map(k => normalizeText(k.trim()));
+
+        return nombreNorm.includes(queryNorm) ||
+               detalleNorm.includes(queryNorm) ||
+               categoriaNorm.includes(queryNorm) ||
+               keywordsArray.some(kw => kw.includes(queryNorm));
       });
 
       if(searchResults.length === 0){
