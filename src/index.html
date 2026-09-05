@@ -1882,8 +1882,12 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const keywordsList = (p.keywords || '').split(',').map(k => k.trim()).join(' ');
-        const searchText = normalizeText(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
+        const keywordsList = (p.keywords || '')
+          .split(',')
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .join(' ');
+        const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -1942,8 +1946,12 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const keywordsList = (p.keywords || '').split(',').map(k => k.trim()).join(' ');
-        const searchText = normalizeText(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
+        const keywordsList = (p.keywords || '')
+          .split(',')
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .join(' ');
+        const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -2370,15 +2378,16 @@ section{ padding-block:var(--s9); }
   // ============================================================
   // BUSCADOR DE PRODUCTOS (E-COMMERCE)
   // ============================================================
-  const normalizeText = str => {
-    if(!str) return '';
-    return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  // Función auxiliar: normaliza texto removiendo acentos/tildes para búsqueda robusta
+  const normalize = str => {
+    if(!str || typeof str !== 'string') return '';
+    return str.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   };
 
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
     function ejecutarBusqueda(query){
-      if(!query || query.length === 0){
+      if(!query || query.trim().length === 0){
         loadProductsFromSheet();
         document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
         return;
@@ -2387,7 +2396,7 @@ section{ padding-block:var(--s9); }
       const wrap = document.getElementById('mercaditoDynamic');
       if(!wrap) return;
 
-      const queryNorm = normalizeText(query.trim());
+      const queryNorm = normalize(query);
       const allProducts = window._neneko_menu_products
         ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
             prods.map(p => ({...p, categoria: cat}))
@@ -2395,11 +2404,17 @@ section{ padding-block:var(--s9); }
         : [];
 
       const searchResults = allProducts.filter(p => {
-        const nombreNorm = normalizeText(p.nombre);
-        const detalleNorm = normalizeText(p.detalle || '');
-        const categoriaNorm = normalizeText(p.categoria);
-        const keywordsArray = (p.keywords || '').split(',').map(k => normalizeText(k.trim()));
+        const nombreNorm = normalize(p.nombre);
+        const detalleNorm = normalize(p.detalle || '');
+        const categoriaNorm = normalize(p.categoria);
 
+        // Procesa keywords: maneja celdas vacías y desglose por comas
+        const keywordsArray = (p.keywords || '')
+          .split(',')
+          .map(k => normalize(k))
+          .filter(k => k.length > 0); // Elimina keywords vacías
+
+        // Retorna verdadero si la query coincide con cualquier campo
         return nombreNorm.includes(queryNorm) ||
                detalleNorm.includes(queryNorm) ||
                categoriaNorm.includes(queryNorm) ||
