@@ -2040,10 +2040,10 @@ section{ padding-block:var(--s9); }
 
       if(!filas.length) return;
 
-      // Procesar los productos del Menú: Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen
+      // Procesar los productos del Menú: Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen [| Keywords]
       const categoriesMenu = new Map();
       filas.forEach(row => {
-        if(row.length < 6) return; // Necesita las 6 columnas
+        if(row.length < 6) return; // Necesita mínimo 6 columnas
 
         const categoria = String(row[0] || '').trim();
         const subcategoria = String(row[1] || '').trim();
@@ -2051,11 +2051,12 @@ section{ padding-block:var(--s9); }
         const precio = String(row[3] || '').trim();
         const detalle = String(row[4] || '').trim();
         const imagen = String(row[5] || '').trim();
+        const keywords = row.length >= 7 ? String(row[6] || '').trim() : '';
 
         if(!categoria || !nombre) return;
 
         if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
-        categoriesMenu.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen });
+        categoriesMenu.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
       });
 
       if(categoriesMenu.size === 0) return;
