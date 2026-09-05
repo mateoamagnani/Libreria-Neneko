@@ -106,11 +106,11 @@ test('martes 14:00 — abierto, y dice hasta cuándo', () => {
 
 test('martes 11:00 — todavía no abrió, avisa a qué hora abre', () => {
   const { estadoDelLocal } = enElMomento('Tue', 11, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre 11:30' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre 12:00' });
 });
 
-test('martes 11:30 — el minuto de apertura ya cuenta como abierto', () => {
-  assert.equal(enElMomento('Tue', 11, 30).estadoDelLocal().abierto, true);
+test('martes 12:00 — el minuto de apertura ya cuenta como abierto', () => {
+  assert.equal(enElMomento('Tue', 12, 0).estadoDelLocal().abierto, true);
 });
 
 test('martes 20:29 — todavía abierto un minuto antes de cerrar', () => {
@@ -123,7 +123,7 @@ test('martes 20:30 — la hora de cierre ya cuenta como cerrado', () => {
 
 test('martes 21:00 — cerrado por hoy, abre mañana', () => {
   const { estadoDelLocal } = enElMomento('Tue', 21, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 11:30' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 12:00' });
 });
 
 // El sábado cierra más temprano que el resto: vale la pena afirmar su borde
@@ -134,12 +134,12 @@ test('sábado 15:29 — todavía abierto un minuto antes de cerrar', () => {
 
 test('sábado 16:00 — ya cerró y el domingo no abre, así que salta al lunes', () => {
   const { estadoDelLocal } = enElMomento('Sat', 16, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre lunes 11:30' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre lunes 12:00' });
 });
 
 test('domingo al mediodía — cerrado, abre mañana', () => {
   const { estadoDelLocal } = enElMomento('Sun', 12, 0);
-  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 11:30' });
+  assert.deepEqual(plano(estadoDelLocal()), { abierto: false, texto: 'Cerrado · abre mañana 12:00' });
 });
 
 test('si el navegador no soporta la zona horaria, no explota', () => {
@@ -171,7 +171,7 @@ test('el domingo se dibuja como Cerrado, no como una celda vacía', () => {
 
 test('los horarios salen con dos dígitos, para que la columna quede alineada', () => {
   const tabla = enElMomento('Wed', 10, 0).tablaRenderizada;
-  assert.match(tabla, /<span>11:30 – 20:30<\/span>/);
+  assert.match(tabla, /<span>12:00 – 20:30<\/span>/);
   assert.match(tabla, /<span>11:30 – 15:30<\/span>/);
 });
 
