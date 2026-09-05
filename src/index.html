@@ -874,6 +874,11 @@ section{ padding-block:var(--s9); }
 }
 .product-info a:hover{ background:var(--btn-bg-hover); }
 
+@media (max-width:480px){
+  .product-header{ flex-direction:column; align-items:flex-start; gap:4px; }
+  .product-info h4{ flex:none; }
+}
+
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }
 @media (max-width:420px){ .product-thumb svg{ width:54px; height:54px; } }
