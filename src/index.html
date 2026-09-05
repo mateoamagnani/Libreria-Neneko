@@ -1824,26 +1824,32 @@ section{ padding-block:var(--s9); }
   }
 
   function buildMercaditoHTML(rows){
-    // Detectar formato: 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
+    // Detectar formato: 7+ columnas (Cat|Subcat|Prod|Price|Detail|Image|Keywords) o 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
+    const tieneSiete = rows.length > 0 && rows[0].length >= 7;
     const tieneSeis = rows.length > 0 && rows[0].length >= 6;
     const grupos = new Map();
 
     rows.forEach(row => {
-      let categoria, subcategoria, nombre, precio, detalle, imagen;
+      let categoria, subcategoria, nombre, precio, detalle, imagen, keywords;
 
-      if(tieneSeis){
+      if(tieneSiete){
+        // Formato nuevo con keywords (7 cols): Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen | Keywords
+        [categoria, subcategoria, nombre, precio, detalle, imagen, keywords] = row;
+      } else if(tieneSeis){
         // Formato nuevo (6 cols): Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen
         [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
+        keywords = '';
       } else {
         // Formato antiguo (3-5 cols): Categoría | Producto | Precio [| Detalle [| Imagen]]
         [categoria, nombre, precio, detalle, imagen] = row;
         subcategoria = '';
+        keywords = '';
       }
 
       if(!categoria || !nombre) return;
 
       if(!grupos.has(categoria)) grupos.set(categoria, []);
-      grupos.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen });
+      grupos.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
     });
 
     // Renderizar todos los productos agrupados por Categoría
@@ -1859,7 +1865,7 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria}`.toLowerCase();
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoria} ${p.keywords || ''}`.toLowerCase();
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -1919,7 +1925,7 @@ section{ padding-block:var(--s9); }
           ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
-        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName}`.toLowerCase();
+        const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName} ${p.keywords || ''}`.toLowerCase();
         return `<div class="product-card" data-search="${esc(searchText)}">
           <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
@@ -2366,7 +2372,7 @@ section{ padding-block:var(--s9); }
         : [];
 
       const searchResults = allProducts.filter(p => {
-        const texto = `${p.nombre} ${p.detalle || ''} ${p.categoria}`.toLowerCase();
+        const texto = `${p.nombre} ${p.detalle || ''} ${p.categoria} ${p.keywords || ''}`.toLowerCase();
         return texto.includes(query);
       });
 
@@ -2387,7 +2393,8 @@ section{ padding-block:var(--s9); }
           p.nombre,
           p.precio,
           p.detalle || '',
-          p.imagen || ''
+          p.imagen || '',
+          p.keywords || ''
         ]));
       }
 
