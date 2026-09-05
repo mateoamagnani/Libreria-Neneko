@@ -1883,7 +1883,7 @@ section{ padding-block:var(--s9); }
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
-          .split(',')
+          .split(/[,;\s]+/)
           .map(k => k.trim())
           .filter(k => k.length > 0)
           .join(' ');
@@ -1947,7 +1947,7 @@ section{ padding-block:var(--s9); }
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
-          .split(',')
+          .split(/[,;\s]+/)
           .map(k => k.trim())
           .filter(k => k.length > 0)
           .join(' ');
@@ -2409,9 +2409,9 @@ section{ padding-block:var(--s9); }
         const detalleNorm = normalize(p.detalle || '');
         const categoriaNorm = normalize(p.categoria);
 
-        // Procesa keywords: maneja celdas vacías y desglose por comas
+        // Procesa keywords: maneja celdas vacías y desglose por comas, puntos y coma, o espacios
         const keywordsArray = (p.keywords || '')
-          .split(',')
+          .split(/[,;\s]+/)
           .map(k => normalize(k))
           .filter(k => k.length > 0); // Elimina keywords vacías
 
