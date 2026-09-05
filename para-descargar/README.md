@@ -9,7 +9,6 @@ Sitio web de Librería Neneko. Una sola página HTML, sin dependencias, sin comp
 ├── index.html          ← El sitio completo (HTML + CSS + JavaScript)
 ├── package.json        ← Scripts para desarrollo
 ├── nuevo-logo.png      ← Logo del negocio
-├── og.jpg              ← Imagen para WhatsApp y redes sociales
 ├── robots.txt          ← Para buscadores
 └── sitemap.xml         ← Mapa del sitio
 ```
@@ -97,7 +96,7 @@ Verifica que todo esté sincronizado (horarios, colores, etc).
 
 Está todo en `index.html`:
 - Colores: dentro del `<style>` (variables `--*`)
-- Logos e imágenes: referencias a `nuevo-logo.png` y `og.jpg`
+- Logo: referencia a `nuevo-logo.png`
 
 ## 📱 Cómo funciona
 
