@@ -455,6 +455,7 @@ section{ padding-block:var(--s9); }
   background:var(--surface); z-index:90;
   transition:right .3s ease; overflow-y:auto;
   display:flex; flex-direction:column; box-shadow:var(--shadow-md);
+  padding-bottom:env(safe-area-inset-bottom, 20px);
 }
 .menu-panel.active{ right:0; }
 
@@ -2338,43 +2339,81 @@ section{ padding-block:var(--s9); }
   loadProductsFromSheet();
 
   // ============================================================
-  // BUSCADOR DE PRODUCTOS
+  // BUSCADOR DE PRODUCTOS (E-COMMERCE)
   // ============================================================
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
-    menuSearch.addEventListener('input', function(){
-      const query = this.value.toLowerCase().trim();
-      const cards = document.querySelectorAll('.product-card');
-      let visible = 0;
+    function ejecutarBusqueda(query){
+      if(!query || query.length === 0){
+        loadProductsFromSheet();
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
 
-      cards.forEach(card => {
-        const searchText = card.getAttribute('data-search') || '';
-        const matches = !query || searchText.includes(query);
-        card.style.display = matches ? '' : 'none';
-        if(matches) visible++;
+      const wrap = document.getElementById('mercaditoDynamic');
+      if(!wrap) return;
+
+      query = query.toLowerCase().trim();
+      const allProducts = window._neneko_menu_products
+        ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
+            prods.map(p => ({...p, categoria: cat}))
+          )
+        : [];
+
+      const searchResults = allProducts.filter(p => {
+        const texto = `${p.nombre} ${p.detalle || ''} ${p.categoria}`.toLowerCase();
+        return texto.includes(query);
       });
 
-      // Ocultar grupos sin productos visibles
-      document.querySelectorAll('.shop-group').forEach(group => {
-        const visibleCards = group.querySelectorAll('.product-card:not([style*="display: none"])').length;
-        group.style.display = visibleCards > 0 ? '' : 'none';
-      });
+      if(searchResults.length === 0){
+        wrap.innerHTML = `<div style="padding: var(--s6); text-align: center; color: var(--text-2);">
+          <p>No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>
+        </div>`;
+      } else {
+        wrap.innerHTML = `<div style="margin-bottom: var(--s5);">
+          <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
+            ← Volver al inicio
+          </button>
+          <h2 style="margin: 0; margin-bottom: var(--s2);">Resultados para: "<strong>${esc(query)}</strong>"</h2>
+          <p style="color: var(--text-2); margin: 0;">${searchResults.length} producto${searchResults.length === 1 ? '' : 's'}</p>
+        </div>` + buildMercaditoHTML(searchResults.map(p => [
+          p.categoria,
+          p.subcategoria || '',
+          p.nombre,
+          p.precio,
+          p.detalle || '',
+          p.imagen || ''
+        ]));
+      }
 
-      // Mostrar mensaje si no hay resultados
-      let noResults = document.getElementById('noSearchResults');
-      if(visible === 0 && query){
-        if(!noResults){
-          noResults = document.createElement('div');
-          noResults.id = 'noSearchResults';
-          noResults.style.cssText = 'padding: var(--s6); text-align: center; color: var(--text-2);';
-          noResults.innerHTML = `<p>No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>`;
-          document.getElementById('mercaditoDynamic')?.parentElement.appendChild(noResults);
+      wrap.scrollIntoView({ behavior: 'smooth' });
+      observarAparicion(wrap.querySelectorAll('.product-card'));
+    }
+
+    menuSearch.addEventListener('keypress', function(e){
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const query = this.value.trim();
+        if(query){
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          ejecutarBusqueda(query);
         }
-        noResults.style.display = '';
-      } else if(noResults){
-        noResults.style.display = 'none';
       }
     });
+
+    const searchIcon = menuSearch.parentElement.querySelector('svg');
+    if(searchIcon){
+      searchIcon.style.cursor = 'pointer';
+      searchIcon.addEventListener('click', function(){
+        const query = menuSearch.value.trim();
+        if(query){
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          ejecutarBusqueda(query);
+        }
+      });
+    }
   }
 
   // ============================================================
