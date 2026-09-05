@@ -1851,7 +1851,7 @@ section{ padding-block:var(--s9); }
         const imagenLimpia = limpiarUrlImagen(p.imagen);
         const toneClass = (imagenLimpia && imagenLimpia.startsWith('http')) ? '' : ` tone-${tone}`;
         const thumbContent = (imagenLimpia && imagenLimpia.startsWith('http'))
-          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy">`
+          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
         const searchText = `${p.nombre} ${p.detalle || ''} ${categoria}`.toLowerCase();
@@ -1911,7 +1911,7 @@ section{ padding-block:var(--s9); }
         const imagenLimpia = limpiarUrlImagen(p.imagen);
         const toneClass = (imagenLimpia && imagenLimpia.startsWith('http')) ? '' : ` tone-${tone}`;
         const thumbContent = (imagenLimpia && imagenLimpia.startsWith('http'))
-          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy">`
+          ? `<img src="${esc(imagenLimpia)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
           : iconoDe(p.nombre);
 
         const searchText = `${p.nombre} ${p.detalle || ''} ${categoryName}`.toLowerCase();
