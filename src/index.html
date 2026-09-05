@@ -1204,8 +1204,7 @@ section{ padding-block:var(--s9); }
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
         <div class="hero-text-container">
-          <h1 class="hero-title">Abrimos nuestras<br>puertas</h1>
-          <p class="hero-subtitle">Los esperamos en nuestro <strong>Local Neneko</strong></p>
+          <h1 class="hero-title">Los esperamos<br>en nuestro local</h1>
         </div>
 
         <div class="hero-ctas">
@@ -1669,7 +1668,7 @@ section{ padding-block:var(--s9); }
   })[c]);
 
   const linkConsulta = nombre =>
-    `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería pedir info sobre ' + nombre)}`;
+    `${WHATSAPP}?text=${encodeURIComponent('Hola Neneko! Como están? Queria consultar por "' + nombre + '"')}`;
 
   // Generar acordeón dinámico de categorías y subcategorías desde Google Sheets
   function actualizarCategoriesEnMenu(categoriasMap){
