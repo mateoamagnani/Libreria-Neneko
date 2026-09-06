@@ -2032,11 +2032,10 @@ section{ padding-block:var(--s9); }
   window.neneko_backToHome = function(){
     // Limpiar parámetros de URL y recargar vista
     window.history.replaceState({}, '', window.location.pathname);
+    // Restaurar posición de scroll inmediatamente (sincrónico)
+    window.scrollTo(0, _neneko_savedScrollPos);
+    // Cargar vista en background sin bloquear el scroll
     loadProductsFromSheet();
-    // Restaurar posición de scroll guardada en lugar de ir al principio
-    setTimeout(() => {
-      window.scrollTo(0, _neneko_savedScrollPos);
-    }, 100);
   };
 
   window.neneko_viewCategory = function(categoryName){
