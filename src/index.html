@@ -1702,12 +1702,12 @@ section{ padding-block:var(--s9); }
         item.className = 'subcategory-item';
 
         const link = document.createElement('a');
-        link.href = `#productos?cat=${encodeURIComponent(categoria)}`;
+        link.href = `#productos?cat=${encodeURIComponent(categoria)}&subcat=${encodeURIComponent(subcat)}`;
         link.className = 'subcategory-link';
         link.textContent = subcat;
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          renderCategoryView(categoria);
+          renderCategoryView(categoria, subcat);
           document.getElementById('menuPanel')?.classList.remove('active');
           document.getElementById('menuOverlay')?.classList.remove('active');
           document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
@@ -1734,10 +1734,11 @@ section{ padding-block:var(--s9); }
   function checkURLParams(){
     const params = new URLSearchParams(window.location.search);
     const cat = params.get('cat');
+    const subcat = params.get('subcat');
     if(cat && window._neneko_menu_products && window._neneko_menu_products[cat]){
       // Esperar a que el DOM esté listo antes de renderizar categoría
       setTimeout(() => {
-        renderCategoryView(decodeURIComponent(cat));
+        renderCategoryView(decodeURIComponent(cat), subcat ? decodeURIComponent(subcat) : undefined);
         document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
@@ -1901,26 +1902,33 @@ section{ padding-block:var(--s9); }
     }).join('');
   }
 
-  function renderCategoryView(categoryName){
+  function renderCategoryView(categoryName, subcategoryName){
     const wrap = document.getElementById('mercaditoDynamic');
     if(!wrap || !window._neneko_menu_products) return;
 
-    const productos = window._neneko_menu_products[categoryName] || [];
+    const allProductos = window._neneko_menu_products[categoryName] || [];
+
+    // Si se especifica una subcategoría, filtrar solo esos productos
+    const productos = subcategoryName
+      ? allProductos.filter(p => (p.subcategoria || 'Otros') === subcategoryName)
+      : allProductos;
+
     if(!productos.length){
       wrap.innerHTML = '<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No hay productos en esta categoría.</p>';
       return;
     }
 
     // Crear HTML con botón de vuelta
+    const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : categoryName;
     const backBtn = `<div style="margin-bottom: var(--s5);">
       <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
         ← Volver al inicio
       </button>
-      <h2 style="margin: 0; margin-bottom: var(--s2);">${esc(categoryName)}</h2>
+      <h2 style="margin: 0; margin-bottom: var(--s2);">${esc(title)}</h2>
       <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
     </div>`;
 
-    // Agrupar por subcategoría si hay múltiples
+    // Agrupar por subcategoría si hay múltiples (solo si no estamos filtrando por subcategoría)
     const bySubcat = new Map();
     productos.forEach((p, i) => {
       const subcat = p.subcategoria || 'Otros';
