@@ -1947,9 +1947,12 @@ section{ padding-block:var(--s9); }
 
   function renderCategoryView(categoryName, subcategoryName){
     const wrap = document.getElementById('mercaditoDynamic');
-    if(!wrap || !window._neneko_menu_products) return;
+    if(!wrap) return;
 
-    const allProductos = window._neneko_menu_products[categoryName] || [];
+    // Buscar primero en productos de inicio, luego en menú dinámico
+    const allProductos = (window._neneko_home_products && window._neneko_home_products[categoryName])
+      || (window._neneko_menu_products && window._neneko_menu_products[categoryName])
+      || [];
 
     // Si se especifica una subcategoría, filtrar solo esos productos
     const productos = subcategoryName
@@ -2054,6 +2057,30 @@ section{ padding-block:var(--s9); }
 
       const filas = normalizarFilas(parseCsv(await res.text()));
       if(!filas.length) throw new Error('la hoja no tiene filas usables');
+
+      // Almacenar productos de inicio para los botones "Ver todo"
+      const homeProducts = new Map();
+      filas.forEach(row => {
+        let categoria, subcategoria, nombre, precio, detalle, imagen, keywords;
+        const tieneSiete = filas.length > 0 && filas[0].length >= 7;
+        const tieneSeis = filas.length > 0 && filas[0].length >= 6;
+
+        if(tieneSiete){
+          [categoria, subcategoria, nombre, precio, detalle, imagen, keywords] = row;
+        } else if(tieneSeis){
+          [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
+          keywords = '';
+        } else {
+          [categoria, nombre, precio, detalle, imagen] = row;
+          subcategoria = '';
+          keywords = '';
+        }
+
+        if(!categoria || !nombre) return;
+        if(!homeProducts.has(categoria)) homeProducts.set(categoria, []);
+        homeProducts.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
+      });
+      window._neneko_home_products = Object.fromEntries(homeProducts);
 
       wrap.innerHTML = buildMercaditoHTML(filas);
       revelarNuevasTarjetas(wrap);
