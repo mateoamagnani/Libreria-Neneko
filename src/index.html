@@ -1718,6 +1718,7 @@ section{ padding-block:var(--s9); }
       viewAllLink.textContent = `Ver todo de ${categoria}`;
       viewAllLink.addEventListener('click', (e) => {
         e.preventDefault();
+        _neneko_savedScrollPos = window.scrollY || 0;
         renderCategoryView(categoria);
         document.getElementById('menuPanel')?.classList.remove('active');
         document.getElementById('menuOverlay')?.classList.remove('active');
@@ -1738,6 +1739,7 @@ section{ padding-block:var(--s9); }
         link.textContent = subcat;
         link.addEventListener('click', (e) => {
           e.preventDefault();
+          _neneko_savedScrollPos = window.scrollY || 0;
           renderCategoryView(categoria, subcat);
           document.getElementById('menuPanel')?.classList.remove('active');
           document.getElementById('menuOverlay')?.classList.remove('active');
@@ -2018,15 +2020,25 @@ section{ padding-block:var(--s9); }
     observarAparicion(wrap.querySelectorAll('.product-card'));
   }
 
+  // Variables globales para preservar scroll
+  let _neneko_savedScrollPos = 0;
+
   window.neneko_backToHome = function(){
     // Limpiar parámetros de URL y recargar vista
     window.history.replaceState({}, '', window.location.pathname);
     loadProductsFromSheet();
-    window.scrollTo(0, 0);
+    // Restaurar posición de scroll guardada en lugar de ir al principio
+    setTimeout(() => {
+      window.scrollTo(0, _neneko_savedScrollPos);
+    }, 100);
   };
 
   window.neneko_viewCategory = function(categoryName){
-    if(!categoryName || !window._neneko_menu_products) return;
+    if(!categoryName) return;
+    // Guardar posición actual antes de cambiar la vista
+    _neneko_savedScrollPos = window.scrollY || 0;
+    // Buscar en productos de inicio o menú dinámico
+    if(!window._neneko_home_products && !window._neneko_menu_products) return;
     renderCategoryView(categoryName);
     document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
   };
