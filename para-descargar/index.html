@@ -1716,15 +1716,12 @@ section{ padding-block:var(--s9); }
       // Agregar "Ver todo" PRIMERO para la categoría
       const viewAllItem = document.createElement('li');
       viewAllItem.className = 'subcategory-item';
-      viewAllItem.style.borderBottom = '1px solid var(--border)';
-      viewAllItem.style.marginBottom = 'var(--s3)';
-      viewAllItem.style.paddingBottom = 'var(--s3)';
 
       const viewAllLink = document.createElement('a');
       viewAllLink.href = `#productos?cat=${encodeURIComponent(categoria)}`;
       viewAllLink.className = 'subcategory-link';
       viewAllLink.style.fontWeight = '500';
-      viewAllLink.textContent = `Ver todo ${categoria}`;
+      viewAllLink.textContent = `Ver todo de ${categoria}`;
       viewAllLink.addEventListener('click', (e) => {
         e.preventDefault();
         renderCategoryView(categoria);
