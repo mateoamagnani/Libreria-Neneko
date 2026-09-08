@@ -817,9 +817,35 @@ section{ padding-block:var(--s9); }
   border-bottom:1px solid var(--border);
   color:var(--text-2);
   overflow:hidden;
+  position:relative;
 }
 .product-thumb svg{ width:72px; height:72px; }
-.product-thumb img{ width:100%; height:100%; object-fit:cover; }
+.product-thumb img{ width:100%; height:100%; object-fit:cover; transition:opacity .4s ease; }
+.product-thumb img[data-loading="true"]{ opacity:0; }
+.product-thumb img[data-loading="false"]{ opacity:1; }
+/* Skeleton loader: pulsing background mientras carga la imagen */
+.product-thumb::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background:linear-gradient(90deg, var(--surface-2) 0%, color-mix(in srgb, var(--border) 50%, var(--surface-2)) 50%, var(--surface-2) 100%);
+  background-size:200% 100%;
+  animation:skeleton-pulse 1.5s infinite;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+.product-thumb::before[data-loading="true"],
+.product-thumb[data-loading="true"]::before{
+  opacity:1;
+}
+.product-thumb[data-loading="false"]::before{
+  opacity:0;
+}
+@keyframes skeleton-pulse{
+  0%{ background-position:200% 0; }
+  100%{ background-position:-200% 0; }
+}
 /* Tonos: tinte sutil sobre la superficie, no bloques de color saturado.
    color-mix mantiene la relación con el fondo en los dos modos.
    Los cuatro tonos rotan para que dos tarjetas vecinas no queden iguales. Los
@@ -1868,7 +1894,7 @@ section{ padding-block:var(--s9); }
     });
   }
 
-  function buildMercaditoHTML(rows){
+  function buildMercaditoHTML(rows, cardIndex = 0){
     // Detectar formato: 7+ columnas (Cat|Subcat|Prod|Price|Detail|Image|Keywords) o 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
     const tieneSiete = rows.length > 0 && rows[0].length >= 7;
     const tieneSeis = rows.length > 0 && rows[0].length >= 6;
@@ -1898,6 +1924,7 @@ section{ padding-block:var(--s9); }
     });
 
     // Renderizar todos los productos agrupados por Categoría
+    let globalCardIndex = cardIndex;
     return [...grupos].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
@@ -1905,8 +1932,13 @@ section{ padding-block:var(--s9); }
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
         const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+
+        // Preload primeras 8 tarjetas, lazy load el resto
+        const shouldPreload = globalCardIndex < 8;
+        const loading = shouldPreload ? '' : 'loading="lazy"';
+
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false'" onerror="this.dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -1915,8 +1947,12 @@ section{ padding-block:var(--s9); }
           .filter(k => k.length > 0)
           .join(' ');
         const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
+
+        const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
+        globalCardIndex++;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
-          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          ${thumb}
           <div class="product-info">
             <div class="product-header">
               <h4>${esc(p.nombre)}</h4>
@@ -1980,14 +2016,19 @@ section{ padding-block:var(--s9); }
     });
 
     const cards = [...bySubcat].map(([subcat, prods]) => {
-      const cardsHtml = prods.map(p => {
+      const cardsHtml = prods.map((p, idx) => {
         const tone = TONES[p.index % TONES.length];
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
         const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+
+        // Preload first 8 cards in category view, lazy load the rest
+        const shouldPreload = p.index < 8;
+        const loading = shouldPreload ? '' : 'loading="lazy"';
+
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false'" onerror="this.dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -1996,8 +2037,11 @@ section{ padding-block:var(--s9); }
           .filter(k => k.length > 0)
           .join(' ');
         const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
+
+        const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
-          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          ${thumb}
           <div class="product-info">
             <div class="product-header">
               <h4>${esc(p.nombre)}</h4>
@@ -2427,7 +2471,7 @@ section{ padding-block:var(--s9); }
       io.unobserve(entry.target);
       revelar(entry.target);
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.15, rootMargin: '100px' });
 
   function observarAparicion(elementos){
     if(!io) return;
