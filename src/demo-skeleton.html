@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo - Skeleton Loader de Librería Neneko</title>
+<style>
+  :root {
+    --bg: #F8F9FA;
+    --surface: #FFFFFF;
+    --surface-2: #E9ECEF;
+    --border: #CBD3DA;
+    --text: #333333;
+    --text-2: #5A6169;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161B;
+      --surface: #1A1F26;
+      --surface-2: #232932;
+      --border: #39434F;
+      --text: #E8ECEF;
+      --text-2: #B0B7BE;
+      color-scheme: dark;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    color: var(--text-2);
+    margin-bottom: 30px;
+    font-size: 16px;
+  }
+
+  .demo-section {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+
+  .demo-section h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  }
+
+  /* SKELETON LOADER - Main Implementation */
+  .product-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-2);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity .4s ease;
+  }
+
+  .product-thumb img[data-loading="true"] { opacity: 0; }
+  .product-thumb img[data-loading="false"] { opacity: 1; }
+
+  /* Skeleton loader: pulsing background mientras carga la imagen */
+  .product-thumb::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+      var(--surface-2) 0%, 
+      color-mix(in srgb, var(--border) 50%, var(--surface-2)) 50%, 
+      var(--surface-2) 100%);
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.5s infinite;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease;
+  }
+
+  .product-thumb[data-loading="true"]::before {
+    opacity: 1;
+  }
+
+  .product-thumb[data-loading="false"]::before {
+    opacity: 0;
+  }
+
+  @keyframes skeleton-pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .product-info {
+    padding: 16px;
+    background: var(--surface);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .demo-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .2s ease;
+  }
+
+  button:hover {
+    background: var(--surface-2);
+    border-color: #6BC2C2;
+  }
+
+  button.active {
+    background: #6BC2C2;
+    color: #2B2B2B;
+    border-color: #6BC2C2;
+  }
+
+  .status {
+    padding: 16px;
+    background: color-mix(in srgb, #6BC2C2 10%, var(--surface));
+    border-left: 3px solid #6BC2C2;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  .code-block {
+    background: color-mix(in srgb, var(--text) 5%, var(--surface));
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .comparison-item h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .comparison-item p {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .comparison {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎨 Demo: Skeleton Loader & Image Optimization</h1>
+  <p class="subtitle">Librería Neneko - Product Image Loading Enhancements</p>
+
+  <div class="demo-section">
+    <h2>Interactive Demo: Toggle Image Loading</h2>
+    <p style="color: var(--text-2); margin-bottom: 16px;">
+      Haz clic en los botones para simular diferentes estados de carga. Observa cómo aparece el skeleton loader (animación pulsante) mientras la imagen "carga".
+    </p>
+
+    <div class="grid">
+      <div class="product-card">
+        <div class="product-thumb" data-loading="true" id="demo1">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%236BC2C2' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='20'%3EFotocopia%3C/text%3E%3C/svg%3E" alt="Fotocopia" data-loading="true" style="opacity: 0;">
+        </div>
+        <div class="product-info">
+          <div class="product-name">Fotocopia B&amp;N</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-thumb" data-loading="false" id="demo2">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%2356A4A4' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='18'%3EImpresión%3C/text%3E%3C/svg%3E" alt="Impresión" data-loading="false" style="opacity: 1;">
+        </div>
+        <div class="product-info">
+          <div class="product-name">Impresión Color</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-thumb" data-loading="true" id="demo3">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%234A8C8C' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='20'%3EAnillado%3C/text%3E%3C/svg%3E" alt="Anillado" data-loading="true" style="opacity: 0;">
+        </div>
+        <div class="product-info">
+          <div class="product-name">Anillado</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-thumb" data-loading="false" id="demo4">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%232E4C6B' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-family='Arial' font-size='16'%3EPlastificado%3C/text%3E%3C/svg%3E" alt="Plastificado" data-loading="false" style="opacity: 1;">
+        </div>
+        <div class="product-info">
+          <div class="product-name">Plastificado</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button onclick="toggleAllLoading()" class="active">Simular carga</button>
+      <button onclick="loadAll()">Cargar todos</button>
+      <button onclick="resetAll()">Reiniciar</button>
+    </div>
+
+    <div class="status">
+      <strong>Estado actual:</strong>
+      <ul style="margin-top: 8px; margin-left: 20px;">
+        <li><span id="state1">Demo 1: Cargando (skeleton visible)</span></li>
+        <li><span id="state2">Demo 2: Cargado (imagen visible)</span></li>
+        <li><span id="state3">Demo 3: Cargando (skeleton visible)</span></li>
+        <li><span id="state4">Demo 4: Cargado (imagen visible)</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <h2>🔧 Implementación Técnica</h2>
+    
+    <h3 style="margin-top: 20px; margin-bottom: 10px; font-size: 16px;">Skeleton Loader CSS</h3>
+    <div class="code-block">
+.product-thumb::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--surface-2) 0%, 
+    color-mix(in srgb, var(--border) 50%, var(--surface-2)) 50%, 
+    var(--surface-2) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s infinite;
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+
+.product-thumb[data-loading="true"]::before { opacity: 1; }
+.product-thumb[data-loading="false"]::before { opacity: 0; }
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+    </div>
+
+    <h3 style="margin-top: 20px; margin-bottom: 10px; font-size: 16px;">Image Loading & Fade-in</h3>
+    <div class="code-block">
+&lt;img src="..." 
+     data-loading="true" 
+     onload="this.dataset.loading='false'"
+     onerror="this.dataset.loading='false'" /&gt;
+
+.product-thumb img {
+  transition: opacity .4s ease;
+}
+.product-thumb img[data-loading="true"] { opacity: 0; }
+.product-thumb img[data-loading="false"] { opacity: 1; }
+    </div>
+
+    <div class="comparison">
+      <div class="comparison-item">
+        <h3>✗ Antes (Sin optimización)</h3>
+        <p>
+          • Imágenes cargan solo cuando entran en viewport<br>
+          • Sin feedback visual durante carga<br>
+          • Espacio en blanco mientras carga<br>
+          • Parece roto o no responde
+        </p>
+      </div>
+      <div class="comparison-item">
+        <h3>✓ Después (Con optimización)</h3>
+        <p>
+          • Primeras 8 tarjetas cargan inmediatamente<br>
+          • Skeleton loader muestra que algo está pasando<br>
+          • Transición suave al cargar imagen<br>
+          • Parece profesional y rápido
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <h2>📊 Estrategias de Optimización</h2>
+    <ul style="margin-left: 20px; line-height: 1.8;">
+      <li><strong>Skeleton Loader:</strong> Animación pulsante mientras carga</li>
+      <li><strong>Preloading:</strong> Primeras 8 tarjetas sin loading="lazy"</li>
+      <li><strong>Lazy Loading:</strong> Resto de tarjetas carga bajo demanda</li>
+      <li><strong>Anticipatory Loading:</strong> rootMargin 100px en IntersectionObserver</li>
+      <li><strong>Smooth Transitions:</strong> Fade-in de 0.4s cuando carga imagen</li>
+      <li><strong>State Tracking:</strong> data-loading attributes para CSS reactivo</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+function toggleAllLoading() {
+  const thumbs = document.querySelectorAll('.product-thumb[id^="demo"]');
+  thumbs.forEach(thumb => {
+    const currentState = thumb.dataset.loading;
+    const newState = currentState === 'true' ? 'false' : 'true';
+    thumb.dataset.loading = newState;
+    const img = thumb.querySelector('img');
+    if (img) {
+      img.dataset.loading = newState;
+      img.style.opacity = newState === 'true' ? '0' : '1';
+    }
+    updateStatus();
+  });
+}
+
+function loadAll() {
+  const thumbs = document.querySelectorAll('.product-thumb[id^="demo"]');
+  thumbs.forEach(thumb => {
+    thumb.dataset.loading = 'false';
+    const img = thumb.querySelector('img');
+    if (img) {
+      img.dataset.loading = 'false';
+      img.style.opacity = '1';
+    }
+  });
+  updateStatus();
+}
+
+function resetAll() {
+  document.getElementById('demo1').dataset.loading = 'true';
+  document.getElementById('demo2').dataset.loading = 'false';
+  document.getElementById('demo3').dataset.loading = 'true';
+  document.getElementById('demo4').dataset.loading = 'false';
+
+  ['demo1', 'demo3'].forEach(id => {
+    const img = document.querySelector(`#${id} img`);
+    img.dataset.loading = 'true';
+    img.style.opacity = '0';
+  });
+
+  ['demo2', 'demo4'].forEach(id => {
+    const img = document.querySelector(`#${id} img`);
+    img.dataset.loading = 'false';
+    img.style.opacity = '1';
+  });
+
+  updateStatus();
+}
+
+function updateStatus() {
+  const states = ['demo1', 'demo2', 'demo3', 'demo4'];
+  states.forEach((id, idx) => {
+    const thumb = document.getElementById(id);
+    const isLoading = thumb.dataset.loading === 'true';
+    const status = isLoading ? 'Cargando (skeleton visible)' : 'Cargado (imagen visible)';
+    document.getElementById(`state${idx + 1}`).textContent = `Demo ${idx + 1}: ${status}`;
+  });
+}
+
+// Initialize
+updateStatus();
+</script>
+
+</body>
+</html>
