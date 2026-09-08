@@ -1753,9 +1753,23 @@ section{ padding-block:var(--s9); }
       accordion.appendChild(subList);
       menuNav.appendChild(accordion);
 
-      // Toggle interactivo
+      // Toggle interactivo — acordeón: cierra otros al abrir uno
       toggle.addEventListener('click', () => {
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+        if (!isExpanded) {
+          // Cerrar todos los demás acordeones
+          menuNav.querySelectorAll('.category-toggle').forEach(otherToggle => {
+            if (otherToggle !== toggle) {
+              otherToggle.setAttribute('aria-expanded', 'false');
+              const controlId = otherToggle.getAttribute('aria-controls');
+              const otherSubList = document.getElementById(controlId);
+              if (otherSubList) otherSubList.classList.remove('active');
+            }
+          });
+        }
+
+        // Alternar el estado del actual
         toggle.setAttribute('aria-expanded', !isExpanded);
         subList.classList.toggle('active');
       });
