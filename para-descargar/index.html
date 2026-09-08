@@ -9,7 +9,7 @@
 <meta name="description" content="Librería Neneko: fotocopias, anillados, impresiones y útiles escolares y de oficina en Peña 3102, CABA. Pedís por WhatsApp y retirás en el local.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#243C54">
-<link rel="canonical" href="https://mateoamagnani.github.io/Libreria-Neneko/">
+<link rel="canonical" href="https://nenekolibreria.github.io/libreria-neneko-web/">
 
 <!-- Open Graph: controla cómo se ve el link al compartirlo por WhatsApp -->
 <meta property="og:type" content="website">
@@ -17,22 +17,22 @@
 <meta property="og:site_name" content="Librería Neneko">
 <meta property="og:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
 <meta property="og:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
-<meta property="og:url" content="https://mateoamagnani.github.io/Libreria-Neneko/">
-<meta property="og:image" content="https://mateoamagnani.github.io/Libreria-Neneko/og.jpg">
+<meta property="og:url" content="https://nenekolibreria.github.io/libreria-neneko-web/">
+<meta property="og:image" content="https://nenekolibreria.github.io/libreria-neneko-web/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Logo de Librería Neneko: un gato leyendo un libro">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
 <meta name="twitter:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
-<meta name="twitter:image" content="https://mateoamagnani.github.io/Libreria-Neneko/og.jpg">
+<meta name="twitter:image" content="https://nenekolibreria.github.io/libreria-neneko-web/og.jpg">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231C2536'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%23E0B36A' text-anchor='middle'%3ELN%3C/text%3E%3C/svg%3E">
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
+<link rel="icon" type="image/png" href="nuevo-logo.png">
+<link rel="apple-touch-icon" href="nuevo-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
 <!-- Datos estructurados para SEO local. El horario tiene que ser idéntico al
      del Google Business Profile y al que se ve en la página (consistencia NAP). -->
@@ -40,12 +40,12 @@
 {
   "@context": "https://schema.org",
   "@type": "StationeryStore",
-  "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
+  "@id": "https://nenekolibreria.github.io/libreria-neneko-web/#negocio",
   "name": "Librería Neneko",
   "description": "Fotocopias, impresiones, anillados y útiles escolares y de oficina en Peña 3102, CABA.",
-  "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
+  "url": "https://nenekolibreria.github.io/libreria-neneko-web/",
   "telephone": "+5491161691209",
-  "image": "https://mateoamagnani.github.io/Libreria-Neneko/og.jpg",
+  "image": "https://nenekolibreria.github.io/libreria-neneko-web/og.jpg",
   "priceRange": "$",
   "currenciesAccepted": "ARS",
   "address": {
@@ -59,7 +59,7 @@
     {
       "@type": "OpeningHoursSpecification",
       "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-      "opens": "11:30",
+      "opens": "12:00",
       "closes": "20:30"
     },
     {
@@ -306,12 +306,14 @@ section{ padding-block:var(--s9); }
   display:block; margin-bottom:var(--s3);
 }
 
-.section-head{ max-width:34rem; margin-bottom:var(--s7); }
+.section-head{ max-width:65rem; margin-bottom:var(--s7); }
 .section-head h2{
   font-size:clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
-  margin-bottom:var(--s3);
+  margin-bottom:var(--s4);
+  display:block; width:100%;
+  max-width:50rem;
 }
-.section-head p{ color:var(--text-2); font-size:1.0625rem; text-wrap:pretty; }
+.section-head p{ color:var(--text-2); font-size:1.0625rem; text-wrap:pretty; margin-top:var(--s3); max-width:60rem; }
 
 /* ==========================================================================
    BOTONES
@@ -322,7 +324,7 @@ section{ padding-block:var(--s9); }
   font-family:inherit; font-size:.9375rem; font-weight:600;
   border:1.5px solid transparent; border-radius:var(--r-full);
   text-decoration:none; cursor:pointer;
-  transition:background .18s ease, border-color .18s ease, transform .18s ease;
+  transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn:active{ transform:translateY(1px); }
 .btn svg{ width:18px; height:18px; flex-shrink:0; }
@@ -363,7 +365,7 @@ section{ padding-block:var(--s9); }
   font-family:'Bricolage Grotesque', sans-serif;
   font-weight:700; font-size:1.375rem; letter-spacing:-.03em;
 }
-.brand img{ width:40px; height:40px; object-fit:contain; flex-shrink:0; }
+.brand img{ width:45px; height:45px; aspect-ratio:1; object-fit:contain; flex-shrink:0; }
 
 /* La barra lleva la marca, el cambio de tema y el CTA. La navegación por
    secciones vive en el footer y en el botón "Ver productos" del hero: en una
@@ -422,9 +424,146 @@ section{ padding-block:var(--s9); }
      y dejamos el CTA en el icono solo — el aria-label lo sigue nombrando. */
   .brand{ font-size:1rem; gap:var(--s2); }
   .brand span{ white-space:nowrap; }
-  .nav-cta{ padding:var(--s2) var(--s3); }
-  .nav-cta .txt{ display:none; }
+  .menu-btn .txt{ display:none; }
 }
+
+/* ==========================================================================
+   MENÚ HAMBURGUESA Y PANEL LATERAL
+   ========================================================================== */
+.menu-btn{
+  background:none; border:none; padding:var(--s2) var(--s3);
+  color:inherit; cursor:pointer; display:flex; align-items:center;
+  gap:var(--s2); font-size:1rem; font-family:inherit;
+  height:var(--nav-h); padding-top:calc(var(--nav-h) / 2 - var(--s2));
+  padding-bottom:calc(var(--nav-h) / 2 - var(--s2));
+}
+.menu-btn svg{ width:24px; height:24px; flex-shrink:0; }
+
+@media (max-width:860px){
+  .menu-btn .txt{ display:none; }
+}
+
+/* Overlay semitransparente */
+.menu-overlay{
+  position:fixed; left:0; top:0; right:0; bottom:0;
+  background:rgba(0, 0, 0, 0.5); z-index:89;
+  opacity:0; pointer-events:none; transition:opacity .3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-overlay.active{ opacity:1; pointer-events:auto; }
+
+/* Panel lateral */
+.menu-panel{
+  position:fixed; right:-100%; top:0; bottom:0; width:100%; max-width:320px;
+  background:var(--surface); z-index:90;
+  transition:right .3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y:auto;
+  display:flex; flex-direction:column; box-shadow:var(--shadow-md);
+  padding-bottom:env(safe-area-inset-bottom, 20px);
+}
+.menu-panel.active{ right:0; }
+
+.menu-header{
+  padding:var(--s4); border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+
+.menu-close{
+  background:none; border:none; cursor:pointer;
+  color:var(--text); padding:var(--s2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25rem;
+}
+.menu-close svg{ width:24px; height:24px; }
+
+.menu-content{
+  padding:var(--s4); flex:1;
+  display:flex; flex-direction:column; gap:var(--s5);
+}
+
+/* Búsqueda */
+.menu-search{
+  position:relative; display:flex; align-items:center;
+  padding:16px; margin:0;
+}
+.menu-search input{
+  width:100%; padding:var(--s3) var(--s4) var(--s3) var(--s4);
+  border:1px solid var(--border); border-radius:var(--r-md);
+  background:var(--surface-2); color:var(--text);
+  font-family:inherit; font-size:.95rem; box-sizing:border-box;
+}
+.menu-search svg{
+  position:absolute; right:28px;
+  width:20px; height:20px; color:var(--text-3);
+  pointer-events:none;
+}
+
+/* Navegación: acordeones dinámicos desde Google Sheets */
+.menu-nav{
+  flex:1; overflow-y:auto; padding:var(--s4) 0;
+  list-style:none;
+}
+
+.category-accordion{
+  border-bottom:1px solid var(--border);
+}
+.category-accordion:last-child{ border-bottom:none; }
+
+.category-toggle{
+  display:flex; align-items:center; justify-content:space-between;
+  width:100%; padding:var(--s4) var(--s5);
+  background:none; border:none; cursor:pointer;
+  color:var(--text); font-weight:500; font-size:0.95rem;
+  text-align:left; transition:background-color .15s ease;
+  font-family:inherit;
+}
+.category-toggle:hover{ background-color:var(--surface-2); }
+.category-toggle::after{
+  content:''; display:block; width:6px; height:6px; border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor; transform:rotate(-45deg) translateY(-2px);
+  transition:transform .2s ease;
+}
+.category-toggle[aria-expanded="true"]::after{
+  transform:rotate(45deg) translateY(0);
+}
+
+.subcategory-list{
+  display:none; list-style:none; margin:0; padding:0;
+  background-color:var(--surface-2);
+}
+.subcategory-list.active{ display:block; }
+
+.subcategory-item{ margin:0; }
+.subcategory-link{
+  display:block; padding:var(--s3) var(--s5) var(--s3) calc(var(--s5) + var(--s4));
+  color:var(--text-2); text-decoration:none; font-size:0.9rem;
+  transition:color .15s ease, background-color .15s ease;
+  border-left:3px solid transparent;
+}
+.subcategory-link:hover{
+  color:var(--text); background-color:rgba(36, 60, 84, 0.08);
+  border-left-color:var(--brand);
+}
+
+.menu-link{
+  color:var(--text); text-decoration:none;
+  padding:var(--s3) var(--s4);
+  border-radius:var(--r-md);
+  transition:background-color .2s ease;
+  display:block;
+}
+.menu-link:hover{ background:var(--surface-2); }
+
+.menu-footer{
+  padding:0 var(--s4) var(--s4) var(--s4);
+  margin-top:auto;
+}
+
+/* Botón WhatsApp en el menú */
+.menu-wa-btn{
+  display:flex; align-items:center; justify-content:center; gap:var(--s2);
+  padding:10px 16px !important; margin:0;
+  border-radius:var(--r-md); font-size:0.9rem;
+}
+.menu-wa-btn svg{ width:16px; height:16px; }
 
 /* ==========================================================================
    HERO
@@ -447,18 +586,30 @@ section{ padding-block:var(--s9); }
   display:grid; grid-template-columns:1.05fr .95fr;
   gap:var(--s8); align-items:center;
 }
-.hero h1{
-  font-size:clamp(2.25rem, 1.3rem + 4vw, 3.9rem);
-  font-weight:600; letter-spacing:-.035em;
-  margin-bottom:var(--s5); max-width:16ch;
+.hero-text-container{
+  margin-bottom:var(--s6);
 }
-.hero h1 em{ font-style:normal; color:var(--brand); }
+.hero-title{
+  font-family:'Playfair Display', 'Merriweather', Georgia, serif;
+  font-size:3.5rem;
+  font-weight:700;
+  color:#243C54;
+  line-height:1.1;
+  margin-bottom:1rem;
+  letter-spacing:-1px;
+}
+.hero-subtitle{
+  font-family:system-ui, -apple-system, sans-serif;
+  font-size:1.25rem;
+  color:#4A5568;
+  margin-bottom:2rem;
+  line-height:1.5;
+}
+.hero-subtitle strong{
+  color:#6BC2C2;
+  font-weight:600;
+}
 
-.hero-lead{
-  font-size:clamp(1.0625rem, 1rem + .3vw, 1.1875rem);
-  color:var(--text-2); max-width:44ch; margin-bottom:var(--s6);
-  text-wrap:pretty;
-}
 .hero-ctas{ display:flex; flex-wrap:wrap; gap:var(--s3); margin-bottom:var(--s6); }
 
 /* Fila de confianza: rating + estado en vivo, pegada al CTA.
@@ -565,6 +716,34 @@ section{ padding-block:var(--s9); }
   .phone-screen{ height:420px; border-radius:32px; }
 }
 
+@media (max-width:640px){
+  .hero-text-container{ text-align:center; }
+  .eyebrow{ justify-content:center; display:flex; }
+  .hero-title{ font-size:2.5rem; margin-bottom:var(--s4); }
+  .hero-subtitle{ font-size:1.0625rem; max-width:100%; white-space:normal; }
+  .hero-ctas{ flex-direction:row; justify-content:center; gap:var(--s2); }
+  .btn-lg{ padding:var(--s2) var(--s3); font-size:0.9375rem; }
+  .trust-row{ flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:var(--s4); }
+  .rating{ justify-content:center; }
+  .status{ justify-content:center; }
+  .phone-wrap{ margin-top:var(--s5); margin-bottom:var(--s5); }
+  #productos .section-head h2{ font-size:2rem; text-align:center; }
+  #productos .section-head p{ text-align:center; max-width:90%; margin-left:auto; margin-right:auto; }
+  .catalog-note{ flex-direction:column; justify-content:center; text-align:center; }
+  .catalog-note p{ max-width:100%; }
+  .trust-head{ flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .trust .section-head{ text-align:center; }
+  .score{ justify-content:center; margin-left:auto; margin-right:auto; }
+  .review{ text-align:center; }
+  #ubicacion .section-head{ text-align:center; }
+  #ubicacion .section-head h2{ text-align:center; }
+  #ubicacion .loc-list .sub{ font-size:0.8125rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #ubicacion .horarios-head{ flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:var(--s2); }
+  #ubicacion .horarios-foot{ font-size:.7rem; white-space:nowrap; text-align:center; }
+  #ubicacion .horarios th, #ubicacion .horarios td{ text-align:center; }
+  #ubicacion .loc-grid > div:first-child > div:last-of-type{ display:flex; flex-direction:row; justify-content:center; align-items:center; gap:var(--s2); flex-wrap:nowrap; }
+}
+
 /* ==========================================================================
    FRANJA DE SERVICIOS
    ========================================================================== */
@@ -612,7 +791,17 @@ section{ padding-block:var(--s9); }
   white-space:nowrap;
 }
 
-.product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s4); }
+.product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s4); margin-bottom:var(--s5); }
+
+.shop-group-footer{
+  display:flex; justify-content:center;
+  padding-top:var(--s4); border-top:1px solid var(--border);
+}
+
+.shop-group-footer .btn{
+  padding:var(--s3) var(--s6);
+  font-size:.95rem;
+}
 
 .product-card{
   display:flex; flex-direction:column;
@@ -620,7 +809,7 @@ section{ padding-block:var(--s9); }
   border:1px solid var(--border);
   border-radius:var(--r-md);
   overflow:hidden;
-  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .product-card:hover{
   border-color:var(--border-strong);
@@ -629,12 +818,14 @@ section{ padding-block:var(--s9); }
 }
 
 .product-thumb{
-  height:120px; display:flex; align-items:center; justify-content:center;
+  width:100%; aspect-ratio:1 / 1; display:flex; align-items:center; justify-content:center;
   background:var(--surface-2);
   border-bottom:1px solid var(--border);
   color:var(--text-2);
+  overflow:hidden;
 }
-.product-thumb svg{ width:52px; height:52px; }
+.product-thumb svg{ width:72px; height:72px; }
+.product-thumb img{ width:100%; height:100%; object-fit:cover; }
 /* Tonos: tinte sutil sobre la superficie, no bloques de color saturado.
    color-mix mantiene la relación con el fondo en los dos modos.
    Los cuatro tonos rotan para que dos tarjetas vecinas no queden iguales. Los
@@ -655,37 +846,82 @@ section{ padding-block:var(--s9); }
 :root[data-theme="dark"] .product-thumb.tone-terra  { color:#8AD3D3; }
 :root[data-theme="dark"] .product-thumb.tone-sage   { color:#A7C4E8; }
 
+.category-header{
+  display:flex; flex-direction:column; gap:var(--s3);
+  margin-bottom:var(--s6); padding:var(--s4) 0;
+  border-bottom:1px solid var(--border);
+}
+
+.category-header h2{
+  margin:0; font-size:1.75rem; color:var(--text);
+}
+
+.category-header p{
+  margin:0; color:var(--text-2); font-size:.95rem;
+}
+
+.btn-ghost{
+  background:transparent;
+  color:var(--text-2);
+  border:1px solid var(--border);
+  padding:var(--s3) var(--s4);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  font-size:.9rem;
+  transition:all .2s ease;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:var(--s2);
+}
+
+.btn-ghost:hover{
+  background:var(--surface-2);
+  border-color:var(--border-strong);
+  color:var(--text);
+}
+
 .product-info{
   display:flex; flex-direction:column; flex:1;
-  padding:var(--s4);
+  padding:var(--s3);
+  gap:var(--s2);
+}
+.product-header{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:var(--s2);
 }
 .product-info h4{
   font-size:.9375rem; font-weight:600; line-height:1.25;
-  margin-bottom:var(--s1);
+  margin:0; flex:1;
 }
 .product-detalle{
   font-size:.8125rem; color:var(--text-2); line-height:1.4;
-  margin-bottom:var(--s2);
+  margin:0;
 }
 .product-info .price{
   font-family:'IBM Plex Mono', monospace;
   font-size:.8125rem; font-weight:600; color:var(--brand);
-  margin-bottom:var(--s3);
+  white-space:nowrap; flex-shrink:0;
 }
 .product-info a{
-  margin-top:auto;
   display:flex; align-items:center; justify-content:center; gap:6px;
   min-height:44px;
   font-size:.8125rem; font-weight:600; text-decoration:none;
   background:var(--btn-bg); color:var(--btn-text);
   border:1.5px solid transparent; border-radius:var(--r-sm);
-  transition:background .15s ease, color .15s ease, border-color .15s ease;
+  transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top:auto;
 }
 .product-info a:hover{ background:var(--btn-bg-hover); }
 
+@media (max-width:480px){
+  .product-header{ flex-direction:column; align-items:flex-start; gap:4px; }
+  .product-info h4{ flex:none; }
+}
+
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }
-@media (max-width:420px){ .product-thumb{ height:96px; } .product-thumb svg{ width:42px; height:42px; } }
+@media (max-width:420px){ .product-thumb svg{ width:54px; height:54px; } }
 
 .catalog-note{
   margin-top:var(--s7); padding-top:var(--s5);
@@ -925,7 +1161,7 @@ section{ padding-block:var(--s9); }
 <header class="navbar">
   <div class="container nav-inner">
     <a class="brand" href="#top">
-      <img src="logo.png" alt="" width="40" height="40" onerror="this.remove()">
+      <img src="nuevo-logo.png" alt="" width="40" height="40" onerror="this.remove()">
       <span>Librería Neneko</span>
     </a>
     <div class="nav-right">
@@ -933,11 +1169,39 @@ section{ padding-block:var(--s9); }
       <svg class="sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="luna" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 019.7 3.5a8.5 8.5 0 1010.8 10.8z"/></svg>
     </button>
-    <a class="btn btn-primary nav-cta" href="https://wa.me/5491161691209" target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp">
-      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
-      <span class="txt">Escribinos</span>
-    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      <span class="txt">Menú</span>
+    </button>
     </div>
+  </div>
+</header>
+
+<!-- Panel lateral del menú -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<!-- Menú hamburguesa: categorías dinámicas desde Google Sheets -->
+<div id="menuOverlay" class="menu-overlay"></div>
+<aside class="menu-panel" id="menuPanel">
+  <div class="menu-header">
+    <h3>Menú</h3>
+    <button class="menu-close" id="menuClose" type="button" aria-label="Cerrar menú">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="menu-search">
+    <input type="text" id="menuSearch" placeholder="Buscar productos..." aria-label="Buscar productos">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+  </div>
+  <nav class="menu-nav">
+    <!-- Las categorías y subcategorías se renderizan dinámicamente aquí desde Google Sheets -->
+  </nav>
+  <div class="menu-footer">
+    <a class="btn btn-primary menu-wa-btn" href="https://wa.me/5491161691209?text=Hola!%20Escribo%20desde%20el%20sitio" target="_blank" rel="noopener">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+      Escribinos
+    </a>
+  </div>
+</aside>
   </div>
 </header>
 
@@ -949,11 +1213,9 @@ section{ padding-block:var(--s9); }
     <div class="container hero-grid">
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
-        <h1>Tu librería del barrio, <em>a un mensaje</em> de distancia.</h1>
-        <p class="hero-lead">
-          Fotocopias, impresiones, anillados y todos los útiles de siempre.
-          Nos escribís, te lo dejamos preparado y pasás a retirarlo.
-        </p>
+        <div class="hero-text-container">
+          <h1 class="hero-title">Los esperamos<br>en nuestro local</h1>
+        </div>
 
         <div class="hero-ctas">
           <a class="btn btn-primary btn-lg" href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20hacer%20una%20consulta" target="_blank" rel="noopener">
@@ -1031,9 +1293,8 @@ section{ padding-block:var(--s9); }
   <section id="productos">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Catálogo</span>
-        <h2>Nuestros Productos<h2>
-        <p>¿No encontrás lo que estabas buscando? Consultanos y te lo conseguimos!</p>
+        <h2>Nuestros Productos</h2>
+        <p>¿No encontras lo que estabas buscando? Consultanos y te lo conseguimos.</p>
       </div>
 
       <!-- El script reemplaza este bloque con los productos del Google Sheet.
@@ -1291,7 +1552,7 @@ section{ padding-block:var(--s9); }
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="brand">
-          <img src="logo.png" alt="" width="40" height="40" onerror="this.remove()">
+          <img src="nuevo-logo.png" alt="" width="40" height="40" onerror="this.remove()">
           <span>Librería Neneko</span>
         </div>
         <p>Fotocopias, anillados y útiles escolares y de oficina. En el barrio desde hace años.</p>
@@ -1331,16 +1592,17 @@ section{ padding-block:var(--s9); }
   // MERCADITO — catálogo desde Google Sheets
   //
   // Cómo activarlo:
-  // 1. Armá una hoja con 3 columnas en este orden:
-  //    Categoria | Producto | Precio
-  //    (la fila de encabezado es opcional, se detecta sola)
+  // 1. Armá una hoja con 5 columnas en este orden:
+  //    Categoria | Producto | Precio | Detalle | Imagen
+  //    (Detalle e Imagen son opcionales; el encabezado se detecta solo)
   // 2. Archivo > Compartir > Publicar en la Web > elegí la hoja
   //    puntual > formato "Valores separados por comas (.csv)" > Publicar
   // 3. Pegá esa URL acá abajo, reemplazando el texto de ejemplo.
   //
   // Los productos se agrupan por categoría en el orden en que aparecen
   // en la hoja. Se pueden usar comas dentro de un nombre si el campo va
-  // entre comillas — el parser las respeta.
+  // entre comillas — el parser las respeta. Las imágenes deben ser URLs
+  // completas (empiezan con "http"). Si no hay imagen, se usa el ícono SVG.
   //
   // Si la URL queda sin configurar, o el Sheet no responde, la página
   // muestra los productos de ejemplo del HTML sin romperse.
@@ -1401,7 +1663,10 @@ section{ padding-block:var(--s9); }
       });
   }
 
-  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=0&single=true&output=csv";
+  // Dos solapas del mismo archivo: gid=0 (Novedades), gid=1 (Menú)
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
+  const SHEET_NOVEDADES_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
+  const SHEET_MENU_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=1186742453&single=true&output=csv";
 
   const WHATSAPP = "https://wa.me/5491161691209";
 
@@ -1413,7 +1678,110 @@ section{ padding-block:var(--s9); }
   })[c]);
 
   const linkConsulta = nombre =>
-    `${WHATSAPP}?text=${encodeURIComponent('Hola! Quería pedir info sobre ' + nombre)}`;
+    `${WHATSAPP}?text=${encodeURIComponent('Hola Neneko! Como están? Queria consultar por "' + nombre + '"')}`;
+
+  // Generar acordeón dinámico de categorías y subcategorías desde Google Sheets
+  function actualizarCategoriesEnMenu(categoriasMap){
+    const menuNav = document.querySelector('.menu-nav');
+    if(!menuNav || !categoriasMap || Object.keys(categoriasMap).length === 0) return;
+
+    menuNav.innerHTML = ''; // Limpiar
+
+    Object.entries(categoriasMap).forEach(([ categoria, productos ], idx) => {
+      // Agrupar por subcategoría
+      const bySubcat = new Map();
+      productos.forEach(p => {
+        const subcat = p.subcategoria && p.subcategoria.trim() ? p.subcategoria : 'General';
+        if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
+        bySubcat.get(subcat).push(p);
+      });
+
+      // Acordeón
+      const accordion = document.createElement('div');
+      accordion.className = 'category-accordion';
+
+      // Toggle
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'category-toggle';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-controls', `subcats-${idx}`);
+      toggle.textContent = categoria;
+
+      // Subcategorías
+      const subList = document.createElement('ul');
+      subList.id = `subcats-${idx}`;
+      subList.className = 'subcategory-list';
+
+      // Agregar "Ver todo" PRIMERO para la categoría
+      const viewAllItem = document.createElement('li');
+      viewAllItem.className = 'subcategory-item';
+
+      const viewAllLink = document.createElement('a');
+      viewAllLink.href = `#productos?cat=${encodeURIComponent(categoria)}`;
+      viewAllLink.className = 'subcategory-link';
+      viewAllLink.style.fontWeight = '500';
+      viewAllLink.textContent = `Ver todo de ${categoria}`;
+      viewAllLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        _neneko_savedScrollPos = window.scrollY || 0;
+        renderCategoryView(categoria);
+        document.getElementById('menuPanel')?.classList.remove('active');
+        document.getElementById('menuOverlay')?.classList.remove('active');
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      viewAllItem.appendChild(viewAllLink);
+      subList.appendChild(viewAllItem);
+
+      // Luego agregar las subcategorías
+      [...bySubcat.keys()].forEach(subcat => {
+        const item = document.createElement('li');
+        item.className = 'subcategory-item';
+
+        const link = document.createElement('a');
+        link.href = `#productos?cat=${encodeURIComponent(categoria)}&subcat=${encodeURIComponent(subcat)}`;
+        link.className = 'subcategory-link';
+        link.textContent = subcat;
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          _neneko_savedScrollPos = window.scrollY || 0;
+          renderCategoryView(categoria, subcat);
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        item.appendChild(link);
+        subList.appendChild(item);
+      });
+
+      accordion.appendChild(toggle);
+      accordion.appendChild(subList);
+      menuNav.appendChild(accordion);
+
+      // Toggle interactivo
+      toggle.addEventListener('click', () => {
+        const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !isExpanded);
+        subList.classList.toggle('active');
+      });
+    });
+  }
+
+  // Verificar parámetros de URL al cargar
+  function checkURLParams(){
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('cat');
+    const subcat = params.get('subcat');
+    if(cat && window._neneko_menu_products && window._neneko_menu_products[cat]){
+      // Esperar a que el DOM esté listo antes de renderizar categoría
+      setTimeout(() => {
+        renderCategoryView(decodeURIComponent(cat), subcat ? decodeURIComponent(subcat) : undefined);
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }
 
   // Los tonos rotan para dar ritmo visual a la grilla; el icono NO rota: sale
   // del nombre del producto, así una fotocopia siempre se ve como una
@@ -1493,49 +1861,194 @@ section{ padding-block:var(--s9); }
   // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
   function normalizarFilas(rows){
     if(!rows.length) return [];
-    const [cat, prod] = rows[0].map(c => c.toLowerCase());
+    const primeraCelda = (rows[0][0] || '').toLowerCase();
     const tieneEncabezado =
-      /^categor/.test(cat || '') && /^(producto|nombre|art)/.test(prod || '');
-    return (tieneEncabezado ? rows.slice(1) : rows)
-      .filter(r => r.length >= 3 && r[0] && r[1]);
+      /^ubicacion|^home|^menu|^categor|^sub/.test(primeraCelda);
+
+    const filas = tieneEncabezado ? rows.slice(1) : rows;
+    return filas.filter(r => {
+      // Soporta: 6 cols (Cat|SubCat|Prod|Price|Detail|Image) o 3-5 cols (Cat|Prod|Price[|Detail[|Image]])
+      if(r.length >= 6) return r[0] && r[2]; // Nueva: Categoría | Sub-Categoría | Producto | ...
+      if(r.length >= 3) return r[0] && r[1]; // Antigua: Categoría | Producto | ...
+      return false;
+    });
   }
 
   function buildMercaditoHTML(rows){
-    const groups = new Map();
-    // La cuarta columna (Detalle) es opcional: una hoja de tres columnas
-    // sigue funcionando igual.
-    rows.forEach(([categoria, nombre, precio, detalle]) => {
-      if(!groups.has(categoria)) groups.set(categoria, []);
-      groups.get(categoria).push({ nombre, precio, detalle });
+    // Detectar formato: 7+ columnas (Cat|Subcat|Prod|Price|Detail|Image|Keywords) o 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
+    const tieneSiete = rows.length > 0 && rows[0].length >= 7;
+    const tieneSeis = rows.length > 0 && rows[0].length >= 6;
+    const grupos = new Map();
+
+    rows.forEach(row => {
+      let categoria, subcategoria, nombre, precio, detalle, imagen, keywords;
+
+      if(tieneSiete){
+        // Formato nuevo con keywords (7 cols): Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen | Keywords
+        [categoria, subcategoria, nombre, precio, detalle, imagen, keywords] = row;
+      } else if(tieneSeis){
+        // Formato nuevo (6 cols): Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen
+        [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
+        keywords = '';
+      } else {
+        // Formato antiguo (3-5 cols): Categoría | Producto | Precio [| Detalle [| Imagen]]
+        [categoria, nombre, precio, detalle, imagen] = row;
+        subcategoria = '';
+        keywords = '';
+      }
+
+      if(!categoria || !nombre) return;
+
+      if(!grupos.has(categoria)) grupos.set(categoria, []);
+      grupos.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
     });
-    return [...groups].map(([categoria, productos]) => {
+
+    // Renderizar todos los productos agrupados por Categoría
+    return [...grupos].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
-        return `<div class="product-card">
-          <div class="product-thumb tone-${tone}">${iconoDe(p.nombre)}</div>
+
+        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          : iconoDe(p.nombre);
+
+        const keywordsList = (p.keywords || '')
+          .split(/[,;\s]+/)
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .join(' ');
+        const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
+        return `<div class="product-card" data-search="${esc(searchText)}">
+          <div class="product-thumb${toneClass}">${thumbContent}</div>
           <div class="product-info">
-            <h4>${esc(p.nombre)}</h4>
+            <div class="product-header">
+              <h4>${esc(p.nombre)}</h4>
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            </div>
             ${detalle}
-            <div class="price">${esc(p.precio) || 'Consultar'}</div>
             <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
           </div>
         </div>`;
       }).join('');
-      return `<div class="shop-group">
+      return `<div class="shop-group" data-categoria="${esc(categoria)}">
         <div class="shop-group-head"><h3>${esc(categoria)}</h3><span>${productos.length} producto${productos.length === 1 ? '' : 's'}</span></div>
         <div class="product-grid">${cards}</div>
+        <div class="shop-group-footer">
+          <button class="btn btn-secondary" data-category="${esc(categoria)}" onclick="window.neneko_viewCategory(this.dataset.category)">Ver todo ${esc(categoria)}</button>
+        </div>
       </div>`;
     }).join('');
   }
 
-  async function loadProductsFromSheet(){
-    // Sin configurar todavía: la página se queda con los productos de ejemplo
-    // que ya están en el HTML. Es la degradación esperada, no un error.
-    if(!SHEET_CSV_URL || SHEET_CSV_URL.startsWith('PEGAR_ACA')) return;
+  function renderCategoryView(categoryName, subcategoryName){
+    const wrap = document.getElementById('mercaditoDynamic');
+    if(!wrap) return;
 
+    // Buscar primero en productos de inicio, luego en menú dinámico
+    const allProductos = (window._neneko_home_products && window._neneko_home_products[categoryName])
+      || (window._neneko_menu_products && window._neneko_menu_products[categoryName])
+      || [];
+
+    // Si se especifica una subcategoría, filtrar solo esos productos
+    const productos = subcategoryName
+      ? allProductos.filter(p => (p.subcategoria || 'Otros') === subcategoryName)
+      : allProductos;
+
+    if(!productos.length){
+      wrap.innerHTML = '<p style="padding: var(--s6); text-align: center; color: var(--text-2);">No hay productos en esta categoría.</p>';
+      return;
+    }
+
+    // Crear HTML con botón de vuelta
+    const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : `Todo ${categoryName}`;
+    const contextBadge = subcategoryName ? '' : `<span style="display: inline-block; margin-left: var(--s2); font-size: 0.85rem; padding: 0.25rem var(--s2); background: var(--surface-2); color: var(--text-2); border-radius: 4px; font-weight: 500;">Listado completo</span>`;
+    const backBtn = `<div style="margin-bottom: var(--s5);">
+      <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
+        ← Volver al inicio
+      </button>
+      <div style="margin-bottom: var(--s2);">
+        <h2 style="margin: 0; display: inline-block;">${esc(title)}</h2>
+        ${contextBadge}
+      </div>
+      <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
+    </div>`;
+
+    // Agrupar por subcategoría si hay múltiples (solo si no estamos filtrando por subcategoría)
+    const bySubcat = new Map();
+    productos.forEach((p, i) => {
+      const subcat = p.subcategoria || 'Otros';
+      if(!bySubcat.has(subcat)) bySubcat.set(subcat, []);
+      bySubcat.get(subcat).push({...p, index: i});
+    });
+
+    const cards = [...bySubcat].map(([subcat, prods]) => {
+      const cardsHtml = prods.map(p => {
+        const tone = TONES[p.index % TONES.length];
+        const detalle = p.detalle
+          ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
+
+        const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+        const thumbContent = (p.imagen && p.imagen.startsWith('http'))
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          : iconoDe(p.nombre);
+
+        const keywordsList = (p.keywords || '')
+          .split(/[,;\s]+/)
+          .map(k => k.trim())
+          .filter(k => k.length > 0)
+          .join(' ');
+        const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
+        return `<div class="product-card" data-search="${esc(searchText)}">
+          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          <div class="product-info">
+            <div class="product-header">
+              <h4>${esc(p.nombre)}</h4>
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+            </div>
+            ${detalle}
+            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+          </div>
+        </div>`;
+      }).join('');
+
+      return `<div class="shop-group" data-categoria="${esc(categoryName)}">
+        <div class="shop-group-head"><h3>${esc(subcat)}</h3><span>${prods.length}</span></div>
+        <div class="product-grid">${cardsHtml}</div>
+      </div>`;
+    }).join('');
+
+    wrap.innerHTML = backBtn + cards;
+    observarAparicion(wrap.querySelectorAll('.product-card'));
+  }
+
+  // Variables globales para preservar scroll
+  let _neneko_savedScrollPos = 0;
+
+  window.neneko_backToHome = function(){
+    // Limpiar parámetros de URL y recargar vista
+    window.history.replaceState({}, '', window.location.pathname);
+    // Restaurar posición de scroll inmediatamente (sincrónico)
+    window.scrollTo(0, _neneko_savedScrollPos);
+    // Cargar vista en background sin bloquear el scroll
+    loadProductsFromSheet();
+  };
+
+  window.neneko_viewCategory = function(categoryName){
+    if(!categoryName) return;
+    // Guardar posición actual antes de cambiar la vista
+    _neneko_savedScrollPos = window.scrollY || 0;
+    // Buscar en productos de inicio o menú dinámico
+    if(!window._neneko_home_products && !window._neneko_menu_products) return;
+    renderCategoryView(categoryName);
+    document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  async function loadProductsFromSheet(){
     const wrap = document.getElementById('mercaditoDynamic');
     if(!wrap) return;
 
@@ -1545,11 +2058,9 @@ section{ padding-block:var(--s9); }
       const ac = new AbortController();
       const timeout = setTimeout(() => ac.abort(), 8000);
 
-      // El parámetro suelto al final hace que la URL sea distinta en cada
-      // carga, así el navegador no sirve una copia guardada y siempre pide
-      // los precios de nuevo. (El caché propio de Google sigue existiendo:
-      // un cambio en la planilla puede tardar unos minutos en salir.)
-      const url = SHEET_CSV_URL + (SHEET_CSV_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+      // Cargar primero Novedades (gid=0) para el homepage
+      const cache = '_=' + Date.now();
+      const url = SHEET_CSV_URL + '&' + cache;
 
       const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
       clearTimeout(timeout);
@@ -1559,10 +2070,95 @@ section{ padding-block:var(--s9); }
       const filas = normalizarFilas(parseCsv(await res.text()));
       if(!filas.length) throw new Error('la hoja no tiene filas usables');
 
+      // Almacenar productos de inicio para los botones "Ver todo"
+      const homeProducts = new Map();
+      filas.forEach(row => {
+        let categoria, subcategoria, nombre, precio, detalle, imagen, keywords;
+        const tieneSiete = filas.length > 0 && filas[0].length >= 7;
+        const tieneSeis = filas.length > 0 && filas[0].length >= 6;
+
+        if(tieneSiete){
+          [categoria, subcategoria, nombre, precio, detalle, imagen, keywords] = row;
+        } else if(tieneSeis){
+          [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
+          keywords = '';
+        } else {
+          [categoria, nombre, precio, detalle, imagen] = row;
+          subcategoria = '';
+          keywords = '';
+        }
+
+        if(!categoria || !nombre) return;
+        if(!homeProducts.has(categoria)) homeProducts.set(categoria, []);
+        homeProducts.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
+      });
+      window._neneko_home_products = Object.fromEntries(homeProducts);
+
       wrap.innerHTML = buildMercaditoHTML(filas);
       revelarNuevasTarjetas(wrap);
+      // Verificar si hay parámetros de URL para navegar a una categoría
+      checkURLParams();
+      // Lazy-load del menú después del homepage
+      loadMenuFromSheet();
     }catch(err){
       console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
+    }
+  }
+
+  // Cargar la hoja de Menú de forma lazy: después de que la página renderice
+  async function loadMenuFromSheet(){
+    try{
+      const ac = new AbortController();
+      const timeout = setTimeout(() => ac.abort(), 8000);
+
+      const cache = '_=' + Date.now();
+      const url = SHEET_MENU_URL + '&' + cache;
+
+      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
+      clearTimeout(timeout);
+
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+
+      const rows = parseCsv(await res.text());
+      if(!rows.length) return;
+
+      // Detectar y saltar encabezado
+      const primeraCelda = (rows[0][0] || '').toLowerCase();
+      const tieneEncabezado = /^categor|^nombre|^menu|^producto|^sub/.test(primeraCelda);
+      const filas = tieneEncabezado ? rows.slice(1) : rows;
+
+      if(!filas.length) return;
+
+      // Procesar los productos del Menú: Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen [| Keywords]
+      const categoriesMenu = new Map();
+      filas.forEach(row => {
+        if(row.length < 6) return; // Necesita mínimo 6 columnas
+
+        const categoria = String(row[0] || '').trim();
+        const subcategoria = String(row[1] || '').trim();
+        const nombre = String(row[2] || '').trim();
+        const precio = String(row[3] || '').trim();
+        const detalle = String(row[4] || '').trim();
+        const imagen = String(row[5] || '').trim();
+        const keywords = row.length >= 7 ? String(row[6] || '').trim() : '';
+
+        if(!categoria || !nombre) return;
+
+        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
+        categoriesMenu.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
+      });
+
+      if(categoriesMenu.size === 0) return;
+
+      window._neneko_menu_products = Object.fromEntries(categoriesMenu);
+
+      // Actualizar el menú si ya está en la página
+      const menuNav = document.querySelector('.menu-nav');
+      if(menuNav){
+        actualizarCategoriesEnMenu(window._neneko_menu_products);
+      }
+    }catch(err){
+      console.warn('No se pudo cargar el menú desde Sheets.', err);
     }
   }
 
@@ -1580,11 +2176,11 @@ section{ padding-block:var(--s9); }
   // ============================================================
   const HORARIOS = [
     { dia: 'Domingo',   bloques: [] },
-    { dia: 'Lunes',     bloques: [[690, 1230]] },
-    { dia: 'Martes',    bloques: [[690, 1230]] },
-    { dia: 'Miércoles', bloques: [[690, 1230]] },
-    { dia: 'Jueves',    bloques: [[690, 1230]] },
-    { dia: 'Viernes',   bloques: [[690, 1230]] },
+    { dia: 'Lunes',     bloques: [[720, 1230]] },
+    { dia: 'Martes',    bloques: [[720, 1230]] },
+    { dia: 'Miércoles', bloques: [[720, 1230]] },
+    { dia: 'Jueves',    bloques: [[720, 1230]] },
+    { dia: 'Viernes',   bloques: [[720, 1230]] },
     { dia: 'Sábado',    bloques: [[690, 930]] },
   ];
 
@@ -1866,7 +2462,156 @@ section{ padding-block:var(--s9); }
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
 
   // Va al final: necesita revelarNuevasTarjetas ya definida.
+  // (loadMenuFromSheet se llama al final de loadProductsFromSheet para lazy-load)
   loadProductsFromSheet();
+
+  // ============================================================
+  // BUSCADOR DE PRODUCTOS (E-COMMERCE)
+  // ============================================================
+  // Función auxiliar: normaliza texto removiendo acentos/tildes para búsqueda robusta
+  const normalize = str => {
+    if(!str || typeof str !== 'string') return '';
+    return str.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  };
+
+  const menuSearch = document.getElementById('menuSearch');
+  if(menuSearch){
+    function ejecutarBusqueda(query){
+      if(!query || query.trim().length === 0){
+        loadProductsFromSheet();
+        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      const wrap = document.getElementById('mercaditoDynamic');
+      if(!wrap) return;
+
+      const queryNorm = normalize(query);
+      const allProducts = window._neneko_menu_products
+        ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
+            prods.map(p => ({...p, categoria: cat}))
+          )
+        : [];
+
+      const searchResults = allProducts.filter(p => {
+        const nombreNorm = normalize(p.nombre);
+        const detalleNorm = normalize(p.detalle || '');
+        const categoriaNorm = normalize(p.categoria);
+
+        // Procesa keywords: maneja celdas vacías y desglose por comas, puntos y coma, o espacios
+        const keywordsArray = (p.keywords || '')
+          .split(/[,;\s]+/)
+          .map(k => normalize(k))
+          .filter(k => k.length > 0); // Elimina keywords vacías
+
+        // Retorna verdadero si la query coincide con cualquier campo
+        return nombreNorm.includes(queryNorm) ||
+               detalleNorm.includes(queryNorm) ||
+               categoriaNorm.includes(queryNorm) ||
+               keywordsArray.some(kw => kw.includes(queryNorm));
+      });
+
+      if(searchResults.length === 0){
+        wrap.innerHTML = `<div style="padding: var(--s6); text-align: center; color: var(--text-2);">
+          <p>No encontramos productos que coincidan con "<strong>${esc(query)}</strong>"</p>
+        </div>`;
+      } else {
+        wrap.innerHTML = `<div style="margin-bottom: var(--s5);">
+          <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
+            ← Volver al inicio
+          </button>
+          <h2 style="margin: 0; margin-bottom: var(--s2);">Resultados para: "<strong>${esc(query)}</strong>"</h2>
+          <p style="color: var(--text-2); margin: 0;">${searchResults.length} producto${searchResults.length === 1 ? '' : 's'}</p>
+        </div>` + buildMercaditoHTML(searchResults.map(p => [
+          p.categoria,
+          p.subcategoria || '',
+          p.nombre,
+          p.precio,
+          p.detalle || '',
+          p.imagen || '',
+          p.keywords || ''
+        ]));
+      }
+
+      wrap.scrollIntoView({ behavior: 'smooth' });
+      observarAparicion(wrap.querySelectorAll('.product-card'));
+    }
+
+    menuSearch.addEventListener('keypress', function(e){
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const query = this.value.trim();
+        if(query){
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          ejecutarBusqueda(query);
+        }
+      }
+    });
+
+    const searchIcon = menuSearch.parentElement.querySelector('svg');
+    if(searchIcon){
+      searchIcon.style.cursor = 'pointer';
+      searchIcon.addEventListener('click', function(){
+        const query = menuSearch.value.trim();
+        if(query){
+          document.getElementById('menuPanel')?.classList.remove('active');
+          document.getElementById('menuOverlay')?.classList.remove('active');
+          ejecutarBusqueda(query);
+        }
+      });
+    }
+  }
+
+  // ============================================================
+  // MENÚ HAMBURGUESA
+  // ============================================================
+  if(document.getElementById('menuBtn')){
+    const menuBtn = document.getElementById('menuBtn');
+    const menuPanel = document.getElementById('menuPanel');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const menuClose = document.getElementById('menuClose');
+    const categoryToggles = document.querySelectorAll('.category-toggle');
+
+    function toggleMenu(){
+      menuPanel.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', menuPanel.classList.contains('active'));
+    }
+
+    function closeMenu(){
+      menuPanel.classList.remove('active');
+      menuOverlay.classList.remove('active');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Botón hamburguesa
+    menuBtn.addEventListener('click', toggleMenu);
+
+    // Cerrar menú
+    menuClose.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', closeMenu);
+
+    // Cerrar al hacer click en un link
+    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
+      el.addEventListener('click', closeMenu);
+    });
+
+    // Subcategorías expandibles
+    categoryToggles.forEach(toggle => {
+      toggle.addEventListener('click', function(){
+        const itemsId = this.getAttribute('aria-controls');
+        const items = document.getElementById(itemsId);
+        const isExpanded = items.classList.contains('active');
+
+        items.classList.toggle('active');
+        this.setAttribute('aria-expanded', !isExpanded);
+      });
+    });
+
+    // Conectar el botón toggle a sus subcategorías
+    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
+  }
 </script>
 </body>
 </html>
