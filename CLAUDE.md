@@ -35,6 +35,25 @@ no se cachean aparte.
 El `package.json` existe solo para dar dos comandos (`npm test`, `npm run dev`); no tiene
 dependencias y no debería tenerlas.
 
+### Imágenes de productos — performance
+
+Las imágenes de los productos vienen de Google Sheets (columna 6 en el formato de 7 columnas).
+Para mantener la página rápida:
+
+- **Tamaño máximo por imagen: 500 KB.** Las imágenes más grandes ralentizan la carga,
+  especialmente en móvil con conexión 3G/4G. Si es necesario subir una imagen más grande,
+  reducir resolución o comprimir en un editor antes de uploadear a Google Sheets.
+- **Formato preferido: JPEG.** PNG funciona pero es más pesado para fotos; WebP es ideal pero
+  no todos los navegadores lo soportan todavía.
+- **Resolución mínima: 200×200 px.** Menos que eso se pixela; 400×400 es suficiente para casi
+  todos los casos. No usar imágenes de 3000×3000 px: se reducen a 200×200 en la tarjeta y el
+  peso extra es al pedo.
+- **Lazy loading:** Ya está configurado automáticamente (`loading="lazy"` y `IntersectionObserver`).
+  Cada tarjeta se carga solo cuando entra en pantalla.
+- **Aspect ratio:** Las tarjetas son cuadradas (1:1) por diseño. Si la imagen es rectangular,
+  se recorta con `object-fit:cover` — usar imágenes aproximadamente cuadradas para evitar
+  sorpresas.
+
 ## Tests
 
 ```bash
