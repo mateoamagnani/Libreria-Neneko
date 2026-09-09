@@ -2148,10 +2148,14 @@ section{ padding-block:var(--s9); }
       revelarNuevasTarjetas(wrap);
       // Verificar si hay parámetros de URL para navegar a una categoría
       checkURLParams();
-      // Lazy-load del menú después del homepage
-      loadMenuFromSheet();
     }catch(err){
       console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
+    }finally{
+      // Lazy-load del menú después del homepage. En un finally, no en el try:
+      // si el fetch de productos falla, el menú tiene que poder cargar igual
+      // — si no, el hamburguesa queda sin categorías cada vez que el Sheet
+      // de arriba tarda o no responde, aunque el de Menú ande perfecto.
+      loadMenuFromSheet();
     }
   }
 
@@ -2621,7 +2625,6 @@ section{ padding-block:var(--s9); }
     const menuPanel = document.getElementById('menuPanel');
     const menuOverlay = document.getElementById('menuOverlay');
     const menuClose = document.getElementById('menuClose');
-    const categoryToggles = document.querySelectorAll('.category-toggle');
 
     function toggleMenu(){
       menuPanel.classList.toggle('active');
@@ -2643,24 +2646,9 @@ section{ padding-block:var(--s9); }
     menuOverlay.addEventListener('click', closeMenu);
 
     // Cerrar al hacer click en un link
-    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
+    document.querySelectorAll('.menu-link, .menu-wa-btn').forEach(el => {
       el.addEventListener('click', closeMenu);
     });
-
-    // Subcategorías expandibles
-    categoryToggles.forEach(toggle => {
-      toggle.addEventListener('click', function(){
-        const itemsId = this.getAttribute('aria-controls');
-        const items = document.getElementById(itemsId);
-        const isExpanded = items.classList.contains('active');
-
-        items.classList.toggle('active');
-        this.setAttribute('aria-expanded', !isExpanded);
-      });
-    });
-
-    // Conectar el botón toggle a sus subcategorías
-    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
   }
 </script>
 </body>

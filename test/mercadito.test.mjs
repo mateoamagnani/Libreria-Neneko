@@ -152,9 +152,13 @@ test('el catálogo apunta a un Sheet publicado, no al placeholder', () => {
 });
 
 test('cada carga pide los precios de nuevo, sin usar copia guardada', async () => {
+  // Dos pedidos: el Sheet de productos y, siempre después (en un finally,
+  // no importa si el de arriba salió bien), el Sheet de Menú — así el
+  // hamburguesa no se queda sin categorías cuando el primero falla.
   const { pedidos } = await correrConSheet('Categoria,Producto,Precio\nUtiles,Bic,$ 900');
-  assert.equal(pedidos.length, 1);
+  assert.equal(pedidos.length, 2);
   assert.match(pedidos[0], /[?&]_=\d+/, 'falta el parámetro que evita el caché del navegador');
+  assert.match(pedidos[1], /[?&]_=\d+/, 'falta el parámetro que evita el caché del navegador');
 });
 
 test('los precios del Sheet reemplazan a los de ejemplo', async () => {
@@ -168,6 +172,17 @@ test('los precios del Sheet reemplazan a los de ejemplo', async () => {
 test('si el Sheet no responde, no se toca el mercadito', async () => {
   const { html } = await correrConSheet(() => ({ ok: false, status: 404 }));
   assert.equal(html, '', 'no debe vaciar ni pisar los productos de ejemplo');
+});
+
+test('si el Sheet de productos falla, el de Menú se pide igual', async () => {
+  // Antes el menú se cargaba adentro del try, después del sheet de arriba:
+  // si ese fetch fallaba, el catch cortaba la cadena y el hamburguesa se
+  // quedaba sin categorías. Tiene que pedirse pase lo que pase.
+  const { pedidos } = await correrConSheet(() => ({ ok: false, status: 404 }));
+  assert.ok(
+    pedidos.some(url => url.includes('gid=1186742453')),
+    'no se pidió el Sheet de Menú (gid=1186742453) cuando el de productos falló'
+  );
 });
 
 test('si el Sheet viene vacío, tampoco se toca', async () => {
