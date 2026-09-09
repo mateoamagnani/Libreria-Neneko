@@ -2079,7 +2079,7 @@ section{ padding-block:var(--s9); }
     }).join('');
 
     wrap.innerHTML = backBtn + cards;
-    observarAparicion(wrap.querySelectorAll('.product-card'));
+    revelarNuevasTarjetas(wrap);
   }
 
   // Variables globales para preservar scroll
@@ -2517,6 +2517,22 @@ section{ padding-block:var(--s9); }
   // así que hay que registrarlas aparte.
   function revelarNuevasTarjetas(wrap){
     observarAparicion(wrap.querySelectorAll('.product-card'));
+    limitarEsperaImagenes(wrap);
+  }
+
+  // Respaldo para cuando una imagen del Sheet no carga NI tampoco dispara un
+  // error explícito — el caso típico es pegar un link de "Compartir" de
+  // Google Drive en vez de la URL de imagen directa: el navegador no siempre
+  // lo detecta como error, así que ni onload ni onerror se disparan nunca y
+  // el esqueleto quedaría girando para siempre. A los 10s se corta solo y
+  // aparece el ícono de respaldo en su lugar.
+  function limitarEsperaImagenes(wrap){
+    wrap.querySelectorAll('.product-thumb img[data-loading="true"]').forEach(img => {
+      const listo = () => { clearTimeout(id); img.dataset.loading = 'false'; };
+      const id = setTimeout(listo, 10000);
+      img.addEventListener('load', listo, { once: true });
+      img.addEventListener('error', listo, { once: true });
+    });
   }
 
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
@@ -2621,7 +2637,7 @@ section{ padding-block:var(--s9); }
       }
 
       wrap.scrollIntoView({ behavior: 'smooth' });
-      observarAparicion(wrap.querySelectorAll('.product-card'));
+      revelarNuevasTarjetas(wrap);
     }
 
     menuSearch.addEventListener('keypress', function(e){
