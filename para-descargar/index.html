@@ -1137,6 +1137,16 @@ section{ padding-block:var(--s9); }
 }
 
 /* ==========================================================================
+   VISTA DE CATEGORÍA — Ocultar distracciones al filtrar
+   ========================================================================== */
+body[data-category-view="true"] .hero,
+body[data-category-view="true"] .services,
+body[data-category-view="true"] .trust,
+body[data-category-view="true"] .sticky-cta{
+  display:none !important;
+}
+
+/* ==========================================================================
    FOOTER
    ========================================================================== */
 .site-footer{
@@ -2021,6 +2031,9 @@ section{ padding-block:var(--s9); }
     const wrap = document.getElementById('mercaditoDynamic');
     if(!wrap) return;
 
+    // Activar vista de categoría: ocultar hero, servicios, reseñas
+    document.body.setAttribute('data-category-view', 'true');
+
     // Buscar primero en productos de inicio, luego en menú dinámico
     const allProductos = (window._neneko_home_products && window._neneko_home_products[categoryName])
       || (window._neneko_menu_products && window._neneko_menu_products[categoryName])
@@ -2117,6 +2130,8 @@ section{ padding-block:var(--s9); }
   let _neneko_savedScrollPos = 0;
 
   window.neneko_backToHome = function(){
+    // Desactivar vista de categoría: mostrar todo nuevamente
+    document.body.setAttribute('data-category-view', 'false');
     // Limpiar parámetros de URL y recargar vista
     window.history.replaceState({}, '', window.location.pathname);
     // Restaurar posición de scroll inmediatamente (sincrónico)
