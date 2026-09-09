@@ -1162,11 +1162,36 @@ body[data-category-view="true"] section{
   }
 }
 
-/* Header de categoría responsive */
+/* Header de categoría: desktop horizontal, mobile vertical */
+.category-header{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:start;
+  gap:var(--s4);
+  margin-bottom:var(--s4);
+  padding-bottom:var(--s3);
+  border-bottom:1px solid var(--border);
+}
+
+.category-header button{
+  white-space:nowrap;
+}
+
+.category-header > div:last-child{
+  text-align:right;
+}
+
 @media (max-width:480px){
   .category-header{
-    flex-direction:column;
-    align-items:flex-start !important;
+    grid-template-columns:1fr;
+    align-items:flex-start;
+    gap:var(--s2);
+  }
+  .category-header button{
+    width:100%;
+  }
+  .category-header > div:last-child{
+    text-align:left;
   }
 }
 
@@ -2075,11 +2100,11 @@ body[data-category-view="true"] section{
 
     // Crear HTML con botón de vuelta
     const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : `Todo ${categoryName}`;
-    const backBtn = `<div class="category-header" style="display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s4); padding-bottom: var(--s3); border-bottom: 1px solid var(--border);">
+    const backBtn = `<div class="category-header">
       <button onclick="window.neneko_backToHome()" class="btn btn-ghost">
         ← Volver al inicio
       </button>
-      <div style="text-align: right;">
+      <div>
         <h2 style="margin: 0;">${esc(title)}</h2>
         <p style="color: var(--text-2); margin: var(--s1) 0 0 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
       </div>
