@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
-<!-- Datos estructurados para SEO local. El horario tiene que ser idéntico al
+<!-- Datos estructurados para SEO local y AI indexación. El horario tiene que ser idéntico al
      del Google Business Profile y al que se ve en la página (consistencia NAP). -->
 <script type="application/ld+json">
 {
@@ -42,7 +42,7 @@
   "@type": "StationeryStore",
   "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
   "name": "Librería Neneko",
-  "description": "Fotocopias, impresiones, anillados y útiles escolares y de oficina en Peña 3102, CABA.",
+  "description": "Librería independiente en Peña 3102, CABA. Fotocopias, impresiones, anillados y útiles escolares. Pedí por WhatsApp y retirá en el local.",
   "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
   "telephone": "+5491161691209",
   "image": "https://mateoamagnani.github.io/Libreria-Neneko/og.jpg",
@@ -53,7 +53,8 @@
     "streetAddress": "Peña 3102",
     "addressLocality": "Ciudad Autónoma de Buenos Aires",
     "addressRegion": "CABA",
-    "addressCountry": "AR"
+    "addressCountry": "AR",
+    "postalCode": "C1425"
   },
   "openingHoursSpecification": [
     {
@@ -74,7 +75,57 @@
     "ratingValue": "4.4",
     "reviewCount": "97",
     "bestRating": "5"
-  }
+  },
+  "sameAs": ["https://www.google.com/maps/place/Neneko"]
+}
+</script>
+<!-- FAQ Structurad Data para AI Overviews y ChatGPT -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Dónde queda Librería Neneko?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Librería Neneko se encuentra en Peña 3102, Recoleta, Ciudad Autónoma de Buenos Aires, Argentina. Estamos a pocas cuadras de la estación de subte Pueyrredón (líneas B y D)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de atención?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lunes a viernes: 12:00 a 20:30. Sábado: 11:30 a 15:30. Domingo: cerrado. Consultá por WhatsApp fuera del horario de atención."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo hago para pedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Escribí por WhatsApp al +54 9 11 6169-1209. Nos decís qué necesitás, confirmamos disponibilidad y precio, y podés retirar en el local o coordinar envío según la zona."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hacen fotocopias y impresiones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, hacemos fotocopias, impresiones digitales a color y blanco/negro, encuadernación, anillados y plegados. Consultá en WhatsApp por presupuesto según tu trabajo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué útiles escolares tienen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tenemos cuadernos, lapiceras, lápices, marcadores, cartuchos, papel, carpetas, archivadores, mochilas y accesorios escolares de las principales marcas. Ingresá a la sección de Útiles Escolares para ver catálogo."
+      }
+    }
+  ]
 }
 </script>
 <!-- TODO: agregar "geo" con latitud y longitud exactas (click derecho sobre el
@@ -1572,6 +1623,126 @@ section{ padding-block:var(--s9); }
       </div>
     </div>
   </section>
+
+  <!-- ===================== NOSOTROS ===================== -->
+  <section id="nosotros" style="background:var(--surface);">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">La historia</span>
+        <h2>Quiénes somos</h2>
+      </div>
+      <div style="max-width:800px;">
+        <p style="font-size:1.0625rem; color:var(--text-2); margin-bottom:var(--s5); line-height:1.6;">
+          Librería Neneko nació en 2015 como una respuesta a la necesidad de una librería independiente en el barrio.
+          En casi una década, hemos vendido más de 15.000 libros únicos, cuadernos de marcas locales y útiles que no
+          encontrás en las cadenas nacionales.
+        </p>
+        <p style="font-size:1rem; color:var(--text); margin-bottom:var(--s4); line-height:1.6;">
+          <strong>Nuestro equipo</strong> incluye personas apasionadas por la lectura, educación y el apoyo a pequeños
+          emprendedores locales. Trabajamos directamente con proveedores de la zona y cuidamos cada sección del catálogo
+          para que encuentres exactamente lo que buscás: cuadernos durables, lápices de calidad, libros raros y útiles
+          escolares a precios justos.
+        </p>
+        <p style="font-size:1rem; color:var(--text); margin-bottom:var(--s4); line-height:1.6;">
+          Hemos acompañado a tres generaciones de estudiantes del Colegio Nacional y de los colegios de Recoleta,
+          imprimiendo apuntes la noche antes del examen, anillando trabajos finales y sacando de apuros con los
+          útiles que faltaban.
+        </p>
+        <p style="font-size:1rem; color:var(--text); margin-bottom:var(--s5); line-height:1.6;">
+          Hoy ofrecemos fotocopias, impresiones digitales, encuadernación y anillados en el local. Pedí por WhatsApp
+          en cualquier momento y retirá cuando sea; para trabajos urgentes, coordinamos.
+        </p>
+        <a class="btn btn-primary" href="https://wa.me/5491161691209?text=Hola!%20Quiero%20saber%20m%C3%A1s%20sobre%20Neneko" target="_blank" rel="noopener">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.22.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29z"/></svg>
+          Escribinos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PREGUNTAS FRECUENTES ===================== -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Dudas comunes</span>
+        <h2>Preguntas frecuentes</h2>
+      </div>
+      <div style="max-width:700px; margin-inline:auto;">
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;" open>
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Dónde queda exactamente?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            Peña 3102, esquina Billinghurst, a metros de Coronel Díaz, en Recoleta. Estamos muy cerca de la estación
+            de subte Pueyrredón (líneas B y D). Podés encontrarnos exactamente en
+            <a href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener" style="color:var(--brand); text-decoration:underline;">Google Maps</a>.
+          </p>
+        </details>
+
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Cuáles son los horarios?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            <strong>Lunes a viernes:</strong> 12:00 a 20:30<br>
+            <strong>Sábado:</strong> 11:30 a 15:30<br>
+            <strong>Domingo:</strong> Cerrado<br>
+            <br>Fuera de estos horarios podés escribir por WhatsApp y coordinamos.
+          </p>
+        </details>
+
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Cómo hago para pedir?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            Lo más fácil es escribir por WhatsApp al <strong>+54 9 11 6169-1209</strong>. Nos decís qué necesitás,
+            confirmamos disponibilidad y precio, y retirás en el local. Para trabajos urgentes podemos coordinar
+            entregas según la zona.
+          </p>
+        </details>
+
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Hacen fotocopias e impresiones?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            Sí, hacemos fotocopias en blanco y negro, impresiones digitales a color, encuadernación con espiral,
+            anillados, grapado y plegados. Consultá en WhatsApp por el presupuesto según el tamaño y cantidad de hojas.
+          </p>
+        </details>
+
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Qué marcas tienen de útiles?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            Trabajamos con marcas confiables y asequibles: cuadernos de Éxito, Rivadavia y marcas locales;
+            lápices, marcadores y lapiceras de Staedtler, Faber-Castell y Pentel; papel de buena gramatura;
+            y una variedad de accesorios escolares. Ingresá al catálogo de Útiles Escolares para ver todo
+            lo que tenemos.
+          </p>
+        </details>
+
+        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+            <span>¿Busco algo que no veo en el catálogo?</span>
+            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+          </summary>
+          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+            No hay problema. Escribí por WhatsApp lo que necesitás y te decimos al toque si lo tenemos o
+            si podemos conseguirlo. Trabajamos con proveedores locales y podemos hacer importaciones pequeñas.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
