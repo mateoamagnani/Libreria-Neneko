@@ -1146,6 +1146,30 @@ body[data-category-view="true"] .sticky-cta{
   display:none !important;
 }
 
+/* Reducir padding-top en vista de categoría */
+body[data-category-view="true"] section{
+  padding-top:var(--s5);
+  padding-bottom:var(--s9);
+}
+@media (max-width:760px){
+  body[data-category-view="true"] section{
+    padding-top:var(--s4);
+  }
+}
+@media (max-width:480px){
+  body[data-category-view="true"] section{
+    padding-top:var(--s3);
+  }
+}
+
+/* Header de categoría responsive */
+@media (max-width:480px){
+  .category-header{
+    flex-direction:column;
+    align-items:flex-start !important;
+  }
+}
+
 /* ==========================================================================
    FOOTER
    ========================================================================== */
@@ -2051,14 +2075,14 @@ body[data-category-view="true"] .sticky-cta{
 
     // Crear HTML con botón de vuelta
     const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : `Todo ${categoryName}`;
-    const backBtn = `<div style="margin-bottom: var(--s3);">
-      <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s2);">
+    const backBtn = `<div class="category-header" style="display: flex; align-items: center; justify-content: space-between; gap: var(--s3); margin-bottom: var(--s4); padding-bottom: var(--s3); border-bottom: 1px solid var(--border);">
+      <button onclick="window.neneko_backToHome()" class="btn btn-ghost">
         ← Volver al inicio
       </button>
-      <div style="margin-bottom: var(--s2);">
-        <h2 style="margin: 0; display: inline-block;">${esc(title)}</h2>
+      <div style="text-align: right;">
+        <h2 style="margin: 0;">${esc(title)}</h2>
+        <p style="color: var(--text-2); margin: var(--s1) 0 0 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
       </div>
-      <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
     </div>`;
 
     // Agrupar por subcategoría si hay múltiples (solo si no estamos filtrando por subcategoría)
