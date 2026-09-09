@@ -909,38 +909,41 @@ section{ padding-block:var(--s9); }
 .product-info{
   display:flex; flex-direction:column; flex:1;
   padding:var(--s3);
-  gap:var(--s2);
+  gap:var(--s3);
 }
-.product-header{
-  display:flex; justify-content:space-between; align-items:baseline;
+.product-content{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
   gap:var(--s2);
 }
 .product-info h4{
   font-size:.9375rem; font-weight:600; line-height:1.25;
-  margin:0; flex:1;
+  margin:0;
 }
 .product-detalle{
   font-size:.8125rem; color:var(--text-2); line-height:1.4;
   margin:0;
 }
+.product-footer{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+  margin-top:auto;
+}
 .product-info .price{
   font-family:'IBM Plex Mono', monospace;
   font-size:.8125rem; font-weight:600; color:var(--brand);
-  white-space:nowrap; flex-shrink:0;
+  flex:1;
 }
 .product-info a{
-  display:flex; align-items:center; justify-content:center; gap:6px;
-  min-height:44px;
+  display:flex; align-items:center; justify-content:center;
+  width:40px; height:40px; flex-shrink:0;
   font-size:.8125rem; font-weight:600; text-decoration:none;
   background:var(--btn-bg); color:var(--btn-text);
-  border:1.5px solid transparent; border-radius:var(--r-sm);
+  border:1.5px solid transparent; border-radius:50%;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top:auto;
 }
 .product-info a:hover{ background:var(--btn-bg-hover); }
 
 @media (max-width:480px){
-  .product-header{ flex-direction:column; align-items:flex-start; gap:4px; }
+  .product-content{ text-align:center; }
   .product-info h4{ flex:none; }
 }
 
@@ -1969,16 +1972,24 @@ section{ padding-block:var(--s9); }
         const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
         globalCardIndex++;
 
+        const waIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
           ${thumb}
           <div class="product-info">
-            <div class="product-header">
+            <div class="product-content">
               <h4>${esc(p.nombre)}</h4>
-              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              ${detalle}
             </div>
-            ${detalle}
-            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
-               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+            <div class="product-footer">
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                 aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
+                ${waIcon}
+              </a>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -2056,16 +2067,24 @@ section{ padding-block:var(--s9); }
 
         const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
 
+        const waIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
           ${thumb}
           <div class="product-info">
-            <div class="product-header">
+            <div class="product-content">
               <h4>${esc(p.nombre)}</h4>
-              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              ${detalle}
             </div>
-            ${detalle}
-            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
-               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+            <div class="product-footer">
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                 aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
+                ${waIcon}
+              </a>
+            </div>
           </div>
         </div>`;
       }).join('');
