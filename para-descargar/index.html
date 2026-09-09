@@ -593,7 +593,7 @@ section{ padding-block:var(--s9); }
   font-family:'Playfair Display', 'Merriweather', Georgia, serif;
   font-size:3.5rem;
   font-weight:700;
-  color:#243C54;
+  color:var(--text);
   line-height:1.1;
   margin-bottom:1rem;
   letter-spacing:-1px;
@@ -601,12 +601,12 @@ section{ padding-block:var(--s9); }
 .hero-subtitle{
   font-family:system-ui, -apple-system, sans-serif;
   font-size:1.25rem;
-  color:#4A5568;
+  color:var(--text-2);
   margin-bottom:2rem;
   line-height:1.5;
 }
 .hero-subtitle strong{
-  color:#6BC2C2;
+  color:var(--brand);
   font-weight:600;
 }
 
@@ -823,9 +823,34 @@ section{ padding-block:var(--s9); }
   border-bottom:1px solid var(--border);
   color:var(--text-2);
   overflow:hidden;
+  position:relative;
 }
 .product-thumb svg{ width:72px; height:72px; }
-.product-thumb img{ width:100%; height:100%; object-fit:cover; }
+.product-thumb img{ width:100%; height:100%; object-fit:cover; transition:opacity .4s ease; }
+.product-thumb img[data-loading="true"]{ opacity:0; }
+.product-thumb img[data-loading="false"]{ opacity:1; }
+/* Skeleton loader: pulsing background mientras carga la imagen */
+.product-thumb::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background:linear-gradient(90deg, var(--surface-2) 0%, color-mix(in srgb, var(--border) 50%, var(--surface-2)) 50%, var(--surface-2) 100%);
+  background-size:200% 100%;
+  animation:skeleton-pulse 1.5s infinite;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+.product-thumb[data-loading="true"]::before{
+  opacity:1;
+}
+.product-thumb[data-loading="false"]::before{
+  opacity:0;
+}
+@keyframes skeleton-pulse{
+  0%{ background-position:200% 0; }
+  100%{ background-position:-200% 0; }
+}
 /* Tonos: tinte sutil sobre la superficie, no bloques de color saturado.
    color-mix mantiene la relación con el fondo en los dos modos.
    Los cuatro tonos rotan para que dos tarjetas vecinas no queden iguales. Los
@@ -1177,10 +1202,8 @@ section{ padding-block:var(--s9); }
   </div>
 </header>
 
-<!-- Panel lateral del menú -->
+<!-- Panel lateral del menú: categorías dinámicas desde Google Sheets -->
 <div class="menu-overlay" id="menuOverlay"></div>
-<!-- Menú hamburguesa: categorías dinámicas desde Google Sheets -->
-<div id="menuOverlay" class="menu-overlay"></div>
 <aside class="menu-panel" id="menuPanel">
   <div class="menu-header">
     <h3>Menú</h3>
@@ -1215,6 +1238,7 @@ section{ padding-block:var(--s9); }
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
         <div class="hero-text-container">
           <h1 class="hero-title">Los esperamos<br>en nuestro local</h1>
+          <p class="hero-subtitle">Fotocopias, anillados y los útiles de siempre: <strong>pedís por WhatsApp</strong> y retirás en el momento.</p>
         </div>
 
         <div class="hero-ctas">
@@ -1294,7 +1318,7 @@ section{ padding-block:var(--s9); }
     <div class="container">
       <div class="section-head">
         <h2>Nuestros Productos</h2>
-        <p>¿No encontras lo que estabas buscando? Consultanos y te lo conseguimos.</p>
+        <p>¿No encontrás lo que estabas buscando? Consultanos y te lo conseguimos.</p>
       </div>
 
       <!-- El script reemplaza este bloque con los productos del Google Sheet.
@@ -1760,9 +1784,23 @@ section{ padding-block:var(--s9); }
       accordion.appendChild(subList);
       menuNav.appendChild(accordion);
 
-      // Toggle interactivo
+      // Toggle interactivo — acordeón: cierra otros al abrir uno
       toggle.addEventListener('click', () => {
         const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+
+        if (!isExpanded) {
+          // Cerrar todos los demás acordeones
+          menuNav.querySelectorAll('.category-toggle').forEach(otherToggle => {
+            if (otherToggle !== toggle) {
+              otherToggle.setAttribute('aria-expanded', 'false');
+              const controlId = otherToggle.getAttribute('aria-controls');
+              const otherSubList = document.getElementById(controlId);
+              if (otherSubList) otherSubList.classList.remove('active');
+            }
+          });
+        }
+
+        // Alternar el estado del actual
         toggle.setAttribute('aria-expanded', !isExpanded);
         subList.classList.toggle('active');
       });
@@ -1874,7 +1912,7 @@ section{ padding-block:var(--s9); }
     });
   }
 
-  function buildMercaditoHTML(rows){
+  function buildMercaditoHTML(rows, cardIndex = 0){
     // Detectar formato: 7+ columnas (Cat|Subcat|Prod|Price|Detail|Image|Keywords) o 6 columnas (Cat|Subcat|Prod|Price|Detail|Image) o 3-5 columnas (Cat|Prod|Price[|Detail[|Image]])
     const tieneSiete = rows.length > 0 && rows[0].length >= 7;
     const tieneSeis = rows.length > 0 && rows[0].length >= 6;
@@ -1904,6 +1942,7 @@ section{ padding-block:var(--s9); }
     });
 
     // Renderizar todos los productos agrupados por Categoría
+    let globalCardIndex = cardIndex;
     return [...grupos].map(([categoria, productos]) => {
       const cards = productos.map((p, i) => {
         const tone = TONES[i % TONES.length];
@@ -1911,8 +1950,13 @@ section{ padding-block:var(--s9); }
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
         const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+
+        // Preload primeras 8 tarjetas, lazy load el resto
+        const shouldPreload = globalCardIndex < 8;
+        const loading = shouldPreload ? '' : 'loading="lazy"';
+
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'" onerror="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -1921,8 +1965,12 @@ section{ padding-block:var(--s9); }
           .filter(k => k.length > 0)
           .join(' ');
         const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoria} ${keywordsList}`);
+
+        const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
+        globalCardIndex++;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
-          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          ${thumb}
           <div class="product-info">
             <div class="product-header">
               <h4>${esc(p.nombre)}</h4>
@@ -1986,14 +2034,19 @@ section{ padding-block:var(--s9); }
     });
 
     const cards = [...bySubcat].map(([subcat, prods]) => {
-      const cardsHtml = prods.map(p => {
+      const cardsHtml = prods.map((p, idx) => {
         const tone = TONES[p.index % TONES.length];
         const detalle = p.detalle
           ? `<p class="product-detalle">${esc(p.detalle)}</p>` : '';
 
         const toneClass = (p.imagen && p.imagen.startsWith('http')) ? '' : ` tone-${tone}`;
+
+        // Preload first 8 cards in category view, lazy load the rest
+        const shouldPreload = p.index < 8;
+        const loading = shouldPreload ? '' : 'loading="lazy"';
+
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy" referrerpolicy="no-referrer">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'" onerror="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -2002,8 +2055,11 @@ section{ padding-block:var(--s9); }
           .filter(k => k.length > 0)
           .join(' ');
         const searchText = normalize(`${p.nombre} ${p.detalle || ''} ${categoryName} ${keywordsList}`);
+
+        const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
-          <div class="product-thumb${toneClass}">${thumbContent}</div>
+          ${thumb}
           <div class="product-info">
             <div class="product-header">
               <h4>${esc(p.nombre)}</h4>
@@ -2023,7 +2079,7 @@ section{ padding-block:var(--s9); }
     }).join('');
 
     wrap.innerHTML = backBtn + cards;
-    observarAparicion(wrap.querySelectorAll('.product-card'));
+    revelarNuevasTarjetas(wrap);
   }
 
   // Variables globales para preservar scroll
@@ -2098,10 +2154,14 @@ section{ padding-block:var(--s9); }
       revelarNuevasTarjetas(wrap);
       // Verificar si hay parámetros de URL para navegar a una categoría
       checkURLParams();
-      // Lazy-load del menú después del homepage
-      loadMenuFromSheet();
     }catch(err){
       console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
+    }finally{
+      // Lazy-load del menú después del homepage. En un finally, no en el try:
+      // si el fetch de productos falla, el menú tiene que poder cargar igual
+      // — si no, el hamburguesa queda sin categorías cada vez que el Sheet
+      // de arriba tarda o no responde, aunque el de Menú ande perfecto.
+      loadMenuFromSheet();
     }
   }
 
@@ -2433,7 +2493,7 @@ section{ padding-block:var(--s9); }
       io.unobserve(entry.target);
       revelar(entry.target);
     });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.15, rootMargin: '100px' });
 
   function observarAparicion(elementos){
     if(!io) return;
@@ -2457,6 +2517,26 @@ section{ padding-block:var(--s9); }
   // así que hay que registrarlas aparte.
   function revelarNuevasTarjetas(wrap){
     observarAparicion(wrap.querySelectorAll('.product-card'));
+    limitarEsperaImagenes(wrap);
+  }
+
+  // Respaldo para cuando una imagen del Sheet no carga NI tampoco dispara un
+  // error explícito — el caso típico es pegar un link de "Compartir" de
+  // Google Drive en vez de la URL de imagen directa: el navegador no siempre
+  // lo detecta como error, así que ni onload ni onerror se disparan nunca y
+  // el esqueleto quedaría girando para siempre. A los 10s se corta solo y
+  // aparece el ícono de respaldo en su lugar.
+  function limitarEsperaImagenes(wrap){
+    wrap.querySelectorAll('.product-thumb img[data-loading="true"]').forEach(img => {
+      const listo = () => {
+        clearTimeout(id);
+        img.dataset.loading = 'false';
+        img.closest('.product-thumb').dataset.loading = 'false';
+      };
+      const id = setTimeout(listo, 10000);
+      img.addEventListener('load', listo, { once: true });
+      img.addEventListener('error', listo, { once: true });
+    });
   }
 
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
@@ -2473,6 +2553,33 @@ section{ padding-block:var(--s9); }
     if(!str || typeof str !== 'string') return '';
     return str.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   };
+
+  // Lee los productos directamente de las tarjetas ya renderizadas en el DOM.
+  // Respaldo para cuando no hay window._neneko_menu_products (el Sheet de Menú
+  // no respondió): sin esto, el buscador decía "no encontramos" para productos
+  // que el visitante tenía a la vista en las tarjetas de ejemplo.
+  //
+  // Se captura UNA sola vez acá, apenas carga la página y antes de que
+  // cualquier búsqueda reemplace el HTML de #mercaditoDynamic — si se leyera
+  // en cada búsqueda, la segunda búsqueda escanearía el resultado filtrado de
+  // la primera en vez del catálogo completo.
+  function productosDesdeTarjetas(wrap){
+    return [...wrap.querySelectorAll('.shop-group')].flatMap(group => {
+      const categoria = group.querySelector('.shop-group-head h3')?.textContent.trim() || '';
+      return [...group.querySelectorAll('.product-card')].map(card => ({
+        categoria,
+        subcategoria: '',
+        nombre: card.querySelector('h4')?.textContent.trim() || '',
+        precio: card.querySelector('.price')?.textContent.trim() || '',
+        detalle: card.querySelector('.product-detalle')?.textContent.trim() || '',
+        imagen: card.querySelector('img')?.getAttribute('src') || '',
+        keywords: ''
+      }));
+    });
+  }
+
+  const mercaditoInicial = document.getElementById('mercaditoDynamic');
+  const productosRespaldo = mercaditoInicial ? productosDesdeTarjetas(mercaditoInicial) : [];
 
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
@@ -2491,7 +2598,7 @@ section{ padding-block:var(--s9); }
         ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
             prods.map(p => ({...p, categoria: cat}))
           )
-        : [];
+        : productosRespaldo;
 
       const searchResults = allProducts.filter(p => {
         const nombreNorm = normalize(p.nombre);
@@ -2534,7 +2641,7 @@ section{ padding-block:var(--s9); }
       }
 
       wrap.scrollIntoView({ behavior: 'smooth' });
-      observarAparicion(wrap.querySelectorAll('.product-card'));
+      revelarNuevasTarjetas(wrap);
     }
 
     menuSearch.addEventListener('keypress', function(e){
@@ -2571,7 +2678,6 @@ section{ padding-block:var(--s9); }
     const menuPanel = document.getElementById('menuPanel');
     const menuOverlay = document.getElementById('menuOverlay');
     const menuClose = document.getElementById('menuClose');
-    const categoryToggles = document.querySelectorAll('.category-toggle');
 
     function toggleMenu(){
       menuPanel.classList.toggle('active');
@@ -2593,24 +2699,9 @@ section{ padding-block:var(--s9); }
     menuOverlay.addEventListener('click', closeMenu);
 
     // Cerrar al hacer click en un link
-    document.querySelectorAll('.menu-link, .category-items a, .menu-wa-btn').forEach(el => {
+    document.querySelectorAll('.menu-link, .menu-wa-btn').forEach(el => {
       el.addEventListener('click', closeMenu);
     });
-
-    // Subcategorías expandibles
-    categoryToggles.forEach(toggle => {
-      toggle.addEventListener('click', function(){
-        const itemsId = this.getAttribute('aria-controls');
-        const items = document.getElementById(itemsId);
-        const isExpanded = items.classList.contains('active');
-
-        items.classList.toggle('active');
-        this.setAttribute('aria-expanded', !isExpanded);
-      });
-    });
-
-    // Conectar el botón toggle a sus subcategorías
-    document.querySelector('.category-toggle').setAttribute('aria-controls', 'subcategorias-escritura');
   }
 </script>
 </body>
