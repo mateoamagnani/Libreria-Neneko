@@ -9,7 +9,7 @@
 <meta name="description" content="Librería Neneko: fotocopias, anillados, impresiones y útiles escolares y de oficina en Peña 3102, CABA. Pedís por WhatsApp y retirás en el local.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#243C54">
-<link rel="canonical" href="https://nenekolibreria.github.io/libreria-neneko-web/">
+<link rel="canonical" href="https://mateoamagnani.github.io/Libreria-Neneko/">
 
 <!-- Open Graph: controla cómo se ve el link al compartirlo por WhatsApp -->
 <meta property="og:type" content="website">
@@ -17,15 +17,15 @@
 <meta property="og:site_name" content="Librería Neneko">
 <meta property="og:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
 <meta property="og:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
-<meta property="og:url" content="https://nenekolibreria.github.io/libreria-neneko-web/">
-<meta property="og:image" content="https://nenekolibreria.github.io/libreria-neneko-web/og.jpg">
+<meta property="og:url" content="https://mateoamagnani.github.io/Libreria-Neneko/">
+<meta property="og:image" content="https://mateoamagnani.github.io/Libreria-Neneko/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Logo de Librería Neneko: un gato leyendo un libro">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Librería Neneko — Fotocopias, anillados y útiles en CABA">
 <meta name="twitter:description" content="Imprimimos tus apuntes, anillamos trabajos y tenemos los útiles de siempre. Pedí por WhatsApp y retirá en Peña 3102, CABA.">
-<meta name="twitter:image" content="https://nenekolibreria.github.io/libreria-neneko-web/og.jpg">
+<meta name="twitter:image" content="https://mateoamagnani.github.io/Libreria-Neneko/og.jpg">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231C2536'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%23E0B36A' text-anchor='middle'%3ELN%3C/text%3E%3C/svg%3E">
 <link rel="icon" type="image/png" href="nuevo-logo.png">
@@ -40,12 +40,12 @@
 {
   "@context": "https://schema.org",
   "@type": "StationeryStore",
-  "@id": "https://nenekolibreria.github.io/libreria-neneko-web/#negocio",
+  "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
   "name": "Librería Neneko",
   "description": "Fotocopias, impresiones, anillados y útiles escolares y de oficina en Peña 3102, CABA.",
-  "url": "https://nenekolibreria.github.io/libreria-neneko-web/",
+  "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
   "telephone": "+5491161691209",
-  "image": "https://nenekolibreria.github.io/libreria-neneko-web/og.jpg",
+  "image": "https://mateoamagnani.github.io/Libreria-Neneko/og.jpg",
   "priceRange": "$",
   "currenciesAccepted": "ARS",
   "address": {
@@ -909,38 +909,41 @@ section{ padding-block:var(--s9); }
 .product-info{
   display:flex; flex-direction:column; flex:1;
   padding:var(--s3);
-  gap:var(--s2);
+  gap:var(--s3);
 }
-.product-header{
-  display:flex; justify-content:space-between; align-items:baseline;
+.product-content{
+  display:flex; flex-direction:column; align-items:center; text-align:center;
   gap:var(--s2);
 }
 .product-info h4{
   font-size:.9375rem; font-weight:600; line-height:1.25;
-  margin:0; flex:1;
+  margin:0;
 }
 .product-detalle{
   font-size:.8125rem; color:var(--text-2); line-height:1.4;
   margin:0;
 }
+.product-footer{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+  margin-top:auto;
+}
 .product-info .price{
   font-family:'IBM Plex Mono', monospace;
   font-size:.8125rem; font-weight:600; color:var(--brand);
-  white-space:nowrap; flex-shrink:0;
+  flex:1;
 }
 .product-info a{
-  display:flex; align-items:center; justify-content:center; gap:6px;
-  min-height:44px;
+  display:flex; align-items:center; justify-content:center;
+  width:40px; height:40px; flex-shrink:0;
   font-size:.8125rem; font-weight:600; text-decoration:none;
   background:var(--btn-bg); color:var(--btn-text);
-  border:1.5px solid transparent; border-radius:var(--r-sm);
+  border:1.5px solid transparent; border-radius:50%;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top:auto;
 }
 .product-info a:hover{ background:var(--btn-bg-hover); }
 
 @media (max-width:480px){
-  .product-header{ flex-direction:column; align-items:flex-start; gap:4px; }
+  .product-content{ text-align:center; }
   .product-info h4{ flex:none; }
 }
 
@@ -1969,16 +1972,24 @@ section{ padding-block:var(--s9); }
         const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
         globalCardIndex++;
 
+        const waIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
           ${thumb}
           <div class="product-info">
-            <div class="product-header">
+            <div class="product-content">
               <h4>${esc(p.nombre)}</h4>
-              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              ${detalle}
             </div>
-            ${detalle}
-            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
-               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+            <div class="product-footer">
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                 aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
+                ${waIcon}
+              </a>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -2013,14 +2024,12 @@ section{ padding-block:var(--s9); }
 
     // Crear HTML con botón de vuelta
     const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : `Todo ${categoryName}`;
-    const contextBadge = subcategoryName ? '' : `<span style="display: inline-block; margin-left: var(--s2); font-size: 0.85rem; padding: 0.25rem var(--s2); background: var(--surface-2); color: var(--text-2); border-radius: 4px; font-weight: 500;">Listado completo</span>`;
     const backBtn = `<div style="margin-bottom: var(--s5);">
       <button onclick="window.neneko_backToHome()" class="btn btn-ghost" style="margin-bottom: var(--s4);">
         ← Volver al inicio
       </button>
       <div style="margin-bottom: var(--s2);">
         <h2 style="margin: 0; display: inline-block;">${esc(title)}</h2>
-        ${contextBadge}
       </div>
       <p style="color: var(--text-2); margin: 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
     </div>`;
@@ -2058,16 +2067,24 @@ section{ padding-block:var(--s9); }
 
         const thumb = `<div class="product-thumb${toneClass}" data-loading="${p.imagen && p.imagen.startsWith('http') ? 'true' : 'false'}">${thumbContent}</div>`;
 
+        const waIcon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>`;
+
         return `<div class="product-card" data-search="${esc(searchText)}">
           ${thumb}
           <div class="product-info">
-            <div class="product-header">
+            <div class="product-content">
               <h4>${esc(p.nombre)}</h4>
-              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              ${detalle}
             </div>
-            ${detalle}
-            <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
-               aria-label="Consultar por ${esc(p.nombre)} por WhatsApp">Consultar</a>
+            <div class="product-footer">
+              <div class="price">${esc(p.precio) || 'Consultar'}</div>
+              <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
+                 aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
+                ${waIcon}
+              </a>
+            </div>
           </div>
         </div>`;
       }).join('');
