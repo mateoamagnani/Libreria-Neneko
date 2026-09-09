@@ -1956,7 +1956,7 @@ section{ padding-block:var(--s9); }
         const loading = shouldPreload ? '' : 'loading="lazy"';
 
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false'" onerror="this.dataset.loading='false'">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'" onerror="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -2046,7 +2046,7 @@ section{ padding-block:var(--s9); }
         const loading = shouldPreload ? '' : 'loading="lazy"';
 
         const thumbContent = (p.imagen && p.imagen.startsWith('http'))
-          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false'" onerror="this.dataset.loading='false'">`
+          ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" data-loading="true" ${loading} referrerpolicy="no-referrer" onload="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'" onerror="this.dataset.loading='false';this.closest('.product-thumb').dataset.loading='false'">`
           : iconoDe(p.nombre);
 
         const keywordsList = (p.keywords || '')
@@ -2528,7 +2528,11 @@ section{ padding-block:var(--s9); }
   // aparece el ícono de respaldo en su lugar.
   function limitarEsperaImagenes(wrap){
     wrap.querySelectorAll('.product-thumb img[data-loading="true"]').forEach(img => {
-      const listo = () => { clearTimeout(id); img.dataset.loading = 'false'; };
+      const listo = () => {
+        clearTimeout(id);
+        img.dataset.loading = 'false';
+        img.closest('.product-thumb').dataset.loading = 'false';
+      };
       const id = setTimeout(listo, 10000);
       img.addEventListener('load', listo, { once: true });
       img.addEventListener('error', listo, { once: true });
