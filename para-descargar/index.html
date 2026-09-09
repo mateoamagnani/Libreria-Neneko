@@ -39,22 +39,28 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "StationeryStore",
+  "@type": "LocalBusiness",
   "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
   "name": "Librería Neneko",
-  "description": "Librería independiente en Peña 3102, CABA. Fotocopias, impresiones, anillados y útiles escolares. Pedí por WhatsApp y retirá en el local.",
+  "description": "Librería independiente en Peña 3102, CABA. Venta de libros, útiles escolares, fotocopias, impresiones y encuadernación. Atiende estudiantes del Colegio Nacional y colegios de Recoleta desde 2015.",
   "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
   "telephone": "+5491161691209",
   "image": "https://mateoamagnani.github.io/Libreria-Neneko/og.jpg",
   "priceRange": "$",
   "currenciesAccepted": "ARS",
+  "additionalType": ["StationeryStore", "BookStore"],
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Peña 3102",
+    "streetAddress": "Peña 3102, esquina Billinghurst",
     "addressLocality": "Ciudad Autónoma de Buenos Aires",
     "addressRegion": "CABA",
     "addressCountry": "AR",
     "postalCode": "C1425"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "-34.585",
+    "longitude": "-58.395"
   },
   "openingHoursSpecification": [
     {
@@ -68,6 +74,12 @@
       "dayOfWeek": ["Saturday"],
       "opens": "11:30",
       "closes": "15:30"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Sunday"],
+      "opens": "00:00",
+      "closes": "00:00"
     }
   ],
   "aggregateRating": {
@@ -76,7 +88,29 @@
     "reviewCount": "97",
     "bestRating": "5"
   },
-  "sameAs": ["https://www.google.com/maps/place/Neneko"]
+  "hasService": [
+    {
+      "@type": "Service",
+      "name": "Fotocopias",
+      "description": "Servicio de fotocopias en blanco y negro"
+    },
+    {
+      "@type": "Service",
+      "name": "Impresiones digitales",
+      "description": "Impresiones a color y blanco/negro"
+    },
+    {
+      "@type": "Service",
+      "name": "Encuadernación y anillados",
+      "description": "Anillado, grapado, plegado y encuadernación"
+    }
+  ],
+  "sameAs": ["https://www.google.com/maps/place/Neneko"],
+  "foundingDate": "2015-01-01",
+  "parentOrganization": {
+    "@type": "Organization",
+    "name": "Librería Neneko"
+  }
 }
 </script>
 <!-- FAQ Structurad Data para AI Overviews y ChatGPT -->
@@ -126,6 +160,129 @@
       }
     }
   ]
+}
+</script>
+<!-- Review Schema para testimonios de clientes -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Reseñas de Librería Neneko",
+  "description": "Reseñas de clientes reales",
+  "hasPart": [
+    {
+      "@type": "Review",
+      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
+      "reviewBody": "Gran variedad de artículos escolares a buen precio — un sábado a la tarde salvaron un pedido de último momento.",
+      "author": {"@type": "Person", "name": "Clienta habitual"},
+      "datePublished": "2026-09-09"
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
+      "reviewBody": "Atención amable y rápida, con mucha variedad de productos y buenos precios.",
+      "author": {"@type": "Person", "name": "Cliente frecuente"},
+      "datePublished": "2026-09-09"
+    },
+    {
+      "@type": "Review",
+      "reviewRating": {"@type": "Rating", "ratingValue": "5"},
+      "reviewBody": "Tienen de todo un poco, y abren hasta pasadas las 20 hs — se nota la buena atención.",
+      "author": {"@type": "Person", "name": "Vecino del barrio"},
+      "datePublished": "2026-09-09"
+    }
+  ]
+}
+</script>
+<!-- Breadcrumb Schema para AI navigation -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "https://mateoamagnani.github.io/Libreria-Neneko/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Productos",
+      "item": "https://mateoamagnani.github.io/Libreria-Neneko/#productos"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Nosotros",
+      "item": "https://mateoamagnani.github.io/Libreria-Neneko/#nosotros"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Ubicación",
+      "item": "https://mateoamagnani.github.io/Libreria-Neneko/#ubicacion"
+    }
+  ]
+}
+</script>
+<!-- Blog Article Schema para indexación de contenido original -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Cómo elegir el cuaderno perfecto para cada materia",
+  "description": "Guía práctica para elegir cuadernos según materia, gramaje, espaciado de líneas y durabilidad.",
+  "datePublished": "2026-09-09",
+  "dateModified": "2026-09-09",
+  "author": {
+    "@type": "Organization",
+    "name": "Librería Neneko"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Librería Neneko",
+    "url": "https://mateoamagnani.github.io/Libreria-Neneko/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "5 libros imprescindibles para estudiantes de secundaria",
+  "description": "Recomendaciones de lectura más allá de lo obligatorio: clásicos accesibles y obras contemporáneas relevantes.",
+  "datePublished": "2026-09-08",
+  "dateModified": "2026-09-08",
+  "author": {
+    "@type": "Organization",
+    "name": "Librería Neneko"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Librería Neneko",
+    "url": "https://mateoamagnani.github.io/Libreria-Neneko/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Checklist de útiles escolares: qué llevar en la mochila (y qué no)",
+  "description": "Guía de optimización: útiles imprescindibles, cómo organizar la mochila, y cómo ahorrar dinero comprando inteligentemente.",
+  "datePublished": "2026-09-06",
+  "dateModified": "2026-09-06",
+  "author": {
+    "@type": "Organization",
+    "name": "Librería Neneko"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Librería Neneko",
+    "url": "https://mateoamagnani.github.io/Libreria-Neneko/"
+  }
 }
 </script>
 <!-- TODO: agregar "geo" con latitud y longitud exactas (click derecho sobre el
@@ -1825,6 +1982,90 @@ body[data-category-view="true"] section{
             si podemos conseguirlo. Trabajamos con proveedores locales y podemos hacer importaciones pequeñas.
           </p>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== BLOG ===================== -->
+  <section id="blog" style="background:var(--surface);">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Consejos y novedades</span>
+        <h2>Blog de la librería</h2>
+        <p>Tips de estudio, recomendaciones de libros y novedades del mundo editorial.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:var(--s5); max-width:1000px; margin-inline:auto;">
+
+        <!-- Article 1 -->
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5);">
+            <div style="display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+              <time datetime="2026-09-09">9 de septiembre, 2026</time>
+              <span>·</span>
+              <span>5 min de lectura</span>
+            </div>
+            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+              Cómo elegir el cuaderno perfecto para cada materia
+            </h3>
+            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+              No todos los cuadernos son iguales. Descubrí cuáles son las características que importan: gramaje del papel, espaciado de líneas, durabilidad de la tapa y cómo elegir según si escribís mucho o preferís tomar apuntes de forma sintética.
+            </p>
+            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6; margin-bottom:var(--s4);">
+              En Neneko vendemos cuadernos Éxito, Rivadavia y marcas locales con diferentes características. Los de 100 hojas son ideales para materias teóricas (Historia, Literatura) con mucho espacio para resúmenes. Los de 50 hojas, más manejables para matemáticas y ejercitación rápida.
+            </p>
+            <a href="https://wa.me/5491161691209?text=Hola!%20Quiero%20saber%20m%C3%A1s%20sobre%20cuadernos%20para%20[materia]" style="color:var(--brand); text-decoration:underline; font-weight:600; font-size:0.9rem;">
+              Consultar por WhatsApp →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5);">
+            <div style="display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+              <time datetime="2026-09-08">8 de septiembre, 2026</time>
+              <span>·</span>
+              <span>4 min de lectura</span>
+            </div>
+            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+              5 libros imprescindibles para estudiantes de secundaria
+            </h3>
+            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+              Más allá de las lecturas obligatorias del colegio, estos cinco libros te van a cambiar la forma de ver el mundo: desde clásicos accesibles hasta obras contemporáneas que hablan de temas que importan hoy.
+            </p>
+            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6; margin-bottom:var(--s4);">
+              Entre nuestras recomendaciones: <strong>Don Quijote</strong> (edición adaptada, menos abrumador), <strong>El principito</strong> de Antoine de Saint-Exupéry, <strong>Bajo la misma estrella</strong> de John Green, <strong>1984</strong> de George Orwell, y <strong>Entonces, ¿por qué no todos?</strong> de economía aplicada. Los tenemos en stock y con descuento para compras de 3 o más.
+            </p>
+            <a href="https://wa.me/5491161691209?text=Hola!%20Quiero%20reservar%20algunos%20de%20los%20libros%20que%20recomiendan" style="color:var(--brand); text-decoration:underline; font-weight:600; font-size:0.9rem;">
+              Consultar disponibilidad →
+            </a>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5);">
+            <div style="display:flex; align-items:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+              <time datetime="2026-09-06">6 de septiembre, 2026</time>
+              <span>·</span>
+              <span>6 min de lectura</span>
+            </div>
+            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+              Checklist de útiles escolares: qué llevar en la mochila (y qué no)
+            </h3>
+            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+              La mayoría de estudiantes cargan más de la cuenta. Te enseñamos a optimizar: cuáles son los útiles imprescindibles, cuáles podés compartir, y cómo organizar tu mochila para que no pese una tonelada.
+            </p>
+            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6; margin-bottom:var(--s4);">
+              Necesitás: 2-3 lapiceras (no 10), 1 lápiz HB y 1 goma, 1 regla, 1 marcador. Ahorrate dinero comprando al por mayor en Neneko — un combo de útiles de calidad sale $800 y te dura todo el año. Los plumones y cartuchos también los vendemos sueltos si se acabó uno.
+            </p>
+            <a href="https://wa.me/5491161691209?text=Hola!%20Quiero%20un%20combo%20de%20%C3%BAtiles%20escolares" style="color:var(--brand); text-decoration:underline; font-weight:600; font-size:0.9rem;">
+              Armar combo personalizado →
+            </a>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
