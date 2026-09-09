@@ -928,9 +928,14 @@ section{ padding-block:var(--s9); }
   margin-top:auto;
 }
 .product-info .price{
+  background:color-mix(in srgb, var(--brand) 12%, transparent);
+  color:var(--brand);
+  padding:4px 12px;
+  border-radius:20px;
   font-family:'IBM Plex Mono', monospace;
-  font-size:.8125rem; font-weight:600; color:var(--brand);
-  flex:1;
+  font-size:.8125rem; font-weight:600;
+  display:inline-block;
+  white-space:nowrap;
 }
 .product-info a{
   display:flex; align-items:center; justify-content:center;
