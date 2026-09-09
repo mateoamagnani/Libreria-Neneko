@@ -2534,6 +2534,33 @@ section{ padding-block:var(--s9); }
     return str.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   };
 
+  // Lee los productos directamente de las tarjetas ya renderizadas en el DOM.
+  // Respaldo para cuando no hay window._neneko_menu_products (el Sheet de Menú
+  // no respondió): sin esto, el buscador decía "no encontramos" para productos
+  // que el visitante tenía a la vista en las tarjetas de ejemplo.
+  //
+  // Se captura UNA sola vez acá, apenas carga la página y antes de que
+  // cualquier búsqueda reemplace el HTML de #mercaditoDynamic — si se leyera
+  // en cada búsqueda, la segunda búsqueda escanearía el resultado filtrado de
+  // la primera en vez del catálogo completo.
+  function productosDesdeTarjetas(wrap){
+    return [...wrap.querySelectorAll('.shop-group')].flatMap(group => {
+      const categoria = group.querySelector('.shop-group-head h3')?.textContent.trim() || '';
+      return [...group.querySelectorAll('.product-card')].map(card => ({
+        categoria,
+        subcategoria: '',
+        nombre: card.querySelector('h4')?.textContent.trim() || '',
+        precio: card.querySelector('.price')?.textContent.trim() || '',
+        detalle: card.querySelector('.product-detalle')?.textContent.trim() || '',
+        imagen: card.querySelector('img')?.getAttribute('src') || '',
+        keywords: ''
+      }));
+    });
+  }
+
+  const mercaditoInicial = document.getElementById('mercaditoDynamic');
+  const productosRespaldo = mercaditoInicial ? productosDesdeTarjetas(mercaditoInicial) : [];
+
   const menuSearch = document.getElementById('menuSearch');
   if(menuSearch){
     function ejecutarBusqueda(query){
@@ -2551,7 +2578,7 @@ section{ padding-block:var(--s9); }
         ? Object.entries(window._neneko_menu_products).flatMap(([cat, prods]) =>
             prods.map(p => ({...p, categoria: cat}))
           )
-        : [];
+        : productosRespaldo;
 
       const searchResults = allProducts.filter(p => {
         const nombreNorm = normalize(p.nombre);
