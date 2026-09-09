@@ -1148,17 +1148,17 @@ body[data-category-view="true"] .sticky-cta{
 
 /* Reducir padding-top en vista de categoría */
 body[data-category-view="true"] section{
-  padding-top:var(--s5);
+  padding-top:var(--s7);
   padding-bottom:var(--s9);
 }
 @media (max-width:760px){
   body[data-category-view="true"] section{
-    padding-top:var(--s4);
+    padding-top:var(--s5);
   }
 }
 @media (max-width:480px){
   body[data-category-view="true"] section{
-    padding-top:var(--s3);
+    padding-top:var(--s4);
   }
 }
 
@@ -1171,6 +1171,13 @@ body[data-category-view="true"] section{
   margin-bottom:var(--s4);
   padding-bottom:var(--s3);
   border-bottom:1px solid var(--border);
+}
+
+/* Título y contador en la misma línea */
+.category-title-group{
+  display:flex;
+  align-items:baseline;
+  gap:var(--s2);
 }
 
 .category-header button{
@@ -2104,9 +2111,9 @@ body[data-category-view="true"] section{
       <button onclick="window.neneko_backToHome()" class="btn btn-ghost">
         ← Volver al inicio
       </button>
-      <div>
+      <div class="category-title-group">
         <h2 style="margin: 0;">${esc(title)}</h2>
-        <p style="color: var(--text-2); margin: var(--s1) 0 0 0;">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
+        <p style="color: var(--text-2); margin: 0 0 0 var(--s2);">${productos.length} producto${productos.length === 1 ? '' : 's'}</p>
       </div>
     </div>`;
 
