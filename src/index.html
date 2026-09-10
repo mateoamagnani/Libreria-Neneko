@@ -479,6 +479,7 @@ img{ max-width:100%; height:auto; display:block; }
 
 .skip-link{
   position:absolute; left:var(--s3); top:-80px; z-index:200;
+  margin-top:env(safe-area-inset-top, 0);
   /* Aparece encima del navbar, que es navy: con --btn-bg (también navy) el
      recuadro se perdía y quedaba texto flotando. Va en el ámbar, igual que el
      CTA de la barra, para que se lea como un control y no como un glitch. */
@@ -486,7 +487,7 @@ img{ max-width:100%; height:auto; display:block; }
   padding:var(--s3) var(--s5); border-radius:0 0 var(--r-sm) var(--r-sm);
   text-decoration:none; font-weight:600; transition:top .15s ease;
 }
-.skip-link:focus{ top:0; }
+.skip-link:focus{ top:0; margin-top:env(safe-area-inset-top, 0); }
 
 /* ==========================================================================
    LAYOUT
@@ -639,7 +640,9 @@ section{ padding-block:var(--s9); }
   gap:var(--s2); font-size:1rem; font-family:inherit;
   height:var(--nav-h); padding-top:calc(var(--nav-h) / 2 - var(--s2));
   padding-bottom:calc(var(--nav-h) / 2 - var(--s2));
+  transition:color .15s ease;
 }
+.menu-btn[aria-expanded="true"]{ color:var(--brand-bright); }
 .menu-btn svg{ width:24px; height:24px; flex-shrink:0; }
 
 @media (max-width:860px){
@@ -794,7 +797,7 @@ section{ padding-block:var(--s9); }
 }
 .hero-title{
   font-family:'Playfair Display', 'Merriweather', Georgia, serif;
-  font-size:3.5rem;
+  font-size:clamp(2.5rem, 1.5rem + 3vw, 4rem);
   font-weight:700;
   color:var(--text);
   line-height:1.1;
@@ -960,8 +963,8 @@ section{ padding-block:var(--s9); }
   /* El teléfono va DESPUÉS del titular, no antes: lo primero que tiene que
      leerse es qué es el negocio y qué se puede hacer acá. La maqueta es
      apoyo, no la portada. */
-  .phone{ width:250px; padding:9px; border-radius:40px; }
-  .phone-screen{ height:420px; border-radius:32px; }
+  .phone{ width:220px; padding:9px; border-radius:40px; }
+  .phone-screen{ height:380px; border-radius:32px; }
 }
 
 @media (max-width:640px){
@@ -1072,7 +1075,7 @@ section{ padding-block:var(--s9); }
 .product-card{
   display:flex; flex-direction:column;
   background:var(--surface);
-  border:1px solid var(--border);
+  border:1px solid var(--border-strong);
   border-radius:var(--r-md);
   overflow:hidden;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1265,10 +1268,13 @@ section{ padding-block:var(--s9); }
 @media (max-width:480px){
   .product-content{ text-align:center; }
   .product-info h4{ flex:none; }
-  .product-info a{ width:40px; height:40px; min-width:40px; min-height:40px; font-size:0.9rem; }
+  .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; font-size:0.9rem; }
   .product-info .price{ font-size:.75rem; }
 }
-@media (max-width:420px){ .product-thumb svg{ width:54px; height:54px; } }
+@media (max-width:420px){
+  .product-thumb svg{ width:54px; height:54px; }
+  .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; }
+}
 
 .catalog-note{
   margin-top:var(--s5); padding-top:var(--s3);
