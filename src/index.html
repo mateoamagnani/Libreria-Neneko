@@ -938,6 +938,21 @@ section{ padding-block:var(--s9); }
 #faq details[open] > summary span:last-child{
   transform:rotate(180deg);
 }
+#faq details > p, #faq details > div{
+  line-height:1.6;
+}
+
+/* FAQ: Responsive Layout */
+#faq > div:first-of-type{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:var(--s5);
+}
+@media (max-width:760px){
+  #faq > div:first-of-type{
+    grid-template-columns:1fr;
+  }
+}
 
 @media (max-width:960px){
   .hero{ padding-block:var(--s7) var(--s7); }
@@ -2158,80 +2173,80 @@ body[data-category-view="true"] section{
       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:var(--s5); max-width:900px; margin-inline:auto;">
 
         <!-- Article 1 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5);">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.8125rem; color:var(--text); font-weight:500;">
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
               <time datetime="2026-09-09">9 de septiembre, 2026</time>
               <span>·</span>
               <span>5 min de lectura</span>
             </div>
-            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
               Cómo elegir el cuaderno perfecto para cada materia
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
               No todos los cuadernos son iguales. Descubrí cuáles son las características que importan: gramaje del papel, espaciado de líneas, durabilidad de la tapa y cómo elegir según si escribís mucho o preferís tomar apuntes de forma sintética.
             </p>
-            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6;">
+            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
               En Neneko vendemos cuadernos Éxito, Rivadavia y marcas locales con diferentes características. Los de 100 hojas son ideales para materias teóricas (Historia, Literatura) con mucho espacio para resúmenes. Los de 50 hojas, más manejables para matemáticas y ejercitación rápida.
             </p>
           </div>
         </article>
 
         <!-- Article 2 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5);">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
               <time datetime="2026-09-08">8 de septiembre, 2026</time>
               <span>·</span>
               <span>4 min de lectura</span>
             </div>
-            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
               Técnicas de apuntes efectivas: escribe menos, aprende más
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
               Muchos estudiantes creen que tomar apuntes significa copiar palabra por palabra. Pero la realidad es que escribir todo te hace perder el hilo de la clase. Te enseñamos a filtrar lo importante, usar abreviaturas y crear un sistema que realmente te ayude a estudiar después.
             </p>
-            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6;">
+            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
               Las técnicas más efectivas son: Cornell (dividir la página en dos columnas), Feynman (explicar el concepto con tus palabras) y mapas conceptuales (dibujar conexiones). Necesitás una buena lapicera (que no se corra), un cuaderno de líneas para organizar mejor y quizá un resaltador para marcar palabras clave. En Neneko tenemos exactamente lo que necesitás para empezar.
             </p>
           </div>
         </article>
 
         <!-- Article 3 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5);">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
               <time datetime="2026-09-06">6 de septiembre, 2026</time>
               <span>·</span>
               <span>5 min de lectura</span>
             </div>
-            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
               Iluminación y ergonomía: cómo armar tu rincón de estudio
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
               Tu espacio de estudio afecta directamente tu concentración y productividad. Muchos estudiantes estudian con mala luz, en una silla incómoda o compartiendo escritorio con otras cosas. Cambios pequeños hacen una gran diferencia en cuánto tiempo tardás en entender un tema.
             </p>
-            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6;">
+            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
               Lo esencial: una lámpara de escritorio (preferentemente LED blanca fría, que no cansa la vista), un escritorio limpio (sin distracciones visuales), una silla con apoyo lumbar, y algo para elevar los libros o la tablet a la altura de los ojos. En Neneko podés encontrar lámparas, escritorios modulares, reposacabezas para silla y accesorios de organización. Un buen escritorio es una inversión en tu educación.
             </p>
           </div>
         </article>
 
         <!-- Article 4 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5);">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); margin-bottom:var(--s3); font-size:0.85rem; color:var(--text-2);">
+        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
+          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
               <time datetime="2026-09-05">5 de septiembre, 2026</time>
               <span>·</span>
               <span>6 min de lectura</span>
             </div>
-            <h3 style="font-size:1.35rem; margin-bottom:var(--s3); line-height:1.3;">
+            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
               Organización visual: cómo armar un sistema de estudio que funcione
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin-bottom:var(--s4);">
+            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
               Un buen sistema de organización te ahorra horas de búsqueda y ansiedad. Muchos estudiantes tienen apuntes dispersos, no saben dónde quedó ese resumen importante, y pierden tiempo reorganizando. Un método simple desde el principio es la diferencia entre estudiar con tranquilidad y estar siempre estresado.
             </p>
-            <p style="color:var(--text-3); font-size:0.95rem; line-height:1.6;">
+            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
               Tres pillares: carpetas (una por materia), color (marcadores o resaltadores para destacar conceptos clave), e índice (escribí un índice en la primera hoja de cada carpeta). Si sumás tabs o separadores, mejor aún. En Neneko vendemos separadores, gomas de color, y carpetas de tapa dura que duran todo el año. Invertir en buena organización ahora es ahorrarte estrés en octubre.
             </p>
           </div>
