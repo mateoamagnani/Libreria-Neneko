@@ -501,6 +501,7 @@ img{ max-width:100%; height:auto; display:block; }
 section{ padding-block:var(--s9); }
 @media (max-width:760px){ section{ padding-block:var(--s8); } }
 @media (max-width:480px){ section{ padding-block:var(--s6); } }
+@media (max-width:375px){ section{ padding-block:var(--s5); } }
 
 .eyebrow{
   font-family:'IBM Plex Mono', monospace;
@@ -1265,6 +1266,7 @@ section{ padding-block:var(--s9); }
 
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }
+@media (max-width:640px){ .product-grid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:480px){
   .product-content{ text-align:center; }
   .product-info h4{ flex:none; }
@@ -1351,6 +1353,11 @@ section{ padding-block:var(--s9); }
 .loc-list .label a{ text-decoration:none; }
 .loc-list .label a:hover{ color:var(--brand); }
 .loc-list .sub{ color:var(--text-2); font-size:.875rem; margin-top:1px; }
+
+@media (max-width:480px){
+  .loc-list .label{ font-size:1.0625rem; }
+  .loc-list .sub{ font-size:.8125rem; }
+}
 
 /* Las filas de dos líneas (la dirección) alinean el icono con la primera, que
    es lo correcto. Las de una sola (el teléfono) no: contra un icono de 42px el
@@ -1517,6 +1524,14 @@ body[data-category-view="true"] section{
     flex-wrap:wrap;
     align-items:center;
   }
+}
+
+/* ==========================================================================
+   BLOG — Mejora visual en dark mode
+   ========================================================================== */
+#blog article{
+  background:var(--surface);
+  border:1px solid var(--border-strong);
 }
 
 /* ==========================================================================
