@@ -1145,18 +1145,28 @@ section{ padding-block:var(--s9); }
   margin:0;
 }
 .product-footer{
-  display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--s4);
   margin-top:auto;
+  padding-top:var(--s3);
+  border-top:1px solid var(--border);
 }
 .product-info .price{
   background:color-mix(in srgb, var(--brand) 15%, transparent);
   color:var(--brand);
-  padding:6px 14px;
+  padding:8px 16px;
   border-radius:20px;
   font-family:'IBM Plex Mono', monospace;
-  font-size:.9375rem; font-weight:600;
+  font-size:.9375rem;
+  font-weight:600;
   display:inline-block;
   white-space:nowrap;
+  transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.product-info .price:hover{
+  background:color-mix(in srgb, var(--brand) 25%, transparent);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]) .product-info .price{
@@ -1167,14 +1177,33 @@ section{ padding-block:var(--s9); }
   color:#60b9ff;
 }
 .product-info a{
-  display:flex; align-items:center; justify-content:center;
-  width:48px; height:48px; flex-shrink:0;
-  font-size:.8125rem; font-weight:600; text-decoration:none;
-  background:var(--btn-bg); color:var(--btn-text);
-  border:1.5px solid transparent; border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  min-width:40px;
+  min-height:40px;
+  flex-shrink:0;
+  font-size:1rem;
+  font-weight:600;
+  text-decoration:none;
+  background:var(--btn-bg);
+  color:var(--btn-text);
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:0 2px 6px rgba(0, 0, 0, 0.08);
 }
-.product-info a:hover{ background:var(--btn-bg-hover); }
+.product-info a:hover{
+  background:var(--btn-bg-hover);
+  transform:translateY(-3px);
+  box-shadow:0 6px 12px rgba(0, 0, 0, 0.14);
+}
+.product-info a:active{
+  transform:translateY(-1px);
+}
 
 @media (max-width:480px){
   .product-content{ text-align:center; }
@@ -1186,7 +1215,8 @@ section{ padding-block:var(--s9); }
 @media (max-width:480px){
   .product-content{ text-align:center; }
   .product-info h4{ flex:none; }
-  .product-info a{ width:32px; height:32px; font-size:.7rem; }
+  .product-info a{ width:40px; height:40px; min-width:40px; min-height:40px; font-size:0.9rem; }
+  .product-info .price{ padding:6px 12px; font-size:.85rem; }
 }
 @media (max-width:420px){ .product-thumb svg{ width:54px; height:54px; } }
 
@@ -1693,8 +1723,10 @@ body[data-category-view="true"] section{
               <div class="product-info">
                 <h4>Fotocopia blanco y negro</h4>
                 <p class="product-detalle">Formato A4 en papel 80gsm. Precio por unidad desde 10 copias. Descuento por cantidad a partir de 50. Ideal para apuntes y materiales de estudio.</p>
-                <div class="price">Consultar</div>
-                <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Fotocopia%20blanco%20y%20negro" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia blanco y negro por WhatsApp">Consultar</a>
+                <div class="product-footer">
+                  <div class="price">Consultar</div>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Fotocopia%20blanco%20y%20negro" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia blanco y negro por WhatsApp">💬</a>
+                </div>
               </div>
             </div>
             <div class="product-card">
@@ -1702,8 +1734,10 @@ body[data-category-view="true"] section{
               <div class="product-info">
                 <h4>Impresión color</h4>
                 <p class="product-detalle">Calidad fotográfica A4 y A3. Enviá por mail, WhatsApp, celular o pendrive. Presupuesto inmediato según cantidad. Recomendado para pósters, trabajos visuales y presentaciones.</p>
-                <div class="price">Consultar</div>
-                <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Impresi%C3%B3n%20color" target="_blank" rel="noopener" aria-label="Consultar por Impresión color por WhatsApp">Consultar</a>
+                <div class="product-footer">
+                  <div class="price">Consultar</div>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Impresi%C3%B3n%20color" target="_blank" rel="noopener" aria-label="Consultar por Impresión color por WhatsApp">💬</a>
+                </div>
               </div>
             </div>
             <div class="product-card">
@@ -1711,8 +1745,10 @@ body[data-category-view="true"] section{
               <div class="product-info">
                 <h4>Anillado con espiral</h4>
                 <p class="product-detalle">Hasta 100 hojas en 15-20 minutos. Espiral de plástico o metal. Ideal para trabajos finales, tesis y apuntes de todo el año escolar.</p>
-                <div class="price">Consultar</div>
-                <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Anillado" target="_blank" rel="noopener" aria-label="Consultar por Anillado por WhatsApp">Consultar</a>
+                <div class="product-footer">
+                  <div class="price">Consultar</div>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Anillado" target="_blank" rel="noopener" aria-label="Consultar por Anillado por WhatsApp">💬</a>
+                </div>
               </div>
             </div>
             <div class="product-card">
@@ -1720,8 +1756,10 @@ body[data-category-view="true"] section{
               <div class="product-info">
                 <h4>Plastificado</h4>
                 <p class="product-detalle">Documentos y credenciales.</p>
-                <div class="price">Consultar</div>
-                <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Plastificado" target="_blank" rel="noopener" aria-label="Consultar por Plastificado por WhatsApp">Consultar</a>
+                <div class="product-footer">
+                  <div class="price">Consultar</div>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Plastificado" target="_blank" rel="noopener" aria-label="Consultar por Plastificado por WhatsApp">💬</a>
+                </div>
               </div>
             </div>
           </div>
@@ -1735,8 +1773,10 @@ body[data-category-view="true"] section{
               <div class="product-info">
                 <h4>Cuaderno tapa dura</h4>
                 <p class="product-detalle">Rayado o cuadriculado, varios tamaños.</p>
-                <div class="price">Consultar</div>
-                <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Cuaderno%20tapa%20dura" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno tapa dura por WhatsApp">Consultar</a>
+                <div class="product-footer">
+                  <div class="price">Consultar</div>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Cuaderno%20tapa%20dura" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno tapa dura por WhatsApp">💬</a>
+                </div>
               </div>
             </div>
             <div class="product-card">
