@@ -154,6 +154,96 @@ Hay 38 skills en `.claude/skills/`. Las más pertinentes acá:
 
 El inventario completo está en `.claude/skills/README.md`.
 
+## Design Principles — Sistema de Diseño Actual
+
+**Este documento define el sistema de diseño real del proyecto.** Las auditorías de diseño se hacen CONTRA este sistema, nunca proponiendo uno nuevo. 
+
+### Paleta de Colores
+
+Todos los colores usan tokens CSS definidos en `:root` con pares en modo oscuro:
+
+**Modo Claro:**
+- `--bg: #F8F9FA` (fondo de página, muy claro)
+- `--surface: #FFFFFF` (tarjetas, blanco puro)
+- `--surface-2: #E9ECEF` (bloques hundidos, gris muy claro)
+- `--brand: #3F7575` (turquesa oscuro, acentos, links)
+- `--brand-bright: #6BC2C2` (turquesa brillante, botones, over navy)
+- `--text: #333333` (texto principal, contraste 12:1)
+- `--text-2: #5A6169` (texto secundario, contraste 6:1)
+- `--text-3: #696F77` (texto terciario, contraste 4.8:1 — AA mínimo)
+- `--border: #CBD3DA` (divisiones finas, 1.5:1)
+- `--border-strong: #A6B1BA` (énfasis, 2.5:1)
+
+**Modo Oscuro:**
+- `--bg: #12161B` (fondo muy oscuro)
+- `--surface: #1A1F26` (tarjetas oscuras)
+- `--surface-2: #232932` (bloques hundidos)
+- `--brand: #6BC2C2` (turquesa claro, acentos — 8.8:1)
+- `--text: #E8ECEF` (texto claro, 15.3:1)
+- `--text-2: #B0B7BE` (secundario, 9:1)
+- `--text-3: #8A9199` (terciario, 5.7:1)
+
+**Excepciones:** Colores de WhatsApp (`#1F2C34`, `#005C4B`) no cambian con tema.
+
+### Tipografía
+
+- **Títulos (h1-h4):** Bricolage Grotesque, 600+ weight, `letter-spacing: -0.02em`, `line-height: 1.1`
+- **Cuerpo:** IBM Plex Sans, 400/500 weight, `line-height: 1.6` para párrafos largos
+- **Código/Etiquetas:** IBM Plex Mono, 400/600 weight, `font-size: 0.8125rem`
+
+**Escala de tamaños:** 17px base (mobile), 16px (desktop)  
+**Mínimo para AA:** 12px con contraste 4.5:1
+
+### Espaciado
+
+Base 4px en escala: `--s1:4px` → `--s10:128px`
+
+```
+--s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+--s6:32px; --s7:48px; --s8:64px; --s9:96px; --s10:128px;
+```
+
+Nunca números mágicos. Siempre usar variables.
+
+### Radios y Sombras
+
+- `--r-sm: 8px` (botones, inputs)
+- `--r-md: 12px` (tarjetas)
+- `--r-lg: 18px` (paneles grandes)
+- `--r-full: 999px` (pills)
+- `--shadow-sm: 0 1px 2px rgba(...), 0 2px 8px rgba(...)`
+- `--shadow-md: 0 4px 12px rgba(...), 0 12px 32px -12px rgba(...)`
+
+### Breakpoints Responsivos
+
+- **1440px:** Desktop wide
+- **960px:** Desktop normal
+- **760px:** Tablet horizontal / mobile wide
+- **640px:** Tablet portrait
+- **480px:** Mobile normal
+- **420px:** Mobile small
+
+Mobile-first: media queries siempre `max-width`.
+
+### Patrones de Interacción
+
+- **Touch targets:** Mínimo 44×44px (48dp en Material)
+- **Transiciones:** `cubic-bezier(0.4, 0, 0.2, 1)` (ease-in-out estándar)
+- **Estados:** `:hover`, `:focus-visible`, `:active` siempre definidos
+- **Focus:** Outline 2.5px color `--brand`, offset 3px
+
+### Accesibilidad No Negociable
+
+- [ ] Contraste mínimo 4.5:1 para texto (WCAG AA)
+- [ ] Contraste mínimo 3:1 para elementos UI grandes
+- [ ] Todos los colores + patrones/iconos (no solo color)
+- [ ] Touch targets ≥ 44×44px
+- [ ] `lang="es-AR"` en `<html>`
+- [ ] Heading hierarchy lógica (no saltear niveles)
+- [ ] Links con `:focus-visible` siempre visibles
+
+---
+
 ## Git
 
 Rama de trabajo actual: `claude/hola-querido-stuzim`. No pushear a `main` sin permiso
