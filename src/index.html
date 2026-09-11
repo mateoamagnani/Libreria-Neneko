@@ -30,6 +30,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231C2536'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='15' font-weight='700' fill='%23E0B36A' text-anchor='middle'%3ELN%3C/text%3E%3C/svg%3E">
 <link rel="icon" type="image/png" href="nuevo-logo.png">
 <link rel="apple-touch-icon" href="nuevo-logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -2399,6 +2400,7 @@ body[data-category-view="true"] section{
           <li><a href="#productos">Productos</a></li>
           <li><a href="#resenas">Reseñas</a></li>
           <li><a href="#ubicacion">Ubicación</a></li>
+          <li><a href="privacy.html">Privacidad</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -3533,6 +3535,21 @@ body[data-category-view="true"] section{
     document.querySelectorAll('.menu-link, .menu-wa-btn').forEach(el => {
       el.addEventListener('click', closeMenu);
     });
+  }
+</script>
+
+<!-- Google Analytics 4: Reemplazá G-XXXXXXXXXX con tu Measurement ID
+     Instrucciones: https://support.google.com/analytics/answer/9304153
+     1. Creá una propiedad en Google Analytics (analytics.google.com)
+     2. Copiá el Measurement ID (comienza con G-)
+     3. Reemplazá G-XXXXXXXXXX abajo -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){if(typeof window !== 'undefined'){window.dataLayer.push(arguments);}}
+  if(typeof window !== 'undefined'){
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
   }
 </script>
 </body>
