@@ -216,12 +216,18 @@ Nunca números mágicos. Siempre usar variables.
 
 ### Breakpoints Responsivos
 
+**Principales (documentados):**
 - **1440px:** Desktop wide
 - **960px:** Desktop normal
 - **760px:** Tablet horizontal / mobile wide
 - **640px:** Tablet portrait
 - **480px:** Mobile normal
 - **420px:** Mobile small
+
+**Intermedios (refinamientos visuales):**
+- **1000px:** Grid de productos 4 → 3 columnas
+- **860px:** Navbar responsive (brand reducido, menú, review 1 col, footer 1 col)
+- **520px:** Navbar compacto (solo icono del menú)
 
 Mobile-first: media queries siempre `max-width`.
 

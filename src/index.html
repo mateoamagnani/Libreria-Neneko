@@ -338,6 +338,10 @@
   --shadow-sm: 0 1px 2px rgba(28,37,54,.06), 0 2px 8px rgba(28,37,54,.05);
   --shadow-md: 0 4px 12px rgba(28,37,54,.07), 0 12px 32px -12px rgba(28,37,54,.16);
 
+  /* --- Tonos de producto --- */
+  --thumb-tone-terra: #4A8C8C;
+  --thumb-tone-sage: #2E4C6B;
+
   --maxw:1200px;
   --nav-h:72px;   /* lo usa el hero para calcular cuánto le queda de pantalla */
   color-scheme: light;
@@ -389,6 +393,10 @@
     --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
     --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 16px 40px -16px rgba(0,0,0,.6);
 
+    /* --- Tonos de producto --- */
+    --thumb-tone-terra: #8AD3D3;
+    --thumb-tone-sage: #A7C4E8;
+
     color-scheme: dark;
   }
 }
@@ -419,6 +427,10 @@
 
   --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
   --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 16px 40px -16px rgba(0,0,0,.6);
+
+  /* --- Tonos de producto --- */
+  --thumb-tone-terra: #8AD3D3;
+  --thumb-tone-sage: #A7C4E8;
 
   color-scheme: dark;
 }
@@ -1133,16 +1145,16 @@ section{ padding-block:var(--s9); }
    Ninguno baja de 3:1 sobre el thumb, que es lo que pide un icono. */
 .product-thumb.tone-navy   { background:color-mix(in srgb, var(--surface-inv) 12%, var(--surface-2)); color:var(--surface-inv); }
 .product-thumb.tone-mustard{ background:color-mix(in srgb, var(--brand) 14%, var(--surface-2));      color:var(--brand); }
-.product-thumb.tone-terra  { background:color-mix(in srgb, #4A8C8C 12%, var(--surface-2));           color:#4A8C8C; }
-.product-thumb.tone-sage   { background:color-mix(in srgb, #2E4C6B 12%, var(--surface-2));           color:#2E4C6B; }
+.product-thumb.tone-terra  { background:color-mix(in srgb, var(--thumb-tone-terra) 12%, var(--surface-2));           color:var(--thumb-tone-terra); }
+.product-thumb.tone-sage   { background:color-mix(in srgb, var(--thumb-tone-sage) 12%, var(--surface-2));           color:var(--thumb-tone-sage); }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]) .product-thumb.tone-navy   { color:#8FB0DE; }
-  :root:not([data-theme="light"]) .product-thumb.tone-terra  { color:#8AD3D3; }
-  :root:not([data-theme="light"]) .product-thumb.tone-sage   { color:#A7C4E8; }
+  :root:not([data-theme="light"]) .product-thumb.tone-terra  { color:var(--thumb-tone-terra); }
+  :root:not([data-theme="light"]) .product-thumb.tone-sage   { color:var(--thumb-tone-sage); }
 }
 :root[data-theme="dark"] .product-thumb.tone-navy   { color:#8FB0DE; }
-:root[data-theme="dark"] .product-thumb.tone-terra  { color:#8AD3D3; }
-:root[data-theme="dark"] .product-thumb.tone-sage   { color:#A7C4E8; }
+:root[data-theme="dark"] .product-thumb.tone-terra  { color:var(--thumb-tone-terra); }
+:root[data-theme="dark"] .product-thumb.tone-sage   { color:var(--thumb-tone-sage); }
 
 .category-header{
   display:flex; flex-direction:column; gap:var(--s3);
@@ -1659,7 +1671,7 @@ body[data-category-view="true"] section{
       <svg class="sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="luna" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.3A8.5 8.5 0 019.7 3.5a8.5 8.5 0 1010.8 10.8z"/></svg>
     </button>
-    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú" aria-expanded="false">
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
       <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       <span class="txt">Menú</span>
     </button>
