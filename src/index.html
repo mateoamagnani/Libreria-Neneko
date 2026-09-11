@@ -536,6 +536,97 @@ section{ padding-block:var(--s9); }
 .about-label{ font-size:1rem; font-weight:600; color:var(--text); margin-bottom:var(--s3); margin-top:var(--s5); }
 
 /* ==========================================================================
+   SECCIONES: NOSOTROS, FAQ, BLOG
+   ========================================================================== */
+/* FAQ Grid — responsive con un breakpoint a 760px */
+.faq-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--s5); margin-bottom:var(--s6);
+}
+@media (max-width:760px){
+  .faq-grid{ grid-template-columns:1fr; }
+}
+
+/* FAQ Item — cada pregunta/respuesta */
+.faq-item{
+  margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4);
+  transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.faq-item:hover{ border-color:var(--border-strong); }
+
+/* Details/Summary — accesible, con animación del ícono */
+.faq-details{
+  list-style:none;
+}
+.faq-summary{
+  cursor:pointer; font-weight:600; color:var(--text);
+  display:flex; justify-content:space-between; align-items:center;
+  user-select:none; padding:0;
+  background:none; border:none; font-family:inherit; font-size:inherit;
+  transition:color .25s ease;
+}
+.faq-summary:hover{ color:var(--brand); }
+.faq-summary:focus-visible{ outline:2.5px solid var(--brand); outline-offset:3px; border-radius:2px; }
+
+/* Chevron con rotación */
+.faq-chevron{
+  display:inline-block;
+  transition:transform .25s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink:0;
+}
+.faq-details[open] .faq-chevron{ transform:rotate(180deg); }
+
+/* Contenido expandible */
+.faq-content{
+  margin-top:var(--s3); color:var(--text-2); line-height:1.6;
+}
+
+/* Blog Grid — responsive, 4->2->1 columnas */
+.blog-grid{
+  display:grid; grid-template-columns:repeat(2, 1fr); gap:var(--s5); max-width:900px; margin-inline:auto;
+}
+@media (max-width:760px){
+  .blog-grid{ grid-template-columns:1fr; }
+}
+
+/* Blog Card — sin hover JavaScript, con CSS animations */
+.blog-card{
+  background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md);
+  overflow:hidden; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
+  display:flex; flex-direction:column; text-align:left;
+}
+.blog-card:hover{
+  border-color:var(--border-strong);
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-md);
+}
+
+/* Contenedor interno del blog card */
+.blog-card-inner{
+  padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;
+}
+
+/* Meta del blog — fecha y lectura */
+.blog-meta{
+  display:flex; align-items:center; gap:var(--s2); font-size:0.8125rem;
+  color:var(--text-3); font-weight:500;
+}
+
+/* Título del blog */
+.blog-title{
+  font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);
+}
+
+/* Párrafo de descripción en blog */
+.blog-excerpt{
+  color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;
+}
+
+/* Párrafo de contexto en blog */
+.blog-context{
+  color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;
+}
+
+/* ==========================================================================
    BOTONES
    ========================================================================== */
 .btn{
@@ -2071,30 +2162,30 @@ body[data-category-view="true"] section{
         <h3 class="about-intro">
           Librería Neneko nació en 2015
         </h3>
-        <p style="font-size:1rem; color:var(--text); margin-bottom:var(--s4); line-height:1.6;">
+        <p style="color:var(--text); margin-bottom:var(--s4); line-height:1.6;">
           Como una respuesta a la necesidad de una librería independiente en el barrio.
           En más de 9 años, hemos vendido <strong>más de 15.000 libros únicos</strong>, cuadernos de marcas locales y útiles que no
           encontrás en las cadenas nacionales. Somos referentes de estudiantes de Recoleta.
         </p>
         <h4 class="about-label">Nuestro equipo</h4>
-        <p style="font-size:0.95rem; color:var(--text-2); margin-bottom:var(--s4); line-height:1.6;">
+        <p style="color:var(--text-2); margin-bottom:var(--s4); line-height:1.6;">
           Conoce de libros, educación y útiles escolares. Trabajamos directamente con proveedores de la zona —
           evitamos intermediarios para mantener precios accesibles. Cada producto que entra al local fue elegido porque es útil, duradero y
           justo. No confiamos en lo que dice la etiqueta; probamos.
         </p>
-        <p style="font-size:0.95rem; color:var(--text-2); margin-bottom:var(--s4); line-height:1.6;">
+        <p style="color:var(--text-2); margin-bottom:var(--s4); line-height:1.6;">
           Hemos acompañado a varias generaciones de estudiantes del Colegio Nacional y de colegios de Recoleta:
           imprimiendo apuntes la noche antes del examen, anillando trabajos finales, ayudando a elegir cuadernos
           según la materia, y sacando de apuros con los útiles que faltaban a última hora.
         </p>
-        <p style="font-size:0.95rem; color:var(--text-2); margin-bottom:var(--s6); line-height:1.6;">
+        <p style="color:var(--text-2); margin-bottom:var(--s6); line-height:1.6;">
           Hoy ofrecemos fotocopias, impresiones digitales, encuadernación y anillados en el local. Pedí por WhatsApp
           en cualquier momento y retirá cuando sea; para trabajos urgentes, coordinamos.
         </p>
 
         <div style="background:var(--surface-2); border-left:4px solid var(--brand); border-radius:var(--r-md); padding:var(--s5); max-width:500px; margin-top:var(--s6);">
-          <h4 style="font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:var(--s2);">Nuestro compromiso</h4>
-          <p style="font-size:0.9rem; color:var(--text); margin:0; line-height:1.6;">
+          <h4 style="font-weight:700; color:var(--text); margin-bottom:var(--s2);">Nuestro compromiso</h4>
+          <p style="color:var(--text); margin:0; line-height:1.6;">
             Precios justos, productos confiables, atención personalizada.
             Sin sorpresas, sin falsas promesas. Si algo no está en stock, te lo decimos clarito y buscamos alternativas juntos.
           </p>
@@ -2110,61 +2201,61 @@ body[data-category-view="true"] section{
         <span class="eyebrow">Dudas comunes</span>
         <h2>Preguntas frecuentes</h2>
       </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:var(--s5); margin-bottom:var(--s6);">
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;" open>
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+      <div class="faq-grid">
+        <details class="faq-item faq-details" open>
+          <summary class="faq-summary">
             <span>¿Dónde queda exactamente?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+          <p class="faq-content">
             Peña 3102, esquina Billinghurst, a metros de Coronel Díaz, en Recoleta. Estamos muy cerca de la estación
             de subte Pueyrredón (líneas B y D). Podés encontrarnos exactamente en
             <a href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener" style="color:var(--brand); text-decoration:underline;">Google Maps</a>.
           </p>
         </details>
 
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <details class="faq-item faq-details">
+          <summary class="faq-summary">
             <span>¿Cuáles son los horarios?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
-            <strong>Lunes a viernes:</strong> 12:00 a 20:30<br>
+          <p class="faq-content">
+            <strong>Lunes a viernes:</strong> 11:30 a 20:30<br>
             <strong>Sábado:</strong> 11:30 a 15:30<br>
             <strong>Domingo:</strong> Cerrado<br>
             <br>Fuera de estos horarios podés escribir por WhatsApp y coordinamos.
           </p>
         </details>
 
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <details class="faq-item faq-details">
+          <summary class="faq-summary">
             <span>¿Cómo hago para pedir?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+          <p class="faq-content">
             Lo más fácil es escribir por WhatsApp al <strong>+54 9 11 6169-1209</strong>. Nos decís qué necesitás,
             confirmamos disponibilidad y precio, y retirás en el local. Para trabajos urgentes podemos coordinar
             entregas según la zona.
           </p>
         </details>
 
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <details class="faq-item faq-details">
+          <summary class="faq-summary">
             <span>¿Hacen fotocopias e impresiones?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+          <p class="faq-content">
             Sí, hacemos fotocopias en blanco y negro, impresiones digitales a color, encuadernación con espiral,
             anillados, grapado y plegados. Consultá en WhatsApp por el presupuesto según el tamaño y cantidad de hojas.
           </p>
         </details>
 
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <details class="faq-item faq-details">
+          <summary class="faq-summary">
             <span>¿Qué marcas tienen de útiles?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+          <p class="faq-content">
             Trabajamos con marcas confiables y asequibles: cuadernos de <strong>Éxito, Rivadavia</strong> y marcas locales;
             lápices, marcadores y lapiceras de <strong>Staedtler, Faber-Castell</strong> y Pentel; papel de buena gramatura;
             y una variedad de accesorios escolares.
@@ -2173,12 +2264,12 @@ body[data-category-view="true"] section{
           </p>
         </details>
 
-        <details style="margin-bottom:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s4); transition:all .25s ease;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text); display:flex; justify-content:space-between; align-items:center; user-select:none;">
+        <details class="faq-item faq-details">
+          <summary class="faq-summary">
             <span>¿Busco algo que no veo en el catálogo?</span>
-            <span aria-hidden="true" style="transition:transform .25s ease;">▼</span>
+            <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
-          <p style="margin-top:var(--s3); color:var(--text-2); line-height:1.6;">
+          <p class="faq-content">
             No hay problema. Escribí por WhatsApp lo que necesitás y te decimos al toque si lo tenemos o
             si podemos conseguirlo. Trabajamos con proveedores locales y podemos hacer importaciones pequeñas.
           </p>
@@ -2204,83 +2295,83 @@ body[data-category-view="true"] section{
         <p>Tips de estudio, recomendaciones de libros y novedades del mundo editorial.</p>
       </div>
 
-      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:var(--s5); max-width:900px; margin-inline:auto;">
+      <div class="blog-grid">
 
         <!-- Article 1 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
+        <article class="blog-card">
+          <div class="blog-card-inner">
+            <div class="blog-meta">
               <time datetime="2026-09-09">9 de septiembre, 2026</time>
               <span>·</span>
               <span>5 min de lectura</span>
             </div>
-            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
+            <h3 class="blog-title">
               Cómo elegir el cuaderno perfecto para cada materia
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
+            <p class="blog-excerpt">
               No todos los cuadernos son iguales. Descubrí cuáles son las características que importan: gramaje del papel, espaciado de líneas, durabilidad de la tapa y cómo elegir según si escribís mucho o preferís tomar apuntes de forma sintética.
             </p>
-            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
+            <p class="blog-context">
               En Neneko vendemos cuadernos Éxito, Rivadavia y marcas locales con diferentes características. Los de 100 hojas son ideales para materias teóricas (Historia, Literatura) con mucho espacio para resúmenes. Los de 50 hojas, más manejables para matemáticas y ejercitación rápida.
             </p>
           </div>
         </article>
 
         <!-- Article 2 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
+        <article class="blog-card">
+          <div class="blog-card-inner">
+            <div class="blog-meta">
               <time datetime="2026-09-08">8 de septiembre, 2026</time>
               <span>·</span>
               <span>4 min de lectura</span>
             </div>
-            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
+            <h3 class="blog-title">
               Técnicas de apuntes efectivas: escribe menos, aprende más
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
+            <p class="blog-excerpt">
               Muchos estudiantes creen que tomar apuntes significa copiar palabra por palabra. Pero la realidad es que escribir todo te hace perder el hilo de la clase. Te enseñamos a filtrar lo importante, usar abreviaturas y crear un sistema que realmente te ayude a estudiar después.
             </p>
-            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
+            <p class="blog-context">
               Las técnicas más efectivas son: Cornell (dividir la página en dos columnas), Feynman (explicar el concepto con tus palabras) y mapas conceptuales (dibujar conexiones). Necesitás una buena lapicera (que no se corra), un cuaderno de líneas para organizar mejor y quizá un resaltador para marcar palabras clave. En Neneko tenemos exactamente lo que necesitás para empezar.
             </p>
           </div>
         </article>
 
         <!-- Article 3 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
+        <article class="blog-card">
+          <div class="blog-card-inner">
+            <div class="blog-meta">
               <time datetime="2026-09-06">6 de septiembre, 2026</time>
               <span>·</span>
               <span>5 min de lectura</span>
             </div>
-            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
+            <h3 class="blog-title">
               Iluminación y ergonomía: cómo armar tu rincón de estudio
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
+            <p class="blog-excerpt">
               Tu espacio de estudio afecta directamente tu concentración y productividad. Muchos estudiantes estudian con mala luz, en una silla incómoda o compartiendo escritorio con otras cosas. Cambios pequeños hacen una gran diferencia en cuánto tiempo tardás en entender un tema.
             </p>
-            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
+            <p class="blog-context">
               Lo esencial: una lámpara de escritorio (preferentemente LED blanca fría, que no cansa la vista), un escritorio limpio (sin distracciones visuales), una silla con apoyo lumbar, y algo para elevar los libros o la tablet a la altura de los ojos. En Neneko podés encontrar lámparas, escritorios modulares, reposacabezas para silla y accesorios de organización. Un buen escritorio es una inversión en tu educación.
             </p>
           </div>
         </article>
 
         <!-- Article 4 -->
-        <article style="background:var(--bg); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; transition:all .25s ease; text-align:center; display:flex; flex-direction:column;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='none';">
-          <div style="padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;">
-            <div style="display:flex; align-items:center; justify-content:center; gap:var(--s2); font-size:0.8125rem; color:var(--text); font-weight:500;">
+        <article class="blog-card">
+          <div class="blog-card-inner">
+            <div class="blog-meta">
               <time datetime="2026-09-05">5 de septiembre, 2026</time>
               <span>·</span>
               <span>6 min de lectura</span>
             </div>
-            <h3 style="font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);">
+            <h3 class="blog-title">
               Organización visual: cómo armar un sistema de estudio que funcione
             </h3>
-            <p style="color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;">
+            <p class="blog-excerpt">
               Un buen sistema de organización te ahorra horas de búsqueda y ansiedad. Muchos estudiantes tienen apuntes dispersos, no saben dónde quedó ese resumen importante, y pierden tiempo reorganizando. Un método simple desde el principio es la diferencia entre estudiar con tranquilidad y estar siempre estresado.
             </p>
-            <p style="color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;">
+            <p class="blog-context">
               Tres pillares: carpetas (una por materia), color (marcadores o resaltadores para destacar conceptos clave), e índice (escribí un índice en la primera hoja de cada carpeta). Si sumás tabs o separadores, mejor aún. En Neneko vendemos separadores, gomas de color, y carpetas de tapa dura que duran todo el año. Invertir en buena organización ahora es ahorrarte estrés en octubre.
             </p>
           </div>
