@@ -559,23 +559,19 @@ section{ padding-block:var(--s9); }
 .about-pilar{ padding:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); background:transparent; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1); }
 .about-pilar:hover{ border-color:var(--border-strong); }
 
-/* FAQ Section — centered layout */
-.faq-head{ text-align:center; margin:0 auto var(--s8) auto; max-width:100%; }
-.faq-head h2{ margin-left:auto; margin-right:auto; }
-.faq-head .eyebrow{ display:inline-block; }
-
-/* FAQ Grid — responsive con un breakpoint a 760px */
-.faq-grid{
+/* FAQ Grid — 2 columnas en desktop, ancho completo */
+#faq .container > .faq-grid{
   display:grid; grid-template-columns:1fr 1fr; gap:var(--s6); margin-bottom:var(--s8);
+  width:100% !important;
 }
 @media (max-width:760px){
-  .faq-grid{ grid-template-columns:1fr; gap:var(--s5); }
+  #faq .container > .faq-grid{ grid-template-columns:1fr; gap:var(--s5); }
 }
 
-/* FAQ CTA final — centered y bien espaciado */
-.faq-cta{
+/* FAQ CTA final — centrado horizontalmente */
+#faq .faq-cta{
   padding:var(--s6) var(--s5); background:var(--surface-2); border-radius:var(--r-md);
-  text-align:center; max-width:600px; margin:0 auto;
+  text-align:center; width:fit-content; max-width:600px; margin-left:auto; margin-right:auto;
 }
 
 /* FAQ Item — cada pregunta/respuesta */
@@ -1089,16 +1085,7 @@ section{ padding-block:var(--s9); }
 }
 
 /* FAQ: Responsive Layout */
-#faq > div:first-of-type{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:var(--s5);
-}
-@media (max-width:760px){
-  #faq > div:first-of-type{
-    grid-template-columns:1fr;
-  }
-}
+/* Layout FAQs ahora manejado con .faq-grid específico, no aquí */
 
 @media (max-width:960px){
   .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
@@ -2250,7 +2237,7 @@ body[data-category-view="true"] section{
   <!-- ===================== PREGUNTAS FRECUENTES ===================== -->
   <section id="faq">
     <div class="container">
-      <div class="section-head faq-head">
+      <div class="section-head">
         <span class="eyebrow">Dudas comunes</span>
         <h2>Preguntas frecuentes</h2>
       </div>
