@@ -642,9 +642,15 @@ section{ padding-block:var(--s9); }
   box-shadow:var(--shadow-md);
 }
 
+/* Imagen del blog — 16:9 aspect ratio */
+.blog-card-image{
+  aspect-ratio:16/9; background:linear-gradient(135deg, var(--surface-2) 0%, var(--border) 100%);
+  width:100%; display:block; overflow:hidden;
+}
+
 /* Contenedor interno del blog card */
 .blog-card-inner{
-  padding:var(--s5) var(--s6); display:flex; flex-direction:column; gap:var(--s3); flex:1;
+  padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;
 }
 
 /* Meta del blog — fecha y lectura */
@@ -656,16 +662,29 @@ section{ padding-block:var(--s9); }
 /* Título del blog */
 .blog-title{
   font-size:1.25rem; font-weight:600; margin:0; line-height:1.3; color:var(--text);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
 
 /* Párrafo de descripción en blog */
 .blog-excerpt{
   color:var(--text-2); line-height:1.6; margin:0; font-size:1rem;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
 }
 
 /* Párrafo de contexto en blog */
 .blog-context{
   color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* CTA del blog — alineado al final */
+.blog-cta{
+  color:var(--brand); text-decoration:none; font-weight:500; font-size:0.9375rem;
+  margin-top:auto; padding-top:var(--s3); transition:color .25s ease;
+  display:inline-flex; align-items:center; gap:var(--s2);
+}
+.blog-cta:hover{
+  color:var(--brand-bright);
 }
 
 /* ==========================================================================
@@ -2349,6 +2368,7 @@ body[data-category-view="true"] section{
 
         <!-- Article 1 -->
         <article class="blog-card">
+          <div class="blog-card-image"></div>
           <div class="blog-card-inner">
             <div class="blog-meta">
               <time datetime="2026-09-09">9 de septiembre, 2026</time>
@@ -2364,11 +2384,13 @@ body[data-category-view="true"] section{
             <p class="blog-context">
               En Neneko vendemos cuadernos Éxito, Rivadavia y marcas locales con diferentes características. Los de 100 hojas son ideales para materias teóricas (Historia, Literatura) con mucho espacio para resúmenes. Los de 50 hojas, más manejables para matemáticas y ejercitación rápida.
             </p>
+            <a href="#" class="blog-cta">Leer artículo <span>→</span></a>
           </div>
         </article>
 
         <!-- Article 2 -->
         <article class="blog-card">
+          <div class="blog-card-image"></div>
           <div class="blog-card-inner">
             <div class="blog-meta">
               <time datetime="2026-09-08">8 de septiembre, 2026</time>
@@ -2384,11 +2406,13 @@ body[data-category-view="true"] section{
             <p class="blog-context">
               Las técnicas más efectivas son: Cornell (dividir la página en dos columnas), Feynman (explicar el concepto con tus palabras) y mapas conceptuales (dibujar conexiones). Necesitás una buena lapicera (que no se corra), un cuaderno de líneas para organizar mejor y quizá un resaltador para marcar palabras clave. En Neneko tenemos exactamente lo que necesitás para empezar.
             </p>
+            <a href="#" class="blog-cta">Leer artículo <span>→</span></a>
           </div>
         </article>
 
         <!-- Article 3 -->
         <article class="blog-card">
+          <div class="blog-card-image"></div>
           <div class="blog-card-inner">
             <div class="blog-meta">
               <time datetime="2026-09-06">6 de septiembre, 2026</time>
@@ -2404,11 +2428,13 @@ body[data-category-view="true"] section{
             <p class="blog-context">
               Lo esencial: una lámpara de escritorio (preferentemente LED blanca fría, que no cansa la vista), un escritorio limpio (sin distracciones visuales), una silla con apoyo lumbar, y algo para elevar los libros o la tablet a la altura de los ojos. En Neneko podés encontrar lámparas, escritorios modulares, reposacabezas para silla y accesorios de organización. Un buen escritorio es una inversión en tu educación.
             </p>
+            <a href="#" class="blog-cta">Leer artículo <span>→</span></a>
           </div>
         </article>
 
         <!-- Article 4 -->
         <article class="blog-card">
+          <div class="blog-card-image"></div>
           <div class="blog-card-inner">
             <div class="blog-meta">
               <time datetime="2026-09-05">5 de septiembre, 2026</time>
@@ -2424,6 +2450,7 @@ body[data-category-view="true"] section{
             <p class="blog-context">
               Tres pillares: carpetas (una por materia), color (marcadores o resaltadores para destacar conceptos clave), e índice (escribí un índice en la primera hoja de cada carpeta). Si sumás tabs o separadores, mejor aún. En Neneko vendemos separadores, gomas de color, y carpetas de tapa dura que duran todo el año. Invertir en buena organización ahora es ahorrarte estrés en octubre.
             </p>
+            <a href="#" class="blog-cta">Leer artículo <span>→</span></a>
           </div>
         </article>
 
