@@ -552,6 +552,13 @@ section{ padding-block:var(--s9); }
 /* ==========================================================================
    SECCIONES: NOSOTROS, FAQ, BLOG
    ========================================================================== */
+/* About (Quiénes somos) — 2 columnas historia + pilares */
+.about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s8); align-items:start; }
+.about-history{ /* primera columna, historia */ }
+.about-pillars{ display:flex; flex-direction:column; gap:var(--s6); }
+.about-pilar{ padding:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); background:transparent; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1); }
+.about-pilar:hover{ border-color:var(--border-strong); }
+
 /* FAQ Grid — responsive con un breakpoint a 760px */
 .faq-grid{
   display:grid; grid-template-columns:1fr 1fr; gap:var(--s5); margin-bottom:var(--s6);
@@ -1083,6 +1090,7 @@ section{ padding-block:var(--s9); }
 }
 
 @media (max-width:960px){
+  .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
   .hero{ padding-block:var(--s7) var(--s7); }
   .hero-grid{ grid-template-columns:1fr; gap:var(--s7); }
   /* El teléfono va DESPUÉS del titular, no antes: lo primero que tiene que
@@ -2183,41 +2191,47 @@ body[data-category-view="true"] section{
         <h2>Quiénes somos</h2>
       </div>
 
-      <!-- Párrafo introductorio -->
-      <p style="color:var(--text); margin-bottom:var(--s7); line-height:1.6; max-width:700px;">
-        Desde 2015 somos una librería independiente en el barrio. En casi una década, hemos vendido más de 15.000 libros únicos, cuadernos de marcas locales y útiles que no encontrás en las cadenas. Trabajamos directamente con proveedores de la zona para mantener precios accesibles. Cada producto fue elegido porque es útil, duradero y justo.
-      </p>
-
-      <!-- Grid de pilares -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:var(--s6); margin-bottom:var(--s7);">
-        <div style="padding:var(--s5); background:var(--surface-2); border-radius:var(--r-md); border:1px solid var(--border);">
-          <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s3) 0; font-size:1.05rem;">Precios claros</h4>
-          <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.95rem;">
-            Sin intermediarios, sin sorpresas. Lo que ves es lo que pagás, siempre justo y accesible.
+      <!-- Layout 2 columnas: Historia | Pilares -->
+      <div class="about-grid">
+        <!-- Columna izquierda: Historia -->
+        <div class="about-history">
+          <p style="color:var(--text); margin-bottom:var(--s5); line-height:1.7; font-size:1rem;">
+            Librería Neneko nació en 2015 como respuesta a la necesidad de una librería independiente en el barrio.
+          </p>
+          <p style="color:var(--text); margin-bottom:var(--s5); line-height:1.7; font-size:0.95rem;">
+            En casi una década hemos vendido <strong>más de 15.000 libros únicos</strong>, cuadernos de marcas locales y útiles que no encontrás en las cadenas. Trabajamos directamente con proveedores de la zona para mantener precios accesibles.
+          </p>
+          <p style="color:var(--text-2); margin-bottom:var(--s5); line-height:1.7; font-size:0.95rem;">
+            Cada producto fue elegido porque es útil, duradero y justo. No confiamos en lo que dice la etiqueta; probamos. Hemos acompañado varias generaciones de estudiantes del barrio, imprimiendo apuntes, anillando trabajos y ayudando a elegir lo que necesitan.
+          </p>
+          <p style="color:var(--text-2); line-height:1.7; font-size:0.95rem;">
+            Hoy ofrecemos fotocopias, impresiones digitales, encuadernación y anillados. Escribí por WhatsApp en cualquier momento y coordinamos.
           </p>
         </div>
 
-        <div style="padding:var(--s5); background:var(--surface-2); border-radius:var(--r-md); border:1px solid var(--border);">
-          <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s3) 0; font-size:1.05rem;">Soluciones al instante</h4>
-          <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.95rem;">
-            Fotocopias, impresiones, encuadernación, anillados. Coordinamos trabajos urgentes sin complicaciones.
-          </p>
-        </div>
+        <!-- Columna derecha: Pilares minimalistas -->
+        <div class="about-pillars">
+          <div class="about-pilar">
+            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Precios claros</h4>
+            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
+              Sin intermediarios, sin sorpresas. Lo que ves es lo que pagás.
+            </p>
+          </div>
 
-        <div style="padding:var(--s5); background:var(--surface-2); border-radius:var(--r-md); border:1px solid var(--border);">
-          <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s3) 0; font-size:1.05rem;">Atención personalizada</h4>
-          <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.95rem;">
-            Hemos acompañado generaciones de estudiantes. Conocemos de libros, educación y útiles escolares.
-          </p>
-        </div>
-      </div>
+          <div class="about-pilar">
+            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Soluciones al instante</h4>
+            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
+              Fotocopias, impresiones, encuadernación. Sin complicaciones.
+            </p>
+          </div>
 
-      <!-- Banner destacado: Nuestro compromiso -->
-      <div style="background:var(--brand); border-radius:var(--r-md); padding:var(--s6); color:white; text-align:center; max-width:600px; margin:0 auto;">
-        <h3 style="font-weight:700; margin:0 0 var(--s3) 0; font-size:1.15rem;">Nuestro compromiso</h3>
-        <p style="margin:0; line-height:1.6; font-size:0.95rem;">
-          Productos confiables, precios justos, atención honesta. Sin falsas promesas. Si algo no está en stock, te lo decimos clarito y buscamos alternativas juntos.
-        </p>
+          <div class="about-pilar">
+            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Atención personalizada</h4>
+            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
+              Conocemos de libros, educación y útiles escolares.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
