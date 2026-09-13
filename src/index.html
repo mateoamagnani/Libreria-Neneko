@@ -623,6 +623,10 @@ section{ padding-block:var(--s9); }
   padding:var(--s7) 0; text-align:center; display:flex; flex-direction:column; gap:var(--s4); align-items:center;
   max-width:900px; margin-left:auto; margin-right:auto;
 }
+@media (max-width:480px){
+  #faq .faq-cta{ padding:var(--s5) 0; gap:var(--s2); }
+  #faq .faq-cta p{ margin-bottom:0 !important; }
+}
 
 /* FAQ Section Head — centrado con columna central */
 #faq .section-head{
@@ -741,6 +745,11 @@ section{ padding-block:var(--s9); }
 #blog .blog-title{ color:var(--text-inv); }
 #blog .blog-excerpt{ color:var(--text-inv-2); }
 #blog .blog-context{ color:var(--text-inv-2); }
+@media (max-width:480px){
+  #blog .section-head h2{ text-align:center; }
+  #blog .section-head p{ text-align:center; }
+  #blog .blog-title{ text-align:center; }
+}
 
 /* ==========================================================================
    BOTONES
@@ -916,6 +925,7 @@ section{ padding-block:var(--s9); }
      y dejamos el CTA en el icono solo — el aria-label lo sigue nombrando. */
   .brand{ font-size:1rem; gap:var(--s2); }
   .brand span{ white-space:nowrap; }
+  .navbar .container{ padding-inline:max(var(--s3), env(safe-area-inset-left, 0px)); }
   .menu-btn .txt{ display:none; }
 }
 
@@ -1928,6 +1938,52 @@ body[data-category-view="true"] section{
   font-size:.75rem; color:var(--text-inv-2);
 }
 @media (max-width:860px){ .footer-grid{ grid-template-columns:1fr; gap:var(--s6); } }
+@media (max-width:480px){
+  .footer-grid{
+    grid-template-columns:1fr;
+    gap:var(--s5);
+    padding-bottom:var(--s5);
+    text-align:center;
+  }
+  .footer-brand .brand{
+    justify-content:center;
+    gap:var(--s3);
+  }
+  .footer-brand .brand img{
+    width:32px;
+    height:32px;
+  }
+  .footer-brand p{
+    margin-left:auto;
+    margin-right:auto;
+    max-width:90%;
+  }
+  .footer-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:var(--s4);
+    text-align:center;
+    justify-items:center;
+  }
+  .footer-col ul{
+    justify-items:center;
+  }
+  .footer-col a{
+    font-size:.8125rem;
+    padding:var(--s2) var(--s1);
+  }
+  .footer-bottom{
+    flex-direction:column;
+    justify-content:center;
+    gap:var(--s2);
+    padding-top:var(--s4);
+    border-top:1px solid rgba(255,255,255,.12);
+    font-size:.7rem;
+  }
+  .footer-bottom span{
+    display:block;
+  }
+}
 
 /* ==========================================================================
    BARRA FIJA DE WHATSAPP (mobile)
