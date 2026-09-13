@@ -731,11 +731,12 @@ section{ padding-block:var(--s9); }
    ========================================================================== */
 .btn{
   display:inline-flex;
+  flex-direction:row;
   align-items:center;
   justify-content:center;
-  gap:var(--s3);
+  gap:8px;
   height:48px;
-  padding:var(--s3) var(--s5);
+  padding:12px 24px;
   font-family:inherit;
   font-size:.9375rem;
   font-weight:600;
@@ -744,6 +745,7 @@ section{ padding-block:var(--s9); }
   border-radius:var(--r-full);
   text-decoration:none;
   cursor:pointer;
+  white-space:nowrap;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn:active{ transform:translateY(1px); }
@@ -752,6 +754,7 @@ section{ padding-block:var(--s9); }
   height:18px;
   flex-shrink:0;
   display:block;
+  margin:0;
 }
 
 .btn-primary{
@@ -776,8 +779,9 @@ section{ padding-block:var(--s9); }
 
 .btn-lg{
   height:54px;
-  padding:var(--s4) var(--s6);
+  padding:16px 32px;
   font-size:1rem;
+  flex-direction:row;
 }
 
 /* Botones pequeños de acción en tarjetas de producto (icono WhatsApp) */
@@ -1233,8 +1237,8 @@ section{ padding-block:var(--s9); }
   .eyebrow{ justify-content:center; display:flex; }
   .hero-title{ font-size:2.5rem; margin-bottom:var(--s4); }
   .hero-subtitle{ font-size:1.0625rem; max-width:100%; white-space:normal; }
-  .hero-ctas{ flex-direction:row; justify-content:center; gap:var(--s2); }
-  .btn-lg{ height:48px; padding:var(--s3) var(--s4); font-size:0.9375rem; }
+  .hero-ctas{ flex-direction:row; justify-content:center; gap:8px; }
+  .btn-lg{ height:48px; padding:12px 20px; font-size:0.9375rem; flex-direction:row; }
   .trust-row{ flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:var(--s4); }
   .rating{ justify-content:center; }
   .status{ justify-content:center; }
@@ -1491,6 +1495,7 @@ section{ padding-block:var(--s9); }
 }
 .product-info a{
   display:inline-flex;
+  flex-direction:row;
   align-items:center;
   justify-content:center;
   width:44px;
@@ -1683,9 +1688,11 @@ section{ padding-block:var(--s9); }
 /* Botones de acción en Ubicación: altura y padding exactos */
 #ubicacion .btn{
   height:48px;
-  padding:var(--s3) var(--s5);
+  padding:12px 24px;
   line-height:1;
   min-height:48px;
+  flex-direction:row;
+  white-space:nowrap;
 }
 #ubicacion .btn svg{
   width:18px;
