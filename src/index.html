@@ -298,6 +298,7 @@
   --surface:       #FFFFFF;   /* tarjetas: blancas para que resalten sobre --bg */
   --surface-2:     #E9ECEF;   /* bloques hundidos / thumbs */
   --surface-inv:   #243C54;   /* bandas oscuras: el navy del logo */
+  --surface-inv-2: #34556B;   /* tono oscuro secundario más claro para contraste */
 
   /* --- Bordes: el token crítico --- */
   --border:        #CBD3DA;   /* divisiones finas — 1.5:1 sobre --surface */
@@ -363,6 +364,7 @@
     --surface:       #1A1F26;
     --surface-2:     #232932;
     --surface-inv:   #16283A;
+    --surface-inv-2: #25394D;
 
     /* 1.7:1 sobre --surface y 2.1:1 sobre --bg: hairline claramente visible.
        El de antes (#3A3428 sobre #1A202C) daba 1.4:1 y encima era marrón
@@ -406,6 +408,7 @@
   --surface:       #1A1F26;
   --surface-2:     #232932;
   --surface-inv:   #16283A;
+  --surface-inv-2: #25394D;
 
   --border:        #39434F;
   --border-strong: #4E5B6C;
@@ -725,6 +728,19 @@ section{ padding-block:var(--s9); }
 .blog-cta{
   display:none;
 }
+
+/* Blog en fondo oscuro: texto claro */
+#blog .blog-card{
+  background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.12);
+}
+#blog .blog-card:hover{ border-color:rgba(255,255,255,.2); }
+#blog .section-head .eyebrow{ color:var(--text-inv-2); }
+#blog .section-head h2{ color:var(--text-inv); }
+#blog .section-head p{ color:var(--text-inv-2); }
+#blog .blog-meta{ color:var(--text-inv-2); }
+#blog .blog-title{ color:var(--text-inv); }
+#blog .blog-excerpt{ color:var(--text-inv-2); }
+#blog .blog-context{ color:var(--text-inv-2); }
 
 /* ==========================================================================
    BOTONES
@@ -1300,6 +1316,11 @@ section{ padding-block:var(--s9); }
 .service h3{ font-size:1rem; font-weight:600; }
 .service p{ font-size:.875rem; color:var(--text-2); text-wrap:pretty; }
 
+/* Servicios en fondo oscuro: texto claro */
+.services .service h3{ color:var(--text-inv); }
+.services .service p{ color:var(--text-inv-2); }
+.services .service svg{ color:var(--brand-bright); }
+
 @media (max-width:860px){
   .services-grid{ grid-template-columns:repeat(2,1fr); }
   .service:nth-child(2n){ border-right:none; }
@@ -1635,6 +1656,37 @@ section{ padding-block:var(--s9); }
   .loc-list .label{ font-size:1.0625rem; }
   .loc-list .sub{ font-size:.8125rem; }
 }
+
+/* Ubicación en fondo oscuro: texto claro */
+#ubicacion .section-head .eyebrow{ color:var(--text-inv-2); }
+#ubicacion .section-head h2{ color:var(--text-inv); }
+#ubicacion .loc-list .label{ color:var(--text-inv); }
+#ubicacion .loc-list .label a{ color:var(--text-inv); }
+#ubicacion .loc-list .label a:hover{ color:var(--brand-bright); }
+#ubicacion .loc-list .sub{ color:var(--text-inv-2); }
+#ubicacion .loc-list .icon{
+  background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.12); color:var(--brand-bright);
+}
+#ubicacion .horarios{
+  background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.12);
+}
+#ubicacion .horarios-head{
+  border-bottom-color:rgba(255,255,255,.12); background:rgba(255,255,255,.08);
+}
+#ubicacion .horarios-head h3{ color:var(--text-inv); }
+#ubicacion .horarios-head h3 svg{ color:var(--brand-bright); }
+#ubicacion .horarios table{ border-color:rgba(255,255,255,.12); }
+#ubicacion .horarios tr{ border-bottom-color:rgba(255,255,255,.12); }
+#ubicacion .horarios th{ color:var(--text-inv-2); }
+#ubicacion .horarios td{ color:var(--text-inv); }
+#ubicacion .horarios tr.hoy{ background:rgba(102,194,194,.12); }
+#ubicacion .horarios tr.hoy th{ color:var(--text-inv); box-shadow:inset 3px 0 0 var(--brand-bright); }
+#ubicacion .horarios tr.hoy td{ color:var(--text-inv); }
+#ubicacion .horarios .tag-hoy{ color:var(--brand-bright); }
+#ubicacion .status{ color:var(--text-inv-2); }
+#ubicacion .status .dot{ background:var(--text-inv-2); }
+#ubicacion .status[data-abierto="si"] .dot{ background:var(--ok); }
+#ubicacion .status[data-abierto="no"] .dot{ background:var(--closed); }
 
 /* Las filas de dos líneas (la dirección) alinean el icono con la primera, que
    es lo correcto. Las de una sola (el teléfono) no: contra un icono de 42px el
@@ -2043,7 +2095,7 @@ body[data-category-view="true"] section{
   </section>
 
   <!-- ===================== SERVICIOS ===================== -->
-  <section class="services" style="padding-block:0; background:var(--surface-inv);">
+  <section class="services" style="padding-block:0; background:var(--surface-inv-2); color:var(--text-inv);">
     <div class="container">
       <div class="services-grid">
         <div class="service">
@@ -2319,7 +2371,7 @@ body[data-category-view="true"] section{
   </section>
 
   <!-- ===================== UBICACIÓN ===================== -->
-  <section id="ubicacion" style="background:var(--surface-inv);">
+  <section id="ubicacion" style="background:var(--surface-inv); color:var(--text-inv);">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Ubicación</span>
@@ -2482,7 +2534,7 @@ body[data-category-view="true"] section{
   </section>
 
   <!-- ===================== BLOG ===================== -->
-  <section id="blog" style="background:var(--surface-inv);">
+  <section id="blog" style="background:var(--surface-inv-2); color:var(--text-inv);">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Consejos y novedades</span>
