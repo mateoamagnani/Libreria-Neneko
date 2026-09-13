@@ -730,10 +730,10 @@ section{ padding-block:var(--s9); }
    BOTONES
    ========================================================================== */
 .btn{
-  display:flex;
-  flex-direction:row;
-  align-items:center;
-  justify-content:center;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
   gap:8px;
   height:48px;
   padding:12px 24px;
@@ -750,12 +750,11 @@ section{ padding-block:var(--s9); }
 }
 .btn:active{ transform:translateY(1px); }
 .btn svg{
-  width:18px;
-  height:18px;
+  width:18px !important;
+  height:18px !important;
   flex-shrink:0;
-  display:block;
+  display:inline-block !important;
   margin:0;
-  line-height:0;
 }
 
 .btn-primary{
@@ -1692,14 +1691,14 @@ section{ padding-block:var(--s9); }
 .horarios tr.hoy{ background:color-mix(in srgb, var(--brand) 9%, var(--surface)); }
 /* Botones de acción en Ubicación: altura y padding exactos */
 #ubicacion .btn{
-  display:flex;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
   height:48px;
   padding:12px 24px;
   line-height:1;
   min-height:48px;
-  flex-direction:row;
-  align-items:center;
-  justify-content:center;
   white-space:nowrap;
 }
 #ubicacion .btn svg{
