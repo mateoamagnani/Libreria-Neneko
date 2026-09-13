@@ -587,12 +587,16 @@ section{ padding-block:var(--s9); }
   display:block; margin-bottom:var(--s3);
 }
 
-.section-head{ max-width:65rem; margin-bottom:var(--s8); }
+.section-head{ max-width:65rem; margin-bottom:var(--s8); margin-top:0; }
 .section-head h2{
   font-size:clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
   margin-bottom:var(--s5);
   display:block; width:100%;
   max-width:50rem;
+}
+#productos .section-head{
+  margin-top:var(--s7);
+  margin-bottom:var(--s5);
 }
 .section-head p{ color:var(--text-2); font-size:1.0625rem; text-wrap:pretty; margin-top:var(--s4); max-width:60rem; line-height:1.6; }
 
@@ -1574,19 +1578,16 @@ section{ padding-block:var(--s9); }
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }
 @media (max-width:640px){ .product-grid{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:480px){
-  .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s2); }
+@media (max-width:520px){
+  .product-grid{ grid-template-columns:repeat(2,1fr) !important; gap:var(--s2); }
   .product-content{ text-align:center; }
-  .product-info{ padding:var(--s3); }
-  .product-info h4{ flex:none; font-size:.8125rem; }
-  .product-info a{ width:36px; height:36px; min-width:36px; min-height:36px; font-size:0.8rem; }
-  .product-info .price{ font-size:.7rem; }
-  .product-thumb svg{ width:48px; height:48px; }
-}
-@media (max-width:420px){
-  .product-grid{ grid-template-columns:1fr; }
-  .product-thumb svg{ width:54px; height:54px; }
-  .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; }
+  .product-info{ padding:var(--s2); }
+  .product-info h4{ flex:none; font-size:.75rem; line-height:1.2; }
+  .product-detalle{ font-size:.6875rem; }
+  .product-info a{ width:32px; height:32px; min-width:32px; min-height:32px; font-size:0.7rem; }
+  .product-info .price{ font-size:.65rem; }
+  .product-thumb{ aspect-ratio:1; }
+  .product-thumb svg{ width:44px; height:44px; }
 }
 
 .catalog-note{
@@ -1999,7 +2000,7 @@ body[data-category-view="true"] section{
     gap:var(--s2);
     padding-top:var(--s3);
     border-top:1px solid rgba(255,255,255,.12);
-    font-size:.65rem;
+    font-size:.8125rem;
   }
   .footer-bottom span{
     display:block;
