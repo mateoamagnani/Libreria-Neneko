@@ -1591,6 +1591,14 @@ section{ padding-block:var(--s9); }
 .trust .eyebrow{ color:var(--text-inv-2); }
 .trust .section-head h2{ color:var(--text-inv); }
 
+/* Reseñas con fondo claro: invertir colores de texto */
+#resenas{ color:var(--text); }
+#resenas .eyebrow{ color:var(--text-2); }
+#resenas .section-head h2{ color:var(--text); }
+#resenas .review{ color:var(--text); }
+#resenas .review strong{ color:var(--text); }
+#resenas .review .author{ color:var(--text-2); }
+
 .trust-head{
   display:flex; align-items:flex-end; justify-content:space-between;
   gap:var(--s5); flex-wrap:wrap; margin-bottom:var(--s7);
@@ -2177,7 +2185,7 @@ body[data-category-view="true"] section{
 
   <!-- ===================== CATÁLOGO ===================== -->
   <!-- ===================== RESEÑAS ===================== -->
-  <section class="trust" id="resenas" style="background:var(--surface-inv);">
+  <section class="trust" id="resenas" style="background:var(--surface-2); color:var(--text);">
     <div class="container">
       <div class="trust-head">
         <div class="section-head">
@@ -2371,7 +2379,7 @@ body[data-category-view="true"] section{
   </section>
 
   <!-- ===================== UBICACIÓN ===================== -->
-  <section id="ubicacion" style="background:var(--surface-inv); color:var(--text-inv);">
+  <section id="ubicacion" style="background:var(--surface-inv-2); color:var(--text-inv);">
     <div class="container">
       <div class="section-head">
         <span class="eyebrow">Ubicación</span>
