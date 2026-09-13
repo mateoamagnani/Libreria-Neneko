@@ -1574,14 +1574,17 @@ section{ padding-block:var(--s9); }
 @media (max-width:1000px){ .product-grid{ grid-template-columns:repeat(3,1fr); } }
 @media (max-width:760px){ .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s3); } }
 @media (max-width:640px){ .product-grid{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:420px){ .product-grid{ grid-template-columns:1fr; } }
 @media (max-width:480px){
+  .product-grid{ grid-template-columns:repeat(2,1fr); gap:var(--s2); }
   .product-content{ text-align:center; }
-  .product-info h4{ flex:none; }
-  .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; font-size:0.9rem; }
-  .product-info .price{ font-size:.75rem; }
+  .product-info{ padding:var(--s3); }
+  .product-info h4{ flex:none; font-size:.8125rem; }
+  .product-info a{ width:36px; height:36px; min-width:36px; min-height:36px; font-size:0.8rem; }
+  .product-info .price{ font-size:.7rem; }
+  .product-thumb svg{ width:48px; height:48px; }
 }
 @media (max-width:420px){
+  .product-grid{ grid-template-columns:1fr; }
   .product-thumb svg{ width:54px; height:54px; }
   .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; }
 }
@@ -1907,8 +1910,8 @@ body[data-category-view="true"] section{
    ========================================================================== */
 .site-footer{
   background:var(--surface-inv); color:var(--text-inv);
-  padding-block:var(--s8);
-  padding-bottom:calc(var(--s8) + env(safe-area-inset-bottom, 0px));
+  padding-block:var(--s5);
+  padding-bottom:calc(var(--s5) + env(safe-area-inset-bottom, 0px));
 }
 .footer-grid{
   display:grid; grid-template-columns:1.6fr 1fr 1fr;
@@ -1942,8 +1945,11 @@ body[data-category-view="true"] section{
 @media (max-width:480px){
   .footer-grid{
     grid-template-columns:1fr 1fr;
-    gap:var(--s5);
-    padding-bottom:var(--s5);
+    gap:var(--s4);
+    padding-bottom:var(--s4);
+    max-width:280px;
+    margin-left:auto;
+    margin-right:auto;
   }
   .footer-brand{
     grid-column:1/-1;
@@ -1951,11 +1957,11 @@ body[data-category-view="true"] section{
     flex-direction:column;
     align-items:center;
     text-align:center;
-    margin-bottom:var(--s4);
+    margin-bottom:var(--s3);
   }
   .footer-brand .brand{
     justify-content:center;
-    gap:var(--s3);
+    gap:var(--s2);
     margin-bottom:var(--s2);
   }
   .footer-brand .brand img{
@@ -1965,6 +1971,7 @@ body[data-category-view="true"] section{
   .footer-brand p{
     max-width:90%;
     margin:0;
+    font-size:.8125rem;
   }
   .footer-col{
     text-align:left;
@@ -1972,16 +1979,17 @@ body[data-category-view="true"] section{
     flex-direction:column;
   }
   .footer-col h4{
-    margin-bottom:var(--s3);
+    margin-bottom:var(--s2);
+    font-size:.625rem;
   }
   .footer-col ul{
     display:flex;
     flex-direction:column;
-    gap:var(--s2);
+    gap:var(--s1);
   }
   .footer-col a{
-    font-size:.8125rem;
-    padding:0;
+    font-size:.75rem;
+    padding:var(--s1) 0;
     min-height:auto;
   }
   .footer-bottom{
@@ -1989,9 +1997,9 @@ body[data-category-view="true"] section{
     flex-direction:column;
     justify-content:center;
     gap:var(--s2);
-    padding-top:var(--s4);
+    padding-top:var(--s3);
     border-top:1px solid rgba(255,255,255,.12);
-    font-size:.7rem;
+    font-size:.65rem;
   }
   .footer-bottom span{
     display:block;
@@ -2296,8 +2304,7 @@ body[data-category-view="true"] section{
   <section id="productos" style="background:var(--surface);">
     <div class="container">
       <div class="section-head">
-        <h2>Nuestros Productos</h2>
-        <p>¿No encontrás lo que estabas buscando? Consultanos y te lo conseguimos.</p>
+        <h2>Novedades y Ofertas</h2>
       </div>
 
       <!-- El script reemplaza este bloque con los productos del Google Sheet.
