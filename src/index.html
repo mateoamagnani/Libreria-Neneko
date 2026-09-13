@@ -612,6 +612,11 @@ section{ padding-block:var(--s9); }
 .about-pillars{ display:flex; flex-direction:column; gap:var(--s6); }
 .about-pilar{ padding:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); background:transparent; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1); }
 .about-pilar:hover{ border-color:var(--border-strong); }
+@media (max-width:520px){
+  .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
+  .about-pilar{ text-align:center; }
+  .about-pilar h4{ margin-left:auto; margin-right:auto; }
+}
 
 /* FAQ Grid — columna central restringida, 1 columna */
 #faq .container > .faq-grid{
@@ -749,9 +754,12 @@ section{ padding-block:var(--s9); }
 #blog .blog-title{ color:var(--text-inv); }
 #blog .blog-excerpt{ color:var(--text-inv-2); }
 #blog .blog-context{ color:var(--text-inv-2); }
-@media (max-width:480px){
-  #blog .section-head h2{ text-align:center; }
-  #blog .section-head p{ text-align:center; }
+@media (max-width:520px){
+  .section-head{ text-align:center; }
+  .section-head h2{ margin-left:auto; margin-right:auto; }
+  .section-head p{ margin-left:auto; margin-right:auto; }
+  .eyebrow{ display:block; }
+
   #blog .blog-card-inner{ text-align:center; }
   #blog .blog-meta{ justify-content:center; }
 }
