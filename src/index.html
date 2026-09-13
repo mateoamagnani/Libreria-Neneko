@@ -1591,13 +1591,16 @@ section{ padding-block:var(--s9); }
 .trust .eyebrow{ color:var(--text-inv-2); }
 .trust .section-head h2{ color:var(--text-inv); }
 
-/* Reseñas con fondo claro: invertir colores de texto */
-#resenas{ color:var(--text); }
-#resenas .eyebrow{ color:var(--text-2); }
-#resenas .section-head h2{ color:var(--text); }
-#resenas .review{ color:var(--text); }
-#resenas .review strong{ color:var(--text); }
-#resenas .review .author{ color:var(--text-2); }
+/* Reseñas con fondo oscuro secundario: colores invertidos para legibilidad */
+#resenas{ color:var(--text-inv); }
+#resenas .eyebrow{ color:var(--text-inv-2); }
+#resenas .section-head h2{ color:var(--text-inv); }
+#resenas .score-num{ color:var(--brand-bright); }
+#resenas .score-meta p{ color:var(--text-inv-2); }
+#resenas .review{ color:var(--text-inv); }
+#resenas .review p{ color:var(--text-inv); }
+#resenas .review cite{ color:var(--text-inv-2); }
+#resenas .review strong{ color:var(--text-inv); }
 
 .trust-head{
   display:flex; align-items:flex-end; justify-content:space-between;
@@ -2185,7 +2188,7 @@ body[data-category-view="true"] section{
 
   <!-- ===================== CATÁLOGO ===================== -->
   <!-- ===================== RESEÑAS ===================== -->
-  <section class="trust" id="resenas" style="background:var(--surface-2); color:var(--text);">
+  <section class="trust" id="resenas" style="background:var(--surface-inv-2); color:var(--text-inv);">
     <div class="container">
       <div class="trust-head">
         <div class="section-head">
