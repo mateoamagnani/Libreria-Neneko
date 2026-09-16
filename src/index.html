@@ -33,6 +33,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Las imágenes de producto viven en postimg: abrir la conexión antes
+     ahorra el ida y vuelta de DNS/TLS cuando aparece la primera tarjeta. -->
+<link rel="preconnect" href="https://i.postimg.cc" crossorigin>
+<link rel="dns-prefetch" href="https://i.postimg.cc">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 
 <!-- Datos estructurados para SEO local y AI indexación. El horario tiene que ser idéntico al
@@ -43,7 +47,7 @@
   "@type": "LocalBusiness",
   "@id": "https://mateoamagnani.github.io/Libreria-Neneko/#negocio",
   "name": "Librería Neneko",
-  "description": "Librería independiente en Peña 3102, CABA. Venta de libros, útiles escolares, fotocopias, impresiones y encuadernación. Atiende estudiantes del Colegio Nacional y colegios de Recoleta desde 2015.",
+  "description": "Librería independiente en Peña 3102, CABA. Venta de libros, útiles escolares, fotocopias, impresiones y encuadernación. Atiende estudiantes del Colegio Nacional y colegios de Recoleta desde 1991.",
   "url": "https://mateoamagnani.github.io/Libreria-Neneko/",
   "telephone": "+5491161691209",
   "image": "https://mateoamagnani.github.io/Libreria-Neneko/og.jpg",
@@ -101,7 +105,7 @@
     }
   ],
   "sameAs": ["https://www.google.com/maps/place/Neneko"],
-  "foundingDate": "2015-01-01",
+  "foundingDate": "1991-01-01",
   "parentOrganization": {
     "@type": "Organization",
     "name": "Librería Neneko"
@@ -168,23 +172,23 @@
     {
       "@type": "Review",
       "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "Gran variedad de artículos escolares a buen precio — un sábado a la tarde salvaron un pedido de último momento.",
-      "author": {"@type": "Person", "name": "Clienta habitual"},
-      "datePublished": "2026-09-09"
+      "reviewBody": "Voy siempre, tienen buenos precios, la atención es muy buena, siempre sonrientes y con buena onda. Imprimen, fotocopian, anillan, y plastifican!",
+      "author": {"@type": "Person", "name": "Florencia Fernández Madero"},
+      "datePublished": "2024"
     },
     {
       "@type": "Review",
       "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "Atención amable y rápida, con mucha variedad de productos y buenos precios.",
-      "author": {"@type": "Person", "name": "Cliente frecuente"},
-      "datePublished": "2026-09-09"
+      "reviewBody": "Muy buena atención!!! Atención personalizada, variedad en productos y en precios. Son muy atentas a la hora de atender y siempre con una sonrisa. El mejor comercio del barrio!!!",
+      "author": {"@type": "Person", "name": "María Eugenia Estarli"},
+      "datePublished": "2021"
     },
     {
       "@type": "Review",
       "reviewRating": {"@type": "Rating", "ratingValue": "5"},
-      "reviewBody": "Tienen de todo un poco, y abren hasta pasadas las 20 hs — se nota la buena atención.",
-      "author": {"@type": "Person", "name": "Vecino del barrio"},
-      "datePublished": "2026-09-09"
+      "reviewBody": "Excelente atención. Variedad de productos. Muy buenas impresiones y mucha cordialidad y eficiencia. A gusto. Clima agradable. Muy solícitos y amables.",
+      "author": {"@type": "Person", "name": "N. Susana Amuchástegui"},
+      "datePublished": "2025"
     }
   ]
 }
@@ -446,6 +450,9 @@
 
 html{
   scroll-behavior:smooth;
+  /* La barra superior es fija: sin este margen, los enlaces del menú dejan el
+     borde de la sección justo debajo de la barra y el título queda tapado. */
+  scroll-padding-top:calc(var(--nav-h) + var(--s4));
   /* El canvas (rebote del scroll, franja detrás de la barra del navegador)
      se pinta desde <html>, no desde <body>. */
   background:var(--bg);
@@ -527,8 +534,13 @@ a[href*="maps"],
 
 /* Menu title styling (replaced h3) */
 .menu-title {
-  font-size:1rem;
-  font-weight:600;
+  font-family:'Bricolage Grotesque', system-ui, sans-serif;
+  font-size:1.25rem; font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--text);
+  margin-left:var(--s3);
+  /* Misma caja de 44px que la X: los dos se centran por el mismo alto. */
+  display:flex; align-items:center; min-height:44px;
 }
 
 img{ max-width:100%; height:auto; display:block; }
@@ -574,10 +586,9 @@ img{ max-width:100%; height:auto; display:block; }
   padding-inline:max(var(--s5), env(safe-area-inset-left, 0px));
 }
 
-section{ padding-block:var(--s9); }
-@media (max-width:760px){ section{ padding-block:var(--s8); } }
+section{ padding-block:var(--s8); }
+@media (max-width:760px){ section{ padding-block:var(--s7); } }
 @media (max-width:480px){ section{ padding-block:var(--s6); } }
-@media (max-width:420px){ section{ padding-block:var(--s5); } }
 
 .eyebrow{
   font-family:'IBM Plex Mono', monospace;
@@ -590,14 +601,15 @@ section{ padding-block:var(--s9); }
 .section-head{ max-width:65rem; margin-bottom:var(--s8); margin-top:0; }
 .section-head h2{
   font-size:clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
-  margin-bottom:var(--s5);
+  margin-bottom:0;
   display:block; width:100%;
   max-width:50rem;
 }
-#productos .section-head{
-  margin-top:var(--s7);
-  margin-bottom:var(--s5);
-}
+/* El bloque mide 65rem dentro de un contenedor de 1200px: sin centrarlo,
+   el texto se centra sobre el bloque y no sobre la página. */
+#productos .section-head{ text-align:center; margin-inline:auto; }
+#productos .section-head h2{ margin-inline:auto; }
+#productos .section-head p{ margin-inline:auto; }
 .section-head p{ color:var(--text-2); font-size:1.0625rem; text-wrap:pretty; margin-top:var(--s4); max-width:60rem; line-height:1.6; }
 
 .about-intro{ font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:var(--s4); line-height:1.3; }
@@ -608,10 +620,29 @@ section{ padding-block:var(--s9); }
    ========================================================================== */
 /* About (Quiénes somos) — 2 columnas historia + pilares */
 .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s8); align-items:start; }
-.about-history{ /* primera columna, historia */ }
+/* Los párrafos van al ancho completo de la sección. */
+.about-history{ max-width:none; }
 .about-pillars{ display:flex; flex-direction:column; gap:var(--s6); }
 .about-pilar{ padding:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); background:transparent; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1); }
 .about-pilar:hover{ border-color:var(--border-strong); }
+.about-history p{ color:var(--text); font-size:1.0625rem; line-height:1.7; margin:0 0 var(--s5); }
+.about-history p:last-child{ margin-bottom:0; }
+/* En el celular los cinco párrafos son tres pantallas: mostramos dos y el
+   resto queda detrás de un botón. En escritorio el botón no existe. */
+.about-leer-mas{ display:none; }
+@media (max-width:520px){
+  .about-history[data-plegado="true"] p:nth-of-type(n+3){ display:none; }
+  .about-leer-mas{
+    display:inline-flex; align-items:center; gap:var(--s2);
+    min-height:44px; padding:0;
+    background:none; border:none; cursor:pointer;
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:.9375rem; font-weight:600; color:var(--brand);
+  }
+  .about-leer-mas::after{ content:'↓'; font-size:.875rem; }
+  .about-leer-mas[aria-expanded="true"]::after{ content:'↑'; }
+}
+
 @media (max-width:520px){
   .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
   .about-pilar{ text-align:center; }
@@ -629,7 +660,9 @@ section{ padding-block:var(--s9); }
 
 /* FAQ CTA final — texto limpio sin decoración */
 #faq .faq-cta{
-  padding:var(--s7) 0; text-align:center; display:flex; flex-direction:column; gap:var(--s4); align-items:center;
+  /* Sin padding abajo: el aire del final lo pone la sección, como en el resto.
+     Con los 48px propios el hueco hasta el Blog era de 176px. */
+  padding:var(--s7) 0 0; text-align:center; display:flex; flex-direction:column; gap:var(--s4); align-items:center;
   max-width:900px; margin-left:auto; margin-right:auto;
 }
 @media (max-width:480px){
@@ -639,10 +672,7 @@ section{ padding-block:var(--s9); }
 
 /* FAQ Section Head — centrado con columna central */
 #faq .section-head{
-  max-width:900px; margin-left:auto; margin-right:auto; text-align:center;
-}
-#faq .section-head h2{
-  margin-left:auto; margin-right:auto;
+  max-width:900px; margin-left:auto; margin-right:auto;
 }
 
 /* FAQ Item — cada pregunta/respuesta */
@@ -686,11 +716,11 @@ section{ padding-block:var(--s9); }
 
 /* Blog Grid — responsive, 4->2->1 columnas */
 #blog .section-head{
-  max-width:1100px; margin-inline:auto;
+  max-width:65rem;
 }
 
 .blog-grid{
-  display:grid; grid-template-columns:1fr; gap:var(--s7); max-width:1100px; margin-inline:auto;
+  display:grid; grid-template-columns:1fr; gap:var(--s7);
 }
 
 /* Blog Card — con expand/collapse smooth */
@@ -754,7 +784,29 @@ section{ padding-block:var(--s9); }
 #blog .blog-title{ color:var(--text-inv); }
 #blog .blog-excerpt{ color:var(--text-inv-2); }
 #blog .blog-context{ color:var(--text-inv-2); }
+.blog-toggle{ display:none; }
 @media (max-width:520px){
+  /* Cada nota se abre con la flecha; cerrada muestra dos líneas. */
+  .blog-toggle{
+    display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+    width:100%; min-height:44px; margin-top:calc(var(--s2) * -1); padding:0;
+    background:none; border:none; cursor:pointer;
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:.9375rem; font-weight:600; color:var(--brand-bright);
+  }
+  .blog-toggle svg{ width:18px; height:18px; flex-shrink:0; transition:transform .25s ease; }
+  .blog-card[data-abierto="true"] .blog-toggle svg{ transform:rotate(180deg); }
+  .blog-card[data-abierto="true"] .blog-excerpt{ -webkit-line-clamp:unset; margin-bottom:var(--s3); }
+  .blog-card[data-abierto="true"] .blog-context{ display:block; }
+  #resenas .review cite{ font-size:.8125rem; }
+  .eyebrow{ font-size:.8125rem; }
+  /* El segundo párrafo repetía el resumen; entre los dos cada nota medía 554px. */
+  .blog-context{ display:none; }
+  .blog-excerpt{
+    font-size:.9375rem;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden; margin-bottom:0;
+  }
   .section-head{ text-align:center; }
   .section-head h2{ margin-left:auto; margin-right:auto; }
   .section-head p{ margin-left:auto; margin-right:auto; }
@@ -762,6 +814,9 @@ section{ padding-block:var(--s9); }
 
   #blog .blog-card-inner{ text-align:center; }
   #blog .blog-meta{ justify-content:center; }
+  /* El subtítulo queda más cerca de la primera nota. */
+  #blog .section-head{ margin-bottom:var(--s6); }
+  #blog .blog-toggle{ justify-content:center; width:auto; margin-inline:auto; gap:var(--s2); margin-bottom:calc(var(--s2) * -1); }
 }
 
 /* ==========================================================================
@@ -893,7 +948,7 @@ section{ padding-block:var(--s9); }
   box-shadow:none;
 }
 .nav-cta:hover{ background:color-mix(in srgb, var(--brand-bright) 85%, var(--text-inv)); }
-.nav-right{ display:flex; align-items:center; gap:var(--s4); }
+.nav-right{ display:flex; align-items:center; gap:var(--s6); }
 
 /* Botón de tema: discreto a propósito. Es una preferencia, no una acción del
    negocio, así que no compite con el CTA de WhatsApp. */
@@ -937,6 +992,7 @@ section{ padding-block:var(--s9); }
      el botón de al lado se lleva el ancho que le falta. Achicamos el nombre
      y dejamos el CTA en el icono solo — el aria-label lo sigue nombrando. */
   .brand{ font-size:1rem; gap:var(--s2); }
+  .navbar .brand{ padding-left:0; margin-left:0; }
   .brand span{ white-space:nowrap; }
   .navbar .container{ padding-inline:max(var(--s3), env(safe-area-inset-left, 0px)); }
   .menu-btn .txt{ display:none; }
@@ -957,6 +1013,14 @@ section{ padding-block:var(--s9); }
 
 @media (max-width:860px){
   .menu-btn .txt{ display:none; }
+  /* En el teléfono los dos controles de la barra quedan iguales: mismo icono
+     de 22px, mismo color, misma área de 44px y sin aro. El aro del botón de
+     tema le daba más peso que a la hamburguesa, y es una preferencia, no una
+     acción del negocio. */
+  .tema-btn{ border-color:transparent; background:transparent; color:var(--text-inv); }
+  .tema-btn svg{ width:22px; height:22px; }
+  .menu-btn svg{ width:22px; height:22px; }
+  .nav-right{ gap:var(--s2); }
 }
 
 /* Overlay semitransparente */
@@ -978,18 +1042,21 @@ section{ padding-block:var(--s9); }
 .menu-panel.active{ right:0; }
 
 .menu-header{
-  padding:var(--s4); border-bottom:1px solid var(--border);
-  display:flex; justify-content:space-between; align-items:center;
+  min-height:var(--nav-h);
+  padding-inline:var(--s5); border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center; gap:var(--s4);
 }
 
 .menu-close{
-  background:none; border:none; cursor:pointer;
-  color:var(--text); padding:0;
+  background:none; border:1px solid var(--border); border-radius:var(--r-full);
+  cursor:pointer; color:var(--text-2); padding:0;
+  transition:color .2s ease, border-color .2s ease;
   display:flex; align-items:center; justify-content:center;
   font-size:1.25rem;
   width:44px; height:44px; flex-shrink:0;
 }
-.menu-close svg{ width:24px; height:24px; }
+.menu-close:hover{ color:var(--text); border-color:var(--border-strong); }
+.menu-close svg{ width:18px; height:18px; }
 
 .menu-content{
   padding:var(--s4); flex:1;
@@ -1129,6 +1196,7 @@ section{ padding-block:var(--s9); }
 }
 
 .hero-ctas{ display:flex; flex-wrap:wrap; gap:var(--s3); margin-bottom:var(--s6); }
+.hero-servicios{ display:none; }
 
 /* Fila de confianza: rating + estado en vivo, pegada al CTA.
    El material de marketing pide prueba social cerca del CTA, no al final. */
@@ -1160,6 +1228,9 @@ section{ padding-block:var(--s9); }
 
 /* --- Maqueta de teléfono --- */
 .phone-wrap{ display:flex; justify-content:center; }
+/* En cuanto el hero se apila, la maqueta de WhatsApp se oculta: el visitante ya
+   está en el celular y la captura de chat empuja los servicios fuera de vista. */
+@media (max-width:960px){ .phone-wrap{ display:none; } }
 .phone{
   position:relative; width:286px; padding:var(--s2);
   background:linear-gradient(160deg,#42464C,#1A1C20 45%,#0A0B0D);
@@ -1276,13 +1347,34 @@ section{ padding-block:var(--s9); }
 }
 
 @media (max-width:640px){
-  .hero-text-container{ text-align:center; }
-  .eyebrow{ justify-content:center; display:flex; }
-  .hero-title{ font-size:2.5rem; margin-bottom:var(--s4); }
-  .hero-subtitle{ font-size:1.0625rem; max-width:100%; white-space:normal; }
-  .hero-ctas{ flex-direction:row; justify-content:center; gap:8px; }
+  /* Ritmo de la primera pantalla, en tres grupos:
+     qué es (rótulo · título · servicios) — espacios cortos, 12 y 16
+     qué hacer (los dos botones)          — salto grande de 32 para separarlo
+     por qué confiar (rating y estado)    — salto medio de 24, con la regla fina
+     El hero deja de medir una pantalla entera: la franja de servicios asoma. */
+  .hero{ min-height:0; padding-block:var(--s6) var(--s7); }
+  /* 32 antes de los botones y 32 después, hasta la regla: el bloque de acción
+     queda a la misma distancia de lo que lo precede y de lo que lo sigue. */
+  .hero-text-container{ text-align:center; margin-bottom:var(--s6); }
+  .eyebrow{ justify-content:center; display:flex; margin-bottom:var(--s4); }
+  .hero-title{ font-size:2rem; margin-bottom:var(--s5); }
+  .hero-subtitle{ display:none; }
+  .hero-servicios{
+    display:block; margin:0;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.8125rem; letter-spacing:.06em; line-height:1.5;
+    color:var(--text-2); text-align:center;
+  }
+  /* Una sola acción con caja; la secundaria pasa a enlace. */
+  .hero-ctas{ flex-direction:column; align-items:stretch; gap:var(--s3); margin-bottom:var(--s6); }
+  .hero-ctas .btn-primary{ width:100%; }
+  .hero-ctas .btn-ghost{
+    width:auto; border:none; background:none; min-height:44px;
+    color:var(--brand); font-weight:600; padding:0;
+  }
+  .hero-ctas .btn-ghost::after{ content:'→'; margin-left:6px; }
   .btn-lg{ height:48px; padding:12px 20px; font-size:0.9375rem; flex-direction:row; }
-  .trust-row{ flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:var(--s4); }
+  .trust-row{ flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:var(--s3); }
   .rating{ justify-content:center; }
   .status{ justify-content:center; }
   .phone-wrap{ margin-top:var(--s5); margin-bottom:var(--s5); }
@@ -1319,6 +1411,9 @@ section{ padding-block:var(--s9); }
   #nosotros .btn{ display:none; }
   /* Ajustar padding en secciones */
   #nosotros > .container > div:last-child{ padding:0 var(--s3); }
+  #nosotros .about-history{ text-align:center; }
+  #nosotros .about-history p{ text-align:center; text-wrap:pretty; }
+  #nosotros .about-leer-mas{ display:block; margin-left:auto; margin-right:auto; }
 }
 
 /* ==========================================================================
@@ -1351,8 +1446,16 @@ section{ padding-block:var(--s9); }
 }
 @media (max-width:480px){
   .services-grid{ grid-template-columns:1fr; }
-  .service{ border-right:none; border-bottom:1px solid var(--border); padding:var(--s5) var(--s4); }
+  /* Icono y nombre centrados en el primer renglón; la descripción, centrada debajo. */
+  .service{
+    border-right:none; border-bottom:1px solid var(--border);
+    padding:var(--s5) var(--s4); flex-direction:row; flex-wrap:wrap;
+    align-items:center; justify-content:center; gap:var(--s2) var(--s3);
+  }
   .service:last-child{ border-bottom:none; }
+  .service svg{ margin-bottom:0; flex-shrink:0; display:block; align-self:center; }
+  .service h3{ font-size:1.0625rem; line-height:1.2; margin:0; align-self:center; }
+  .service p{ flex:0 0 100%; margin:0; font-size:.9375rem; text-align:center; }
 }
 
 /* ==========================================================================
@@ -1374,6 +1477,29 @@ section{ padding-block:var(--s9); }
 }
 
 .product-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s4); margin-bottom:var(--s5); }
+
+.grupo-ver-mas{ display:none; }
+
+@media (max-width:520px){
+  /* En la vista de categoría cada subcategoría muestra 4 productos y el
+     resto se revela; el encabezado del grupo queda fijo al scrollear para
+     no perder de vista en qué subcategoría se está. */
+  body[data-category-view="true"] .shop-group-head{
+    position:sticky; top:var(--nav-h); z-index:5;
+    background:var(--surface);
+    margin-bottom:var(--s4);
+    padding:var(--s3) var(--s4);
+  }
+  .shop-group[data-limitado="true"] .product-grid > .product-card:nth-child(n+5){ display:none; }
+  .grupo-ver-mas{
+    display:flex; align-items:center; justify-content:center; gap:var(--s2);
+    width:100%; min-height:44px; margin-top:calc(var(--s3) * -1);
+    background:none; border:1px solid var(--border); border-radius:var(--r-md);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    font-size:.9375rem; font-weight:600; color:var(--brand);
+    cursor:pointer;
+  }
+}
 
 .shop-group-footer{
   display:flex; justify-content:center;
@@ -1454,12 +1580,8 @@ section{ padding-block:var(--s9); }
 :root[data-theme="dark"] .product-thumb.tone-terra  { color:var(--thumb-tone-terra); }
 :root[data-theme="dark"] .product-thumb.tone-sage   { color:var(--thumb-tone-sage); }
 
-.category-header{
-  display:flex; flex-direction:column; gap:var(--s3);
-  margin-bottom:var(--s7); padding:var(--s5) 0;
-  border-bottom:1px solid var(--border);
-}
-
+/* Los estilos de caja del encabezado de categoría están definidos más abajo,
+   en un solo lugar. Acá quedan sólo tipografía y color. */
 .category-header h2{
   margin:0; font-size:1.75rem; color:var(--text); line-height:1.2;
 }
@@ -1546,7 +1668,7 @@ section{ padding-block:var(--s9); }
   flex-direction:row;
   align-items:center;
   justify-content:center;
-  width:44px;
+  width:auto;
   height:44px;
   min-width:44px;
   min-height:44px;
@@ -1557,11 +1679,18 @@ section{ padding-block:var(--s9); }
   background:var(--btn-bg);
   color:var(--btn-text);
   border:none;
-  border-radius:50%;
+  border-radius:var(--r-full);
   cursor:pointer;
   transition:all .25s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:var(--shadow-sm);
-  padding:0;
+  padding:0 var(--s4);
+  gap:var(--s2);
+}
+/* El rótulo va sólo en escritorio: un icono solo no dice qué pasa al tocarlo.
+   En móvil el botón vuelve al círculo, para no comerle ancho a la tarjeta. */
+.product-info a .cta-txt{
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  font-size:.875rem; font-weight:600; line-height:1;
 }
 .product-card:hover .product-info a{
   background:var(--btn-bg-hover);
@@ -1590,10 +1719,13 @@ section{ padding-block:var(--s9); }
   .product-grid{ grid-template-columns:repeat(2,1fr) !important; gap:var(--s2); }
   .product-content{ text-align:center; }
   .product-info{ padding:var(--s2); }
-  .product-info h4{ flex:none; font-size:.75rem; line-height:1.2; }
-  .product-detalle{ font-size:.6875rem; }
-  .product-info a{ width:32px; height:32px; min-width:32px; min-height:32px; font-size:0.7rem; }
-  .product-info .price{ font-size:.65rem; }
+  .product-info h4{ flex:none; font-size:.875rem; line-height:1.25; }
+  .product-detalle{ font-size:.8125rem; }
+  .product-info a{ width:32px; height:32px; min-width:32px; min-height:32px; font-size:0.7rem; padding:0; border-radius:50%; }
+  .product-info a .cta-txt{ display:none; }
+  /* El precio deja de estar pegado al borde: se centra en el espacio que
+     queda a la izquierda del botón. */
+  .product-info .price{ font-size:.8125rem; flex:1; justify-content:center; }
   .product-thumb{ aspect-ratio:1; }
   .product-thumb svg{ width:44px; height:44px; }
 }
@@ -1627,7 +1759,7 @@ section{ padding-block:var(--s9); }
 
 .trust-head{
   display:flex; align-items:flex-end; justify-content:space-between;
-  gap:var(--s5); flex-wrap:wrap; margin-bottom:var(--s7);
+  gap:var(--s5); flex-wrap:wrap; margin-bottom:var(--s8);
 }
 .trust-head .section-head{ margin-bottom:0; }
 .score{
@@ -1653,6 +1785,12 @@ section{ padding-block:var(--s9); }
   border-radius:var(--r-md);
 }
 .review .stars{ color:var(--brand-bright); font-size:.875rem; letter-spacing:.1em; margin-bottom:var(--s4); }
+.review-head{ display:flex; align-items:center; justify-content:space-between; gap:var(--s3); margin-bottom:var(--s4); }
+.review-head .stars{ margin-bottom:0; }
+.review-fecha{
+  font-family:'IBM Plex Mono', monospace; font-size:.8125rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--text-inv-2);
+}
 .review p{ color:var(--text-inv); font-size:.9375rem; line-height:1.6; flex:1; text-wrap:pretty; }
 .review cite{
   display:block; margin-top:var(--s4); padding-top:var(--s3);
@@ -1662,7 +1800,18 @@ section{ padding-block:var(--s9); }
   color:var(--text-inv-2);
 }
 @media (max-width:860px){ .review-grid{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:640px){ .review-grid{ grid-template-columns:1fr; } }
+@media (max-width:640px){
+  /* Apiladas ocupaban 1.192px. Deslizándose se ve una entera y se intuye la
+     siguiente, que además invita a seguir leyendo. */
+  .review-grid{
+    display:flex; grid-template-columns:none;
+    overflow-x:auto; scroll-snap-type:x mandatory;
+    margin-inline:calc(var(--s5) * -1); padding-inline:var(--s5);
+    scrollbar-width:none;
+  }
+  .review-grid::-webkit-scrollbar{ display:none; }
+  .review{ flex:0 0 84%; scroll-snap-align:center; }
+}
 
 /* ==========================================================================
    UBICACIÓN Y HORARIOS
@@ -1691,7 +1840,9 @@ section{ padding-block:var(--s9); }
   .loc-list .sub{ font-size:.8125rem; }
 }
 
-/* Ubicación en fondo oscuro: texto claro */
+/* El "Escribinos" de Ubicación toma el color del propio borde. */
+#ubicacion .btn-ghost{ color:var(--border); }
+#ubicacion .btn-ghost:hover{ color:var(--border-strong); }
 #ubicacion .section-head .eyebrow{ color:var(--text-inv-2); }
 #ubicacion .section-head h2{ color:var(--text-inv); }
 #ubicacion .loc-list .label{ color:var(--text-inv); }
@@ -1800,7 +1951,7 @@ section{ padding-block:var(--s9); }
 .horarios .tag-hoy{
   display:inline-block; margin-left:var(--s2);
   font-family:'IBM Plex Mono', monospace;
-  font-size:.625rem; letter-spacing:.1em; text-transform:uppercase;
+  font-size:.75rem; letter-spacing:.1em; text-transform:uppercase;
   color:var(--brand); vertical-align:1px;
 }
 .horarios td.cerrado{ color:var(--closed); font-weight:600; }
@@ -1840,6 +1991,11 @@ section{ padding-block:var(--s9); }
 body[data-category-view="true"] .hero,
 body[data-category-view="true"] .services,
 body[data-category-view="true"] .trust,
+body[data-category-view="true"] #nosotros,
+body[data-category-view="true"] #faq,
+body[data-category-view="true"] #blog,
+body[data-category-view="true"] #productos .section-head,
+body[data-category-view="true"] .catalog-note,
 body[data-category-view="true"] .sticky-cta{
   display:none !important;
 }
@@ -1857,17 +2013,22 @@ body[data-category-view="true"] section{
 @media (max-width:480px){
   body[data-category-view="true"] section{
     padding-top:var(--s4);
+    /* 96px abajo contra 16 arriba dejaba una franja vacía entre el catálogo
+       y Ubicación; con 48 el respiro sigue existiendo y es proporcional. */
+    padding-bottom:var(--s7);
   }
 }
 
 /* Header de categoría: desktop horizontal, mobile vertical */
+/* Un solo renglón: botón a la izquierda, título a la derecha, centrados entre
+   sí. Los dos son elementos directos del flex y se centran por su caja. */
 .category-header{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  align-items:start;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
   gap:var(--s4);
-  margin-bottom:var(--s4);
-  padding-bottom:var(--s3);
+  margin-bottom:var(--s6);
+  padding-bottom:var(--s4);
   border-bottom:1px solid var(--border);
 }
 
@@ -1880,29 +2041,54 @@ body[data-category-view="true"] section{
 
 .category-header button{
   white-space:nowrap;
+  flex-shrink:0;
 }
 
 .category-header > div:last-child{
   text-align:right;
-  justify-self:end;
 }
 
 @media (max-width:480px){
+  /* Vista de categoría en móvil: una sola línea — flecha a la izquierda y
+     el título centrado en el resto del ancho. Sin contador de productos. */
   .category-header{
-    grid-template-columns:1fr;
-    align-items:flex-start;
+    flex-direction:row;
+    align-items:center;
     gap:var(--s2);
-  }
-  .category-header button{
-    width:100%;
-  }
-  .category-header > div:last-child{
-    text-align:left;
-    justify-self:auto;
+    margin-bottom:var(--s5);
+    padding-bottom:var(--s3);
   }
   .category-title-group{
-    flex-wrap:wrap;
+    order:2;
+    flex:1;
+    flex-direction:column;
     align-items:center;
+    text-align:center;
+    gap:0;
+    /* Compensa el ancho de la flecha para que el título quede al centro. */
+    padding-right:32px;
+  }
+  .category-title-group h2{
+    font-family:'Bricolage Grotesque', sans-serif;
+    font-size:1.25rem; font-weight:700; letter-spacing:-.02em;
+    text-wrap:balance;
+  }
+  .category-title-group p{ display:none; }
+  /* La flecha es sólo la flecha: sin caja ni borde, como en una barra de
+     navegación. El recuadro competía con el título. */
+  .category-header button{
+    order:1;
+    width:44px; min-width:44px; height:44px; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    border:none; background:none;
+    color:var(--brand);
+    font-size:1.5rem; line-height:1;
+    margin-left:calc(var(--s3) * -1);
+  }
+  .category-header button:hover{ background:none; color:var(--text); }
+  .volver-largo{ display:none; }
+  .category-header > div:last-child{
+    text-align:center;
   }
 }
 
@@ -1919,21 +2105,21 @@ body[data-category-view="true"] section{
    ========================================================================== */
 .site-footer{
   background:var(--surface-inv); color:var(--text-inv);
-  padding-block:var(--s5);
-  padding-bottom:calc(var(--s5) + env(safe-area-inset-bottom, 0px));
+  padding-block:var(--s8);
+  padding-bottom:calc(var(--s8) + env(safe-area-inset-bottom, 0px));
 }
 .footer-grid{
-  display:grid; grid-template-columns:1.6fr 1fr 1fr;
-  gap:var(--s7); padding-bottom:var(--s6);
+  display:grid; grid-template-columns:1.4fr 1fr 1fr;
+  gap:var(--s7); padding-bottom:var(--s7);
   border-bottom:1px solid rgba(255,255,255,.12);
 }
-.footer-brand .brand{ color:var(--text-inv); margin-bottom:var(--s4); }
-.footer-brand p{ color:var(--text-inv-2); font-size:.9375rem; max-width:34ch; }
+.footer-brand .brand{ color:var(--text-inv); margin-bottom:var(--s3); }
+.footer-brand p{ color:var(--text-inv-2); font-size:.9375rem; line-height:1.6; max-width:38ch; }
 .footer-col h4{
   font-family:'IBM Plex Sans', sans-serif;
-  font-size:.9375rem; font-weight:600;
+  font-size:.8125rem; font-weight:600;
   letter-spacing:.08em; text-transform:uppercase;
-  color:var(--text-inv); margin-bottom:var(--s4);
+  color:var(--text-inv-2); margin-bottom:var(--s2);
 }
 .footer-col ul{ list-style:none; display:flex; flex-direction:column; }
 .footer-col a{
@@ -1944,9 +2130,29 @@ body[data-category-view="true"] section{
 }
 .footer-col a:hover{ color:var(--brand-bright); }
 
+/* Contacto: cada dato es una fila tocable con su icono y su rótulo. */
+.footer-col-contacto ul{ gap:var(--s3); }
+.footer-col-contacto a{
+  align-items:center; gap:var(--s3);
+  padding:var(--s2) 0; min-height:52px;
+}
+.footer-col-contacto svg{
+  width:18px; height:18px; flex-shrink:0; color:var(--brand-bright);
+}
+.fc-texto{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+.fc-rotulo{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.6875rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--text-inv-2);
+}
+.fc-valor{ font-size:.9375rem; color:var(--text-inv); }
+.footer-col-contacto a:hover .fc-valor{ color:var(--brand-bright); }
+/* La copia de Privacidad vive junto a la dirección sólo en móvil. */
+.fc-privacidad{ display:none; }
+
 .footer-bottom{
   display:flex; justify-content:space-between; align-items:center;
-  flex-wrap:wrap; gap:var(--s3); padding-top:var(--s5);
+  flex-wrap:wrap; gap:var(--s3); padding-top:var(--s6);
   font-family:'IBM Plex Sans', sans-serif;
   font-size:.9375rem; font-weight:500; color:var(--text-inv-2);
   line-height:1.5;
@@ -1962,6 +2168,9 @@ body[data-category-view="true"] section{
     margin-right:auto;
   }
   .footer-brand{
+    display:none;
+  }
+  .footer-brand.oculto-desktop{
     grid-column:1/-1;
     display:flex;
     flex-direction:column;
@@ -2009,9 +2218,9 @@ body[data-category-view="true"] section{
     gap:var(--s3);
   }
   .footer-col a{
-    font-size:.875rem;
-    padding:0;
-    min-height:auto;
+    font-size:.9375rem;
+    /* Sin esto los links del pie quedan en 21px de alto: imposibles de tocar. */
+    min-height:44px; padding:var(--s2) 0;
     line-height:1.5;
     text-decoration:none;
     color:var(--text-inv);
@@ -2034,6 +2243,49 @@ body[data-category-view="true"] section{
   .footer-bottom span{
     display:block;
   }
+  /* Cierre del sitio con el mismo lenguaje que la franja de Servicios:
+     Navegación como filas a ancho completo con chevrón; el contacto queda
+     reducido a la dirección (el WhatsApp ya vive en la barra fija). */
+  .footer-grid{ grid-template-columns:1fr; max-width:none; gap:0; padding-bottom:0; border-bottom:none; }
+  .site-footer{ padding-top:var(--s6); }
+  .footer-col:not(.footer-col-contacto){ order:1; }
+  .footer-col:not(.footer-col-contacto) h4{ display:none; }
+  .footer-col:not(.footer-col-contacto) ul{ gap:0; }
+  .footer-col:not(.footer-col-contacto) a{
+    display:flex; align-items:center; justify-content:space-between;
+    width:100%; min-height:52px; padding:var(--s2) 0;
+    font-size:1.0625rem; color:var(--text-inv); text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,.1);
+  }
+  .footer-col:not(.footer-col-contacto) a::after{
+    content:"\203A"; color:var(--text-inv-2); font-size:1.125rem; line-height:1;
+  }
+  .footer-col:not(.footer-col-contacto) li:last-child{ display:none; }
+  /* La última fila visible no lleva línea: el bloque cierra con la dirección. */
+  .footer-col:not(.footer-col-contacto) li:nth-last-child(2) a{ border-bottom:none; }
+  .footer-col-contacto{ order:2; padding-top:var(--s2); }
+  .footer-col-contacto h4{ display:none; }
+  .footer-col-contacto ul{ flex-direction:row; justify-content:center; align-items:center; gap:var(--s3); }
+  .fc-privacidad{ display:flex; align-items:center; gap:var(--s3); }
+  .fc-privacidad::before{
+    content:""; width:3px; height:3px; border-radius:50%;
+    background:rgba(255,255,255,.28); flex-shrink:0;
+  }
+  .fc-privacidad a{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.78rem; letter-spacing:.02em; text-transform:uppercase;
+    color:var(--text-inv-2);
+  }
+  .footer-col-contacto li:first-child{ display:none; }
+  .footer-col-contacto a{
+    display:inline-flex; align-items:center; gap:var(--s2);
+    min-height:44px; padding:0;
+  }
+  .footer-col-contacto svg{ width:17px; height:17px; }
+  .fc-rotulo{ display:none; }
+  .fc-valor{ font-size:.9375rem; color:var(--brand-bright); }
+  /* Sin la firma: el pie termina en la dirección. */
+  .footer-bottom{ display:none; }
 }
 
 /* ==========================================================================
@@ -2070,10 +2322,10 @@ body[data-category-view="true"] section{
     },
     "author": {
       "@type": "Person",
-      "name": "Clienta habitual"
+      "name": "Florencia Fernández Madero"
     },
-    "reviewBody": "Gran variedad de artículos escolares a buen precio — un sábado a la tarde salvaron un pedido de último momento.",
-    "datePublished": "2026-09-09"
+    "reviewBody": "Voy siempre, tienen buenos precios, la atención es muy buena, siempre sonrientes y con buena onda. Imprimen, fotocopian, anillan, y plastifican!",
+    "datePublished": "2024"
   },
   {
     "@context": "https://schema.org",
@@ -2084,10 +2336,10 @@ body[data-category-view="true"] section{
     },
     "author": {
       "@type": "Person",
-      "name": "Cliente frecuente"
+      "name": "María Eugenia Estarli"
     },
-    "reviewBody": "Atención amable y rápida, con mucha variedad de productos y buenos precios.",
-    "datePublished": "2026-09-09"
+    "reviewBody": "Muy buena atención!!! Atención personalizada, variedad en productos y en precios. Son muy atentas a la hora de atender y siempre con una sonrisa. El mejor comercio del barrio!!!",
+    "datePublished": "2021"
   },
   {
     "@context": "https://schema.org",
@@ -2098,10 +2350,10 @@ body[data-category-view="true"] section{
     },
     "author": {
       "@type": "Person",
-      "name": "Vecino del barrio"
+      "name": "N. Susana Amuchástegui"
     },
-    "reviewBody": "Tienen de todo un poco, y abren hasta pasadas las 20 hs — se nota la buena atención.",
-    "datePublished": "2026-09-09"
+    "reviewBody": "Excelente atención. Variedad de productos. Muy buenas impresiones y mucha cordialidad y eficiencia. A gusto. Clima agradable. Muy solícitos y amables.",
+    "datePublished": "2025"
   }
 ]
 </script>
@@ -2164,8 +2416,9 @@ body[data-category-view="true"] section{
       <div>
         <span class="eyebrow">Peña 3102 · Recoleta, CABA</span>
         <div class="hero-text-container">
-          <h1 class="hero-title">Los esperamos<br>en nuestro local</h1>
+          <h1 class="hero-title">Los esperamos en<br>nuestro local</h1>
           <p class="hero-subtitle">Fotocopias, anillados y los útiles de siempre: <strong>pedís por WhatsApp</strong> y retirás en el momento.</p>
+          <p class="hero-servicios">Fotocopias · Anillados · Útiles · Plastificado</p>
         </div>
 
         <div class="hero-ctas">
@@ -2215,6 +2468,7 @@ body[data-category-view="true"] section{
   <!-- ===================== SERVICIOS ===================== -->
   <section class="services" style="padding-block:0; background:var(--surface-inv-2); color:var(--text-inv);">
     <div class="container">
+      <h2 class="sr-only">Nuestros servicios</h2>
       <div class="services-grid">
         <div class="service">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M7 9V4h10v5M7 17v3h10v-3M17 12h.01"/></svg>
@@ -2248,47 +2502,13 @@ body[data-category-view="true"] section{
         <h2>Quiénes somos</h2>
       </div>
 
-      <!-- Layout 2 columnas: Historia | Pilares -->
-      <div class="about-grid">
-        <!-- Columna izquierda: Historia -->
-        <div class="about-history">
-          <p style="color:var(--text); margin-bottom:var(--s5); line-height:1.7; font-size:1rem;">
-            Librería Neneko nació en 2015 como respuesta a la necesidad de una librería independiente en el barrio.
-          </p>
-          <p style="color:var(--text); margin-bottom:var(--s5); line-height:1.7; font-size:0.95rem;">
-            En casi una década hemos vendido <strong>más de 15.000 libros únicos</strong>, cuadernos de marcas locales y útiles que no encontrás en las cadenas. Trabajamos directamente con proveedores de la zona para mantener precios accesibles.
-          </p>
-          <p style="color:var(--text-2); margin-bottom:var(--s5); line-height:1.7; font-size:0.95rem;">
-            Cada producto fue elegido porque es útil, duradero y justo. No confiamos en lo que dice la etiqueta; probamos. Hemos acompañado varias generaciones de estudiantes del barrio, imprimiendo apuntes, anillando trabajos y ayudando a elegir lo que necesitan.
-          </p>
-          <p style="color:var(--text-2); line-height:1.7; font-size:0.95rem;">
-            Hoy ofrecemos fotocopias, impresiones digitales, encuadernación y anillados. Escribí por WhatsApp en cualquier momento y coordinamos.
-          </p>
-        </div>
-
-        <!-- Columna derecha: Pilares minimalistas -->
-        <div class="about-pillars">
-          <div class="about-pilar">
-            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Precios claros</h4>
-            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
-              Sin intermediarios, sin sorpresas. Lo que ves es lo que pagás.
-            </p>
-          </div>
-
-          <div class="about-pilar">
-            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Soluciones al instante</h4>
-            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
-              Fotocopias, impresiones, encuadernación. Sin complicaciones.
-            </p>
-          </div>
-
-          <div class="about-pilar">
-            <h4 style="font-weight:700; color:var(--text); margin:0 0 var(--s2) 0; font-size:1rem;">Atención personalizada</h4>
-            <p style="color:var(--text-2); margin:0; line-height:1.6; font-size:0.9rem;">
-              Conocemos de libros, educación y útiles escolares.
-            </p>
-          </div>
-        </div>
+      <div class="about-history">
+        <p>Librería Neneko abrió en 1991 en la esquina de Peña y Billinghurst, y sigue en el mismo local. Cambió el barrio, cambiaron las máquinas y cambió la forma de pedir; el mostrador es el mismo.</p>
+        <p>El negocio se fue acomodando a lo que el barrio necesitaba. Primero fueron los cuadernos y los útiles, después las fotocopias, más tarde las impresiones a color, el anillado y el plastificado. Hoy conviven las dos cosas: la librería de siempre y el lugar donde se resuelve un trabajo práctico a las siete de la tarde.</p>
+        <p>Por el mostrador pasan las listas del colegio en marzo, los apuntes de la facultad en época de finales, los trabajos que hay que anillar para entregar al día siguiente y los papeles de la oficina de la vuelta. Vimos crecer a chicos que venían a comprar una goma y hoy traen a los suyos.</p>
+        <p>No tenemos catálogo infinito ni depósito: tenemos lo que se usa todos los días, y lo que no está lo conseguimos. Preferimos decir “eso no lo tengo, pero te lo traigo para el martes” antes que venderte cualquier cosa.</p>
+        <p>Abrimos de lunes a viernes de 11:30 a 20:30 y los sábados de 11:30 a 15:30. Si querés adelantar el pedido, escribinos por WhatsApp: mandás el archivo o la lista, confirmamos precio y disponibilidad, y lo retirás listo.</p>
+      </div>
       </div>
     </div>
   </section>
@@ -2313,19 +2533,28 @@ body[data-category-view="true"] section{
 
       <div class="review-grid">
         <blockquote class="review">
-          <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
-          <p>Gran variedad de artículos escolares a buen precio — un sábado a la tarde salvaron un pedido de último momento.</p>
-          <cite>Clienta habitual</cite>
+          <div class="review-head">
+            <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <span class="review-fecha">Hace 2 años</span>
+          </div>
+          <p>Voy siempre, tienen buenos precios, la atención es muy buena, siempre sonrientes y con buena onda. Imprimen, fotocopian, anillan, y plastifican!</p>
+          <cite>Florencia Fernández Madero · reseña en Google</cite>
         </blockquote>
         <blockquote class="review">
-          <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
-          <p>Atención amable y rápida, con mucha variedad de productos y buenos precios.</p>
-          <cite>Cliente frecuente</cite>
+          <div class="review-head">
+            <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <span class="review-fecha">Hace 5 años</span>
+          </div>
+          <p>Muy buena atención!!! Atención personalizada, variedad en productos y en precios. Son muy atentas a la hora de atender y siempre con una sonrisa. El mejor comercio del barrio!!!</p>
+          <cite>María Eugenia Estarli · reseña en Google</cite>
         </blockquote>
         <blockquote class="review">
-          <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
-          <p>Tienen de todo un poco, y abren hasta pasadas las 20 hs — se nota la buena atención.</p>
-          <cite>Vecino del barrio</cite>
+          <div class="review-head">
+            <div class="stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <span class="review-fecha">Hace un año</span>
+          </div>
+          <p>Excelente atención. Variedad de productos. Muy buenas impresiones y mucha cordialidad y eficiencia. A gusto. Clima agradable. Muy solícitos y amables.</p>
+          <cite>N. Susana Amuchástegui · reseña en Google</cite>
         </blockquote>
       </div>
     </div>
@@ -2334,7 +2563,7 @@ body[data-category-view="true"] section{
   <section id="productos" style="background:var(--surface);">
     <div class="container">
       <div class="section-head">
-        <h2>Novedades y Ofertas</h2>
+        <h2>¡Novedades y Ofertas!</h2>
       </div>
 
       <!-- El script reemplaza este bloque con los productos del Google Sheet.
@@ -2350,7 +2579,7 @@ body[data-category-view="true"] section{
                 <p class="product-detalle">Formato A4 en papel 80gsm. Precio por unidad desde 10 copias. Descuento por cantidad a partir de 50. Ideal para apuntes y materiales de estudio.</p>
                 <div class="product-footer">
                   <div class="price">Consultar</div>
-                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Fotocopia%20blanco%20y%20negro" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia blanco y negro por WhatsApp">💬</a>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Fotocopia%20blanco%20y%20negro" target="_blank" rel="noopener" aria-label="Consultar por Fotocopia blanco y negro por WhatsApp">💬<span class="cta-txt">Pedir</span></a>
                 </div>
               </div>
             </div>
@@ -2361,7 +2590,7 @@ body[data-category-view="true"] section{
                 <p class="product-detalle">Calidad fotográfica A4 y A3. Enviá por mail, WhatsApp, celular o pendrive. Presupuesto inmediato según cantidad. Recomendado para pósters, trabajos visuales y presentaciones.</p>
                 <div class="product-footer">
                   <div class="price">Consultar</div>
-                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Impresi%C3%B3n%20color" target="_blank" rel="noopener" aria-label="Consultar por Impresión color por WhatsApp">💬</a>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Impresi%C3%B3n%20color" target="_blank" rel="noopener" aria-label="Consultar por Impresión color por WhatsApp">💬<span class="cta-txt">Pedir</span></a>
                 </div>
               </div>
             </div>
@@ -2372,7 +2601,7 @@ body[data-category-view="true"] section{
                 <p class="product-detalle">Hasta 100 hojas en 15-20 minutos. Espiral de plástico o metal. Ideal para trabajos finales, tesis y apuntes de todo el año escolar.</p>
                 <div class="product-footer">
                   <div class="price">Consultar</div>
-                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Anillado" target="_blank" rel="noopener" aria-label="Consultar por Anillado por WhatsApp">💬</a>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Anillado" target="_blank" rel="noopener" aria-label="Consultar por Anillado por WhatsApp">💬<span class="cta-txt">Pedir</span></a>
                 </div>
               </div>
             </div>
@@ -2383,7 +2612,7 @@ body[data-category-view="true"] section{
                 <p class="product-detalle">Documentos y credenciales.</p>
                 <div class="product-footer">
                   <div class="price">Consultar</div>
-                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Plastificado" target="_blank" rel="noopener" aria-label="Consultar por Plastificado por WhatsApp">💬</a>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Plastificado" target="_blank" rel="noopener" aria-label="Consultar por Plastificado por WhatsApp">💬<span class="cta-txt">Pedir</span></a>
                 </div>
               </div>
             </div>
@@ -2400,7 +2629,7 @@ body[data-category-view="true"] section{
                 <p class="product-detalle">Rayado o cuadriculado, varios tamaños.</p>
                 <div class="product-footer">
                   <div class="price">Consultar</div>
-                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Cuaderno%20tapa%20dura" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno tapa dura por WhatsApp">💬</a>
+                  <a href="https://wa.me/5491161691209?text=Hola!%20Quer%C3%ADa%20pedir%20info%20sobre%20Cuaderno%20tapa%20dura" target="_blank" rel="noopener" aria-label="Consultar por Cuaderno tapa dura por WhatsApp">💬<span class="cta-txt">Pedir</span></a>
                 </div>
               </div>
             </div>
@@ -2630,7 +2859,7 @@ body[data-category-view="true"] section{
 
         <details class="faq-item faq-details">
           <summary class="faq-summary">
-            <span>¿Busco algo que no veo en el catálogo?</span>
+            <span>¿Hay algo que no encontras?</span>
             <span class="faq-chevron" aria-hidden="true">▼</span>
           </summary>
           <p class="faq-content">
@@ -2766,11 +2995,28 @@ body[data-category-view="true"] section{
           <li><a href="privacy.html">Privacidad</a></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div class="footer-col footer-col-contacto">
         <h4>Contacto</h4>
         <ul>
-          <li><a href="https://wa.me/5491161691209" target="_blank" rel="noopener">+54 9 11 6169-1209</a></li>
-          <li><a href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener">Peña 3102, CABA</a></li>
+          <li>
+            <a href="https://wa.me/5491161691209" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm0 18.15h-.01a8.2 8.2 0 01-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24a8.2 8.2 0 015.83 2.42 8.2 8.2 0 012.41 5.83c0 4.54-3.7 8.23-8.24 8.23z"/></svg>
+              <span class="fc-texto">
+                <span class="fc-rotulo">WhatsApp</span>
+                <span class="fc-valor">+54 9 11 6169-1209</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.google.com/maps/search/?api=1&query=Librer%C3%ADa+Neneko+Pe%C3%B1a+3102+CABA" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+              <span class="fc-texto">
+                <span class="fc-rotulo">Cómo llegar</span>
+                <span class="fc-valor">Peña 3102, CABA</span>
+              </span>
+            </a>
+          </li>
+          <li class="fc-privacidad"><a href="privacy.html">Privacidad</a></li>
         </ul>
       </div>
     </div>
@@ -2925,11 +3171,11 @@ body[data-category-view="true"] section{
       viewAllLink.textContent = `Ver todo de ${categoria}`;
       viewAllLink.addEventListener('click', (e) => {
         e.preventDefault();
-        _neneko_savedScrollPos = window.scrollY || 0;
+        _nenekoGuardarScroll();
         renderCategoryView(categoria);
         document.getElementById('menuPanel')?.classList.remove('active');
         document.getElementById('menuOverlay')?.classList.remove('active');
-        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        window._nenekoIrAProductos?.();
       });
 
       viewAllItem.appendChild(viewAllLink);
@@ -2946,11 +3192,11 @@ body[data-category-view="true"] section{
         link.textContent = subcat;
         link.addEventListener('click', (e) => {
           e.preventDefault();
-          _neneko_savedScrollPos = window.scrollY || 0;
+          _nenekoGuardarScroll();
           renderCategoryView(categoria, subcat);
           document.getElementById('menuPanel')?.classList.remove('active');
           document.getElementById('menuOverlay')?.classList.remove('active');
-          document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+          window._nenekoIrAProductos?.();
         });
 
         item.appendChild(link);
@@ -2993,7 +3239,7 @@ body[data-category-view="true"] section{
       // Esperar a que el DOM esté listo antes de renderizar categoría
       setTimeout(() => {
         renderCategoryView(decodeURIComponent(cat), subcat ? decodeURIComponent(subcat) : undefined);
-        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        window._nenekoIrAProductos?.();
       }, 100);
     }
   }
@@ -3161,7 +3407,7 @@ body[data-category-view="true"] section{
               <div class="price">${esc(p.precio) || 'Consultar'}</div>
               <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                  aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
-                ${waIcon}
+                ${waIcon}<span class="cta-txt">Pedir</span>
               </a>
             </div>
           </div>
@@ -3203,7 +3449,7 @@ body[data-category-view="true"] section{
     const title = subcategoryName ? `${categoryName} > ${subcategoryName}` : `Todo ${categoryName}`;
     const backBtn = `<div class="category-header">
       <button onclick="window.neneko_backToHome()" class="btn btn-ghost">
-        ← Volver al inicio
+        <span aria-hidden="true">←</span><span class="volver-largo"> Volver al inicio</span><span class="sr-only">Volver al inicio</span>
       </button>
       <div class="category-title-group">
         <h2 style="margin: 0;">${esc(title)}</h2>
@@ -3259,16 +3505,22 @@ body[data-category-view="true"] section{
               <div class="price">${esc(p.precio) || 'Consultar'}</div>
               <a href="${esc(linkConsulta(p.nombre))}" target="_blank" rel="noopener"
                  aria-label="Consultar por ${esc(p.nombre)} por WhatsApp" title="Consultar por WhatsApp">
-                ${waIcon}
+                ${waIcon}<span class="cta-txt">Pedir</span>
               </a>
             </div>
           </div>
         </div>`;
       }).join('');
 
-      return `<div class="shop-group" data-categoria="${esc(categoryName)}">
+      const sobran = prods.length - 4;
+      const verMas = sobran > 0
+        ? `<button type="button" class="grupo-ver-mas" onclick="window.neneko_verMasGrupo(this)">Ver más</button>`
+        : '';
+
+      return `<div class="shop-group" data-categoria="${esc(categoryName)}"${sobran > 0 ? ' data-limitado="true"' : ''}>
         <div class="shop-group-head"><h3>${esc(subcat)}</h3><span>${prods.length}</span></div>
         <div class="product-grid">${cardsHtml}</div>
+        ${verMas}
       </div>`;
     }).join('');
 
@@ -3279,25 +3531,60 @@ body[data-category-view="true"] section{
   // Variables globales para preservar scroll
   let _neneko_savedScrollPos = 0;
 
+  // Cada subcategoría muestra 4 productos; el resto se revela con "Ver más".
+  window.neneko_verMasGrupo = function(btn){
+    const grupo = btn.closest('.shop-group');
+    if(!grupo) return;
+    grupo.removeAttribute('data-limitado');
+    btn.remove();
+  };
+
+  // Posicionamiento sin animación: cuando la vista cambia, el alto de la página
+  // cambia con ella, y una animación suave sobre un layout que se está
+  // reacomodando es justamente el "scroll raro" (baja, el contenido se acorta,
+  // el navegador corrige, vuelve). Saltamos directo, ya con el layout nuevo.
+  function _nenekoIrA(el){
+    if(!el) return;
+    const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 72;
+    const y = Math.max(0, el.getBoundingClientRect().top + window.scrollY - navH);
+    // 'instant' pisa el scroll-behavior:smooth del CSS, que es para los enlaces
+    // del menú. Acá no queremos animación: el layout acaba de cambiar de alto.
+    window.scrollTo({ top:y, left:0, behavior:'instant' });
+  }
+
+  // Espera a que el navegador haya maquetado el contenido nuevo antes de mover
+  // el scroll: si no, la página todavía mide lo de antes y la posición se recorta.
+  function _nenekoTrasPintar(fn){
+    requestAnimationFrame(() => requestAnimationFrame(fn));
+  }
+
   window.neneko_backToHome = function(){
-    // Desactivar vista de categoría: mostrar todo nuevamente
+    const destino = _neneko_savedScrollPos;
     document.body.setAttribute('data-category-view', 'false');
-    // Limpiar parámetros de URL y recargar vista
     window.history.replaceState({}, '', window.location.pathname);
-    // Restaurar posición de scroll inmediatamente (sincrónico)
-    window.scrollTo(0, _neneko_savedScrollPos);
-    // Cargar vista en background sin bloquear el scroll
-    loadProductsFromSheet();
+    // Devolvemos el scroll apenas reaparecen las secciones, y otra vez cuando el
+    // catálogo terminó de repintarse: sin el segundo paso la página crece debajo
+    // del usuario y el salto se ve.
+    _nenekoTrasPintar(() => window.scrollTo({ top:destino, left:0, behavior:'instant' }));
+    Promise.resolve(loadProductsFromSheet()).catch(() => {}).then(() => {
+      _nenekoTrasPintar(() => window.scrollTo({ top:destino, left:0, behavior:'instant' }));
+    });
+  };
+
+  function _nenekoGuardarScroll(){
+    _neneko_savedScrollPos = window.scrollY || document.documentElement.scrollTop || 0;
+  }
+
+  window._nenekoIrAProductos = function(){
+    _nenekoTrasPintar(() => _nenekoIrA(document.getElementById('productos')));
   };
 
   window.neneko_viewCategory = function(categoryName){
     if(!categoryName) return;
-    // Guardar posición actual antes de cambiar la vista
-    _neneko_savedScrollPos = window.scrollY || 0;
-    // Buscar en productos de inicio o menú dinámico
+    _nenekoGuardarScroll();
     if(!window._neneko_home_products && !window._neneko_menu_products) return;
     renderCategoryView(categoryName);
-    document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+    _nenekoTrasPintar(() => _nenekoIrA(document.getElementById('productos')));
   };
 
   async function loadProductsFromSheet(){
@@ -3782,7 +4069,7 @@ body[data-category-view="true"] section{
     function ejecutarBusqueda(query){
       if(!query || query.trim().length === 0){
         loadProductsFromSheet();
-        document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+        window._nenekoIrAProductos?.();
         return;
       }
 
@@ -3836,7 +4123,7 @@ body[data-category-view="true"] section{
         ]));
       }
 
-      wrap.scrollIntoView({ behavior: 'smooth' });
+      window._nenekoIrAProductos?.();
       revelarNuevasTarjetas(wrap);
     }
 
@@ -3901,11 +4188,11 @@ body[data-category-view="true"] section{
   }
 </script>
 
-<!-- Google Analytics 4: Reemplazá G-XXXXXXXXXX con tu Measurement ID
-     Instrucciones: https://support.google.com/analytics/answer/9304153
-     1. Creá una propiedad en Google Analytics (analytics.google.com)
-     2. Copiá el Measurement ID (comienza con G-)
-     3. Reemplazá G-XXXXXXXXXX abajo -->
+<!-- Google Analytics 4 — desactivado: el fragmento tenía el ID de ejemplo
+     G-XXXXXXXXXX, que no mide nada y agrega una descarga en cada visita.
+     Para activarlo: creá la propiedad en analytics.google.com, copiá el
+     Measurement ID (empieza con G-) y descometá el bloque de abajo
+     reemplazándolo en las dos apariciones.
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -3914,6 +4201,67 @@ body[data-category-view="true"] section{
     gtag('js', new Date());
     gtag('config', 'G-XXXXXXXXXX');
   }
+</script>
+-->
+
+<script>
+  // Notas del blog desplegables en pantallas chicas.
+  (function(){
+    const flecha = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    document.querySelectorAll('#blog .blog-card').forEach(function(card, i){
+      const cuerpo = card.querySelector('.blog-card-inner') || card;
+      const contexto = card.querySelector('.blog-context');
+      if(!contexto) return;
+      const id = 'nota-' + (i + 1);
+      contexto.id = id;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'blog-toggle';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', id);
+      btn.innerHTML = '<span>Leer la nota</span>' + flecha;
+      cuerpo.appendChild(btn);
+      btn.addEventListener('click', function(){
+        const abierta = card.getAttribute('data-abierto') === 'true';
+        card.setAttribute('data-abierto', abierta ? 'false' : 'true');
+        btn.setAttribute('aria-expanded', abierta ? 'false' : 'true');
+        btn.querySelector('span').textContent = abierta ? 'Leer la nota' : 'Cerrar';
+      });
+    });
+  })();
+
+  // "Leer más" en Quiénes somos, sólo en pantallas chicas.
+  (function(){
+    const hist = document.querySelector('.about-history');
+    if(!hist) return;
+    const chico = window.matchMedia('(max-width:520px)');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'about-leer-mas';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', 'about-historia');
+    btn.textContent = 'Leer más';
+    hist.id = 'about-historia';
+    hist.after(btn);
+
+    function aplicar(){
+      if(chico.matches){
+        if(!hist.hasAttribute('data-plegado')) hist.setAttribute('data-plegado', 'true');
+      } else {
+        hist.removeAttribute('data-plegado');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = 'Leer más';
+      }
+    }
+    btn.addEventListener('click', function(){
+      const abierto = hist.getAttribute('data-plegado') !== 'true';
+      hist.setAttribute('data-plegado', abierto ? 'true' : 'false');
+      btn.setAttribute('aria-expanded', abierto ? 'false' : 'true');
+      btn.textContent = abierto ? 'Leer más' : 'Leer menos';
+    });
+    chico.addEventListener('change', aplicar);
+    aplicar();
+  })();
 </script>
 </body>
 </html>
