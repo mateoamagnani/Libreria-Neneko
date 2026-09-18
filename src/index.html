@@ -1870,6 +1870,7 @@ section{ padding-block:var(--s8); }
 #ubicacion .status .dot{ background:var(--text-inv-2); }
 #ubicacion .status[data-abierto="si"] .dot{ background:var(--ok); }
 #ubicacion .status[data-abierto="no"] .dot{ background:var(--closed); }
+#ubicacion .status[data-abierto="si"] b{ color:var(--brand-bright); }
 
 /* Las filas de dos líneas (la dirección) alinean el icono con la primera, que
    es lo correcto. Las de una sola (el teléfono) no: contra un icono de 42px el
@@ -2362,7 +2363,7 @@ body[data-category-view="true"] section{
 
 <header class="navbar">
   <div class="container nav-inner">
-    <a class="brand" href="#top">
+    <a class="brand" href="#" onclick="location.reload(); return false;">
       <img src="logo.png" alt="Librería Neneko" width="40" height="40" onerror="this.remove()">
       <span>Librería Neneko</span>
     </a>
