@@ -67,13 +67,20 @@ verificar la paleta; `test/n8n-asistente.test.mjs` hace lo mismo con los nodos C
 workflow de n8n.
 
 `horarios.test.mjs` existe por algo concreto: el bloque de horarios y su visibilidad en
-modo oscuro se rompieron varias veces. Afirma dos invariantes que no se pueden romper en
+modo oscuro se rompieron varias veces. Afirma invariantes que no se pueden romper en
 silencio:
 
 - **Todo color definido en `:root` tiene su par en el bloque de modo oscuro**, y los
   bordes llegan al contraste mínimo contra la superficie que dividen. Ese era el bug: un
   borde con el valor del modo claro es invisible de noche.
 - **El horario de respaldo escrito en el HTML coincide con el que calcula el script.**
+- **Ninguna hora escrita en la página contradice a `HORARIOS`.** No se valida una lista de
+  lugares, sino toda hora que aparezca en el archivo: el FAQ llegó a declarar que el local
+  abría 12:00 mientras el resto decía 11:30, y nadie lo vio.
+- **Los textos inversos llegan a AA sobre las dos bandas oscuras**, `--surface-inv` y
+  `--surface-inv-2`. Antes se comparaba solo contra la primera, y `--text-inv-2` quedaba en
+  3,88:1 sobre la segunda: 45 elementos por debajo del mínimo. El par que hay que afirmar
+  no es el documentado, es el peor de los reales.
 
 Es decir: **los tests leen el código de producción, no una copia.** Si movés esas funciones
 de lugar, los tests se rompen — que es justamente lo que tienen que hacer.
@@ -123,10 +130,14 @@ en el Google Business Profile. Las inconsistencias bajan el posicionamiento loca
 
 El horario **no se escribe a mano** en la página: sale de la constante `HORARIOS` del
 `<script>`, y de ahí se arman la tabla de la sección Ubicación, el cartel de "abierto
-ahora" y la línea del footer. Si cambia el horario del local hay que tocar tres lugares y
-ninguno más: `HORARIOS`, el `openingHoursSpecification` del JSON-LD (vive en el `<head>`,
-fuera del JS) y el Google Business Profile. El `<tbody>` de respaldo del HTML se valida
-solo contra `HORARIOS` desde los tests.
+ahora" y la línea del footer.
+
+Si cambia el horario del local, el punto de partida es `HORARIOS`, más el
+`openingHoursSpecification` del JSON-LD (vive en el `<head>`, fuera del JS) y el Google
+Business Profile. Pero hay además horas escritas a mano en la prosa, en la respuesta del
+FAQ (en el JSON-LD y en el HTML visible) y en la maqueta de WhatsApp: **corré los tests y
+ellos te dicen cuáles quedaron desfasadas**, porque validan toda hora que aparezca en el
+archivo, no una lista fija de lugares. No confíes en esta enumeración, confiá en el test.
 
 ## Al trabajar el bot de WhatsApp
 

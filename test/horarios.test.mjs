@@ -226,6 +226,40 @@ test('el horario del JSON-LD coincide con HORARIOS', () => {
     'el openingHoursSpecification del <head> quedó desfasado de HORARIOS');
 });
 
+// Los dos tests de arriba cubren el <tbody> de respaldo y el JSON-LD, pero el
+// horario también está escrito a mano en la prosa, en la respuesta del FAQ (en
+// el JSON-LD y en el HTML visible) y en la maqueta de WhatsApp. Esos no los
+// miraba nadie, y uno se desincronizó: el FAQ del JSON-LD llegó a declarar que
+// el local abría 12:00 mientras HORARIOS decía 11:30, o sea dos horarios
+// contradictorios en la misma página, los dos leídos por Google.
+//
+// En vez de enumerar cada lugar —lista que se desactualiza sola en cuanto
+// alguien agrega un párrafo— este test da vuelta la pregunta: toma TODA hora
+// escrita en el archivo y exige que sea un borde que HORARIOS produce. Si
+// mañana aparece un horario nuevo en cualquier rincón, o alguien cambia uno y
+// se olvida del resto, salta acá.
+test('ninguna hora escrita en la página contradice a HORARIOS', () => {
+  const { filasDeHorario } = enElMomento('Wed', 12, 0);
+
+  const hhmm = (min) => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
+  const permitidas = new Set(
+    filasDeHorario().flatMap(({ bloques }) => plano(bloques).flat().map(hhmm)));
+
+  assert.ok(permitidas.size > 0, 'HORARIOS no produjo ningún horario');
+
+  // La hora tiene que estar aislada. Sin esto pican dos cosas que no son
+  // horarios: la escala de espaciado del CSS (--s3:12px se lee como "3:12") y
+  // las fechas ISO con hora (2026-09-20T10:30:00). De ahí que se exija que no
+  // venga pegada a una letra, un dígito, un guion ni otros dos puntos.
+  const escritas = [...html.matchAll(/(?<![A-Za-z\d:-])(\d{1,2}:\d{2})(?![:\dA-Za-z])/g)]
+    .map((m) => m[1]);
+  assert.ok(escritas.length > 0, 'esperaba encontrar horarios escritos en el HTML');
+
+  const intrusas = [...new Set(escritas)].filter((t) => !permitidas.has(t));
+  assert.deepEqual(intrusas, [],
+    `estas horas están escritas en la página pero no salen de HORARIOS (${[...permitidas].join(', ')}): ${intrusas.join(', ')}`);
+});
+
 // ---------------------------------------------------------------------------
 // Sistema de color
 // ---------------------------------------------------------------------------
@@ -321,15 +355,47 @@ test('el texto secundario también llega a AA', () => {
   });
 });
 
-// --brand-bright vive solo sobre las bandas oscuras (--surface-inv): el
-// puntaje de Google, las estrellas de las reseñas y el hover del footer. Las
-// estrellas son texto normal, así que necesitan AA completo, no el 3:1 de
-// texto grande. Con el ámbar del logo sin aclarar daba 3,9:1.
+// Las bandas oscuras no son una sola: hay dos superficies, --surface-inv (la
+// barra, el pie) y --surface-inv-2, más clara, que es el fondo de Servicios,
+// Reseñas, Ubicación y Blog. Los tests de acá abajo comparaban solo contra la
+// primera, y por eso nadie vio que --text-inv-2 daba 3,88:1 sobre la segunda:
+// 45 elementos por debajo de AA en modo claro, con el token documentado como
+// "5,6:1" porque ese era el número contra la superficie equivocada.
+//
+// La lección es que el par que hay que afirmar no es el documentado sino el
+// peor de los reales. Este test recorre el producto completo de textos por
+// superficies, así que agregar una superficie oscura nueva obliga a que todos
+// los textos sigan siendo legibles sobre ella.
+const SUPERFICIES_OSCURAS = ['--surface-inv', '--surface-inv-2'];
+
+test('los textos inversos llegan a AA sobre TODAS las bandas oscuras, no solo una', () => {
+  [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
+    ['--text-inv', '--text-inv-2'].forEach((token) => {
+      SUPERFICIES_OSCURAS.forEach((superficie) => {
+        const ratio = contraste(t[token], t[superficie]);
+        assert.ok(ratio >= 4.5,
+          `${token} sobre ${superficie} en modo ${modo}: ${ratio.toFixed(2)}:1, hace falta 4.5:1`);
+      });
+    });
+  });
+});
+
+// El acento carga el puntaje de Google, las estrellas y los hovers del pie.
+// Sobre --surface-inv llega a AA en los dos modos y eso se exige. Sobre
+// --surface-inv-2 en modo claro da 3,81:1 y no llega: se decidió no tocarlo
+// para no mover el color de marca, sabiendo que las estrellas son aria-hidden
+// y que el "4,4" también va en texto. El piso de 3:1 deja esa decisión por
+// escrito y frena que empeore; si algún día se aclara el acento, subir esto
+// a 4.5 y borrar el comentario.
 test('el acento se lee sobre la banda oscura, en los dos modos', () => {
   [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
     const ratio = contraste(t['--brand-bright'], t['--surface-inv']);
     assert.ok(ratio >= 4.5,
       `--brand-bright sobre --surface-inv en modo ${modo}: ${ratio.toFixed(2)}:1`);
+
+    const sobreLaOtra = contraste(t['--brand-bright'], t['--surface-inv-2']);
+    assert.ok(sobreLaOtra >= 3,
+      `--brand-bright sobre --surface-inv-2 en modo ${modo}: ${sobreLaOtra.toFixed(2)}:1, el piso es 3:1`);
   });
 });
 
