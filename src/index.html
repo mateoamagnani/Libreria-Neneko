@@ -130,7 +130,7 @@
       "name": "¿Cuál es el horario de atención?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Lunes a viernes: 12:00 a 20:30. Sábado: 11:30 a 15:30. Domingo: cerrado. Consultá por WhatsApp fuera del horario de atención."
+        "text": "Lunes a viernes: 11:30 a 20:30. Sábado: 11:30 a 15:30. Domingo: cerrado. Consultá por WhatsApp fuera del horario de atención."
       }
     },
     {
@@ -312,7 +312,9 @@
   --text-2:        #5A6169;   /*  6.0:1 sobre --bg */
   --text-3:        #696F77;   /*  4.8:1 sobre --bg — mínimo AA */
   --text-inv:      #F2F5F6;
-  --text-inv-2:    #A9B8C2;   /*  5.6:1 sobre --surface-inv */
+  --text-inv-2:    #BAC6CE;   /*  6.5:1 sobre --surface-inv; 4.5:1 sobre --surface-inv-2,
+                                  que es la superficie más clara donde se apoya y por eso
+                                  la que manda: con #A9B8C2 daba 3.9:1 y no llegaba a AA. */
 
   /* --- Marca y estados --- */
   /* El turquesa de marca es #6BC2C2. Como TEXTO sobre el fondo claro da
@@ -1657,7 +1659,9 @@ section{ padding-block:var(--s8); }
   .product-info{ padding:var(--s2); }
   .product-info h4{ flex:none; font-size:.875rem; line-height:1.25; }
   .product-detalle{ font-size:.8125rem; }
-  .product-info a{ width:32px; height:32px; min-width:32px; min-height:32px; font-size:0.7rem; padding:0; border-radius:50%; }
+  /* 44px es el área de tap mínima del proyecto: este es el botón que abre
+     WhatsApp, o sea la única conversión que importa. No achicarlo. */
+  .product-info a{ width:44px; height:44px; min-width:44px; min-height:44px; font-size:0.7rem; padding:0; border-radius:50%; }
   .product-info a .cta-txt{ display:none; }
   /* El precio deja de estar pegado al borde: se centra en el espacio que
      queda a la izquierda del botón. */
@@ -1808,6 +1812,11 @@ section{ padding-block:var(--s8); }
 #ubicacion .status[data-abierto="si"] .dot{ background:var(--ok); }
 #ubicacion .status[data-abierto="no"] .dot{ background:var(--closed); }
 #ubicacion .status[data-abierto="si"] b{ color:var(--brand-bright); }
+/* El rojo de --closed sobre esta banda da 1.34:1 — ilegible. Ningún rojo llega
+   a AA sobre --surface-inv-2, así que el estado cerrado va en blanco, igual que
+   la celda "Cerrado" de la tabla de acá abajo. El punto rojo sigue dando la
+   señal de color, y es decorativo (aria-hidden): el dato está en la palabra. */
+#ubicacion .status[data-abierto="no"] b{ color:var(--text-inv); }
 
 /* Las filas de dos líneas (la dirección) alinean el icono con la primera, que
    es lo correcto. Las de una sola (el teléfono) no: contra un icono de 42px el
