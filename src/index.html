@@ -1289,8 +1289,11 @@ section{ padding-block:var(--s8); }
      qué es (rótulo · título · servicios) — espacios cortos, 12 y 16
      qué hacer (los dos botones)          — salto grande de 32 para separarlo
      por qué confiar (rating y estado)    — salto medio de 24, con la regla fina
-     El hero deja de medir una pantalla entera: la franja de servicios asoma. */
-  .hero{ min-height:0; padding-block:var(--s6) var(--s7); }
+     El hero mide la pantalla entera y centra su contenido: la franja de
+     servicios arranca recién abajo del pliegue. Todo eso lo hereda de .hero
+     (min-height con svh y justify-content:center), así que acá no se lo
+     redefine. Tampoco se le baja el padding de arriba: con el contenido
+     centrado, un padding asimétrico lo corre del medio. */
   /* 32 antes de los botones y 32 después, hasta la regla: el bloque de acción
      queda a la misma distancia de lo que lo precede y de lo que lo sigue. */
   .hero-text-container{ text-align:center; margin-bottom:var(--s6); }
