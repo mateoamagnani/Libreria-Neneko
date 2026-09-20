@@ -611,19 +611,12 @@ section{ padding-block:var(--s8); }
 #productos .section-head p{ margin-inline:auto; }
 .section-head p{ color:var(--text-2); font-size:1.0625rem; text-wrap:pretty; margin-top:var(--s4); max-width:60rem; line-height:1.6; }
 
-.about-intro{ font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:var(--s4); line-height:1.3; }
-.about-label{ font-size:1rem; font-weight:600; color:var(--text); margin-bottom:var(--s4); margin-top:var(--s5); }
-
 /* ==========================================================================
    SECCIONES: NOSOTROS, FAQ, BLOG
    ========================================================================== */
-/* About (Quiénes somos) — 2 columnas historia + pilares */
-.about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s8); align-items:start; }
+/* About (Quiénes somos) */
 /* Los párrafos van al ancho completo de la sección. */
 .about-history{ max-width:none; }
-.about-pillars{ display:flex; flex-direction:column; gap:var(--s6); }
-.about-pilar{ padding:var(--s5); border:1px solid var(--border); border-radius:var(--r-md); background:transparent; transition:all .25s cubic-bezier(0.4, 0, 0.2, 1); }
-.about-pilar:hover{ border-color:var(--border-strong); }
 .about-history p{ color:var(--text); font-size:1.0625rem; line-height:1.7; margin:0 0 var(--s5); }
 .about-history p:last-child{ margin-bottom:0; }
 /* En el celular los cinco párrafos son tres pantallas: mostramos dos y el
@@ -640,12 +633,6 @@ section{ padding-block:var(--s8); }
   }
   .about-leer-mas::after{ content:'↓'; font-size:.875rem; }
   .about-leer-mas[aria-expanded="true"]::after{ content:'↑'; }
-}
-
-@media (max-width:520px){
-  .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
-  .about-pilar{ text-align:center; }
-  .about-pilar h4{ margin-left:auto; margin-right:auto; }
 }
 
 /* FAQ Grid — columna central restringida, 1 columna */
@@ -735,11 +722,6 @@ section{ padding-block:var(--s8); }
   box-shadow:var(--shadow-md);
 }
 
-/* Imagen del blog — oculta (no se usa) */
-.blog-card-image{
-  display:none;
-}
-
 /* Contenedor interno del blog card */
 .blog-card-inner{
   padding:var(--s5); display:flex; flex-direction:column; gap:var(--s3); flex:1;
@@ -766,10 +748,6 @@ section{ padding-block:var(--s8); }
   color:var(--text-3); font-size:0.9375rem; line-height:1.6; margin:0;
 }
 
-/* CTA del blog — oculto (no se usa) */
-.blog-cta{
-  display:none;
-}
 
 /* Blog en fondo oscuro: texto claro */
 #blog .blog-card{
@@ -876,32 +854,6 @@ section{ padding-block:var(--s8); }
   flex-direction:row;
 }
 
-/* Botones pequeños de acción en tarjetas de producto (icono WhatsApp) */
-.product-cta{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:44px;
-  height:44px;
-  flex-shrink:0;
-  background:transparent;
-  border:none;
-  color:var(--brand);
-  font-size:1.5rem;
-  cursor:pointer;
-  text-decoration:none;
-  padding:0;
-  transition:transform .2s ease, opacity .2s ease;
-}
-.product-cta:hover{
-  transform:scale(1.1);
-  opacity:0.8;
-}
-.product-cta:focus-visible{
-  outline:2.5px solid var(--brand);
-  outline-offset:3px;
-  border-radius:var(--r-sm);
-}
 
 /* ==========================================================================
    NAVBAR
@@ -935,18 +887,9 @@ section{ padding-block:var(--s8); }
 }
 .brand img{ width:45px; height:45px; aspect-ratio:1; object-fit:contain; flex-shrink:0; }
 
-/* La barra lleva la marca, el cambio de tema y el CTA. La navegación por
+/* La barra lleva la marca, el cambio de tema y el menú. La navegación por
    secciones vive en el footer y en el botón "Ver productos" del hero: en una
    página de un solo scroll, tres links arriba competían con el CTA. */
-/* El CTA de la barra no puede ser el primario: ese es navy, y sobre la barra
-   navy desaparece. Va en el ámbar del logo, que es el otro color de la marca
-   y es lo que más salta ahí arriba — que es exactamente lo que buscamos. */
-.nav-cta{
-  min-height:44px; padding:var(--s3) var(--s4); font-size:.875rem;
-  background:var(--brand-bright); color:var(--surface-inv);
-  box-shadow:none;
-}
-.nav-cta:hover{ background:color-mix(in srgb, var(--brand-bright) 85%, var(--text-inv)); }
 .nav-right{ display:flex; align-items:center; gap:var(--s6); }
 
 /* Botón de tema: discreto a propósito. Es una preferencia, no una acción del
@@ -1056,11 +999,6 @@ section{ padding-block:var(--s8); }
 }
 .menu-close:hover{ color:var(--text); border-color:var(--border-strong); }
 .menu-close svg{ width:18px; height:18px; }
-
-.menu-content{
-  padding:var(--s4); flex:1;
-  display:flex; flex-direction:column; gap:var(--s5);
-}
 
 /* Búsqueda */
 .menu-search{
@@ -1331,7 +1269,6 @@ section{ padding-block:var(--s8); }
 /* Layout FAQs ahora manejado con .faq-grid específico, no aquí */
 
 @media (max-width:960px){
-  .about-grid{ grid-template-columns:1fr; gap:var(--s6); }
   .hero{ padding-block:var(--s7) var(--s7); }
   .hero-grid{ grid-template-columns:1fr; gap:var(--s7); }
   /* El teléfono va DESPUÉS del titular, no antes: lo primero que tiene que
@@ -2169,16 +2106,6 @@ body[data-category-view="true"] section{
   .footer-brand{
     display:none;
   }
-  .footer-brand.oculto-desktop{
-    grid-column:1/-1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    margin-bottom:var(--s4);
-    padding-bottom:var(--s4);
-    border-bottom:1px solid rgba(255,255,255,.12);
-  }
   .footer-brand .brand{
     justify-content:center;
     gap:var(--s2);
@@ -2309,53 +2236,6 @@ body[data-category-view="true"] section{
 @media (max-width:860px){ .sticky-cta{ display:block; } }
 @media (max-width:860px){ .site-footer{ padding-bottom:calc(var(--s5) + 76px + env(safe-area-inset-bottom, 0px)); } }
 </style>
-<!-- Review Schema: Customer testimonials for E-E-A-T and AI citability -->
-<script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Florencia Fernández Madero"
-    },
-    "reviewBody": "Voy siempre, tienen buenos precios, la atención es muy buena, siempre sonrientes y con buena onda. Imprimen, fotocopian, anillan, y plastifican!",
-    "datePublished": "2024"
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "María Eugenia Estarli"
-    },
-    "reviewBody": "Muy buena atención!!! Atención personalizada, variedad en productos y en precios. Son muy atentas a la hora de atender y siempre con una sonrisa. El mejor comercio del barrio!!!",
-    "datePublished": "2021"
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": "5"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "N. Susana Amuchástegui"
-    },
-    "reviewBody": "Excelente atención. Variedad de productos. Muy buenas impresiones y mucha cordialidad y eficiencia. A gusto. Clima agradable. Muy solícitos y amables.",
-    "datePublished": "2025"
-  }
-]
-</script>
 </head>
 <body>
 
