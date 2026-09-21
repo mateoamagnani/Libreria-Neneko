@@ -83,6 +83,19 @@ function obtenerApiKey() {
   return PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
 }
 
+// La key va en el header, no en ?key= de la URL. Las keys nuevas de Google (las que
+// empiezan con "AQ.") fallan con API_KEY_INVALID si se mandan por query string: el
+// backend las toma por un token OAuth. De paso, así la key no queda escrita en la URL.
+function opcionesGemini(apiKey, payload) {
+  return {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'x-goog-api-key': apiKey },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+}
+
 // Cuenta filas con datos. getMaxRows() devuelve el tamaño de la grilla (1000 por
 // defecto), no las filas cargadas: usar eso da "999 pendientes" con la hoja vacía.
 function contarFilasDatos(sheet) {
@@ -101,6 +114,7 @@ function onOpen() {
     .addItem('Cargar archivo de proveedor', 'showSidebar')
     .addSeparator()
     .addItem('Probar conexión a Gemini', 'probarConexionGemini')
+    .addItem('Ver modelos disponibles', 'listarModelosDisponibles')
     .addItem('Aprobar todos los cambios pendientes', 'aprobarTodos')
     .addItem('Ver productos para revisar', 'abrirProductosRevision')
     .addItem('Descargar cambios (CSV)', 'descargarCSV')
@@ -183,14 +197,7 @@ function probarConexionGemini() {
       }]
     };
 
-    const options = {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
-    };
-
-    const response = UrlFetchApp.fetch(GEMINI_API_URL + '?key=' + apiKey, options);
+    const response = UrlFetchApp.fetch(GEMINI_API_URL, opcionesGemini(apiKey, payload));
 
     if (response.getResponseCode() === 200) {
       SpreadsheetApp.getUi().alert('✅ Conexión a Gemini OK - API Key válida y funcionando');
@@ -202,6 +209,47 @@ function probarConexionGemini() {
   } catch (error) {
     SpreadsheetApp.getUi().alert('❌ Error: ' + error.message);
     registrarLog('ERROR', 'Error en prueba de conexión: ' + error.message);
+  }
+}
+
+// Google renombra y jubila modelos seguido. Esto pregunta cuáles acepta la cuenta,
+// para no tener que adivinar el valor de GEMINI_MODELO.
+function listarModelosDisponibles() {
+  const ui = SpreadsheetApp.getUi();
+  const apiKey = obtenerApiKey();
+
+  if (!apiKey) {
+    ui.alert('❌ Falta la API Key. Cargala en Propiedades del script con la clave GEMINI_API_KEY.');
+    return;
+  }
+
+  try {
+    const response = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models', {
+      method: 'get',
+      headers: { 'x-goog-api-key': apiKey },
+      muteHttpExceptions: true
+    });
+
+    if (response.getResponseCode() !== 200) {
+      ui.alert('❌ Error ' + response.getResponseCode() + '\n\n' + response.getContentText());
+      registrarLog('ERROR', 'Listado de modelos falló: ' + response.getResponseCode());
+      return;
+    }
+
+    const modelos = (JSON.parse(response.getContentText()).models || [])
+      .filter(m => (m.supportedGenerationMethods || []).indexOf('generateContent') !== -1)
+      .map(m => m.name.replace('models/', ''));
+
+    const enUso = modelos.indexOf(GEMINI_MODELO) !== -1
+      ? '✅ "' + GEMINI_MODELO + '" está disponible.'
+      : '⚠️ "' + GEMINI_MODELO + '" NO figura. Cambiá GEMINI_MODELO por alguno de la lista.';
+
+    ui.alert('Modelos disponibles (' + modelos.length + ')\n\n' + modelos.join('\n') + '\n\n' + enUso);
+    registrarLog('INFO', 'Modelos disponibles consultados: ' + modelos.length);
+
+  } catch (error) {
+    ui.alert('❌ Error: ' + error.message);
+    registrarLog('ERROR', 'Error al listar modelos: ' + error.message);
   }
 }
 
@@ -250,14 +298,7 @@ function enviarArchivoAGemini(base64, mimeType, fileName, tamanioBytes) {
       }]
     };
 
-    const options = {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
-    };
-
-    const response = UrlFetchApp.fetch(GEMINI_API_URL + '?key=' + apiKey, options);
+    const response = UrlFetchApp.fetch(GEMINI_API_URL, opcionesGemini(apiKey, payload));
     const result = JSON.parse(response.getContentText());
 
     if (response.getResponseCode() !== 200) {

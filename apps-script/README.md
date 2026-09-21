@@ -38,6 +38,23 @@ Si alguna vez la key se filtra (la pegaste en un chat, la subiste a un repo, la 
 por mail), borrala desde ese mismo panel de Google y generá una nueva. No alcanza con
 sacarla del archivo.
 
+#### Por qué la key viaja en un header
+
+Google cambió el formato: las keys nuevas empiezan con `AQ.` en vez de `AIza...`, y
+**fallan con `API_KEY_INVALID` si se mandan como `?key=` en la URL** — el backend las
+toma por un token OAuth. Por eso el script las manda en el header `x-goog-api-key`.
+
+Consecuencia práctica: **no podés probar la key pegando una URL en el navegador**, porque
+ahí no hay forma de mandar un header. Si querés probarla fuera del script, va por consola:
+
+```bash
+curl -H "x-goog-api-key: TU_API_KEY" \
+  https://generativelanguage.googleapis.com/v1beta/models
+```
+
+Un `API_KEY_INVALID` (400) significa key inválida o mal enviada. **No** significa que falte
+un medio de pago: eso daría 403 o 429.
+
 ### 3. Estructura de la planilla
 
 La hoja **"Todos los productos"** tiene que tener, sí o sí:
@@ -52,6 +69,18 @@ primera vez.
 
 Recargá la planilla. Aparece el menú **🔄 Actualizar Precios**. Empezá por
 **"Probar conexión a Gemini"**: si responde OK, ya está.
+
+Si da error de modelo, usá **"Ver modelos disponibles"**: lista los que acepta tu cuenta y
+te avisa si el valor de `GEMINI_MODELO` sigue vigente. Google renombra y jubila modelos
+seguido, así que cuando algo deje de andar, ese es el primer lugar donde mirar.
+
+## Costo
+
+El tier gratuito de Gemini **no pide tarjeta** y no vence: los modelos Flash y Flash-Lite
+entran ahí, con un tope de pedidos por día que para esta librería sobra de lejos.
+
+**No habilites facturación.** Cargar un medio de pago *reemplaza* el tier gratuito en vez
+de sumarse, así que pasarías de no pagar nada a pagar prepago.
 
 ## Red de seguridad
 
