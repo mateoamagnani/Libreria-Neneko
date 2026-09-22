@@ -156,9 +156,11 @@ de entorno o en las credenciales de n8n.
 
 ## Skills
 
-Hay 38 skills en `.claude/skills/`. Las más pertinentes acá:
+Hay 30 skills en `.claude/skills/` (se podó de 40: sacamos las de React/Next.js/React
+Native, redundancias y una que no cargaba — el detalle está en el README de skills). Las
+más pertinentes acá:
 
-- `web-quality-audit`, `performance`, `accessibility`, `seo` → antes de cada deploy.
+- `web-quality-audit`, `performance`, `accessibility`, `seo-mastery` → antes de cada deploy.
 - `web-design-guidelines`, `apple-design` → al tocar la UI.
 - `n8n-*` → al armar el asistente de WhatsApp.
 - `ponytail` → cuando una solución empieza a crecer de más.

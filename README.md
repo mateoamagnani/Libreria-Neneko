@@ -31,7 +31,7 @@ lo demás está al servicio de eso.
 │   └── fuentes/                    # PDFs originales de los que salen los docs
 ├── .github/workflows/              # Tests en cada push, deploy a Pages desde main
 └── .claude/
-    └── skills/                     # 38 skills que Claude Code carga en este repo
+    └── skills/                     # 30 skills que Claude Code carga en este repo
         └── README.md               # Inventario, fuentes y licencias
 ```
 
@@ -111,7 +111,7 @@ Lo que está hecho:
 - ✅ Workflow de n8n del asistente de WhatsApp, listo para importar
 - ✅ Deploy automático a GitHub Pages, con los tests como condición
 - ✅ Los tres documentos base pasados a Markdown
-- ✅ 38 skills instaladas para trabajar el proyecto con Claude Code
+- ✅ 30 skills instaladas para trabajar el proyecto con Claude Code
 
 Lo que sigue:
 
@@ -128,7 +128,7 @@ Detalle de pendientes en [`docs/concepto-landing.md`](docs/concepto-landing.md#e
 
 ## Trabajar en este repo con Claude Code
 
-El repo trae 38 skills en `.claude/skills/` que se activan solas según la tarea: auditorías
+El repo trae 30 skills en `.claude/skills/` que se activan solas según la tarea: auditorías
 de performance y accesibilidad, guías de diseño, construcción de workflows de n8n y revisión
 de código. El inventario completo, con la fuente y licencia de cada una, está en
 [`.claude/skills/README.md`](.claude/skills/README.md).
