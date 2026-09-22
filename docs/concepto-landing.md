@@ -144,14 +144,13 @@ Pendiente:
 
 - [ ] Sin fotos reales del local ni de los productos (los thumbs son SVG genéricos). El
       material de marketing indica que las fotos reales convierten mejor en negocios físicos.
-- [ ] Falta `geo` (latitud y longitud) en el JSON-LD.
+- [ ] El `geo` del JSON-LD tiene coordenadas aproximadas (3 decimales, -34.585/-58.395):
+      alcanza para el nivel de manzana pero no son el punto exacto. Afinarlas clickeando
+      la puerta del local en Google Maps y copiando el par que da el click derecho.
 - [ ] Las URLs del `canonical`, los `og:*` y el JSON-LD apuntan a GitHub Pages. Si se compra
       un dominio propio hay que actualizarlas — ver [`deploy.md`](./deploy.md).
 - [ ] Sin medición: no hay analytics ni tracking de clicks al CTA de WhatsApp.
       Ver [`google-setup-guia-paso-a-paso.md`](./google-setup-guia-paso-a-paso.md).
-- [ ] `index.html` en la raíz del repo es una copia de `src/index.html`. El workflow publica
-      `src/`, así que la copia no debería hacer falta: hay que confirmar desde qué fuente
-      sirve GitHub Pages y borrar la que sobra, antes de que se desincronicen.
 
 ---
 
