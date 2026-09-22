@@ -6,7 +6,7 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git fetch *)",
-      "Bash(git push -u origin claude/hola-querido-stuzim*)",
+      "Bash(git push origin main)",
       "mcp__github__actions_list",
       "mcp__github__get_job_logs",
       "mcp__github__get_commit",
