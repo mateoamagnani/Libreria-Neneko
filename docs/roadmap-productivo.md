@@ -99,28 +99,7 @@ Está dividido en **fases**. Hacé lo que se pueda en cada una, en orden.
 
 ---
 
-## 🟢 Fase 4: Automatización y WhatsApp Bot (6+ meses)
-
-**Objetivo:** Responder preguntas comunes automáticamente.
-
-### 4.1 Preparación
-- [ ] ¿Cuáles son las preguntas más frecuentes?
-  - "¿Qué horario?", "¿Hacen impresión color?", "¿Cuál es el precio?"
-- [ ] ¿Vale la pena un bot o está bien que contesten ustedes?
-- [ ] Si el volumen es alto, entonces sí
-
-### 4.2 Implementar bot de WhatsApp (n8n)
-- [ ] Conectar WhatsApp Business API
-- [ ] Cargar el workflow `asistente-whatsapp.json`
-- [ ] Testear: el bot responde automáticamente
-- [ ] Humanos pueden tomar el chat si es complicado
-- [ ] **Requiere:** hosting (Vercel, Railway) + credenciales de Meta
-
-**Impacto:** 🟡 Reduce carga manual, mejora velocidad de respuesta.
-
----
-
-## 🔵 Fase 5: Monetización inteligente (opcional)
+## 🔵 Fase 4: Monetización inteligente (opcional)
 
 **Objetivo:** Si en el futuro consideran vender online.
 
@@ -171,13 +150,13 @@ Cada mes, revisá:
 ## Preguntas frecuentes
 
 **P: ¿Cuánto tarda en ver resultados?**  
-R: Google Business → 1-2 semanas. Search Console → 1-2 meses. Bot → depende si lo hacen.
+R: Google Business → 1-2 semanas. Search Console → 1-2 meses.
 
 **P: ¿Necesito contratar a alguien?**  
-R: Para Fase 1 y 2, no. Vos lo hacés. Fase 4 (bot) podría necesitar ayuda técnica.
+R: Para Fase 1 y 2, no. Vos lo hacés.
 
 **P: ¿Cuesta dinero?**  
-R: Google Tools = gratis. Hosting para bot (si lo hacen) = ~$5-20/mes. Dominio propio = ~$100/año (opcional).
+R: Google Tools = gratis. Dominio propio = ~$100/año (opcional).
 
 **P: ¿Y si no ando con tiempo?**  
 R: Prioridad: (1) Business Profile, (2) Search Console. El resto puede esperar.

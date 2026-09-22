@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "libreria-neneko",
-  "description": "Sitio web y asistente de WhatsApp para Librería Neneko",
+  "description": "Sitio web para Librería Neneko",
   "type": "module",
   "scripts": {
     "test": "node --test test/*.test.mjs",
