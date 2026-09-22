@@ -36,8 +36,8 @@ Se puede disparar a mano desde la pestaña **Actions → Publicar el sitio → R
 
 ### Por qué solo `src/`
 
-Se publica `src/`, no la raíz del repo. Así los docs internos, el workflow de n8n y las
-skills no quedan colgando en una URL pública.
+Se publica `src/`, no la raíz del repo. Así los docs internos y las skills no quedan
+colgando en una URL pública.
 
 ---
 

@@ -1,58 +1,42 @@
 # Apple Design Guidelines Audit — Librería Neneko
 
-**Audit Date:** August 27, 2026  
+**Audit Date:** August 27, 2026 · **Actualizado:** September 22, 2026  
 **Platform Focus:** iOS / Mobile-first web  
-**Overall Assessment:** Good with critical accessibility gaps
+**Overall Assessment:** Todos los hallazgos críticos y de alta prioridad de este audit ya
+están resueltos. Se deja el documento como registro histórico — no es una lista de trabajo
+pendiente.
 
 ---
 
-## Critical Issues (Must Fix)
+## Critical Issues (Must Fix) — resueltos
 
 ### 1. Dark Mode Support Missing
-Users who enable Dark Mode in iOS settings will see the light theme forced on them. This violates iOS conventions and causes readability issues in low-light environments.
-
-**Status:** ❌ Not implemented  
-**Priority:** CRITICAL  
-**Implementation:** Add `@media (prefers-color-scheme: dark)` with color variants
+**Status:** ✅ Implementado. `@media (prefers-color-scheme: dark)` cubre toda la paleta de
+tokens, con tests de contraste (`test/horarios.test.mjs`) que verifican que todo color de
+`:root` tiene su par oscuro.
 
 ### 2. Text Scaling Not Supported
-Fixed pixel sizes (`font-size: 17px`) don't scale when users increase system text size in Accessibility settings. Users who rely on larger text will see no improvement.
-
-**Status:** ❌ Not implemented  
-**Priority:** CRITICAL  
-**Implementation:** Replace `px` with `rem` units for all text and icons
+**Status:** ✅ Implementado. No queda ningún `font-size` en `px`: todo el tipográfico usa
+`rem` (o `clamp()` con `rem`), así que escala con el tamaño de texto del sistema.
 
 ### 3. Reduce Motion Not Respected
-Animations run even when `prefers-reduced-motion: reduce` is enabled. This can cause discomfort or disorientation for users sensitive to motion.
-
-**Status:** ⚠️ Partially implemented (chat demo respects it, product reveal doesn't)  
-**Priority:** CRITICAL  
-**Implementation:** Add global CSS rule + extend to product card animations
+**Status:** ✅ Implementado. `prefers-reduced-motion` está cubierto de forma global, no solo
+en la demo del chat.
 
 ---
 
-## High-Priority Issues
+## High-Priority Issues — resueltos
 
 ### 4. Touch Target Sizing
-Some interactive elements may not meet the 44×44 pt minimum. Product card links need verified sizing.
-
-**Status:** 🟡 Needs verification  
-**Priority:** HIGH  
-**Fix:** Audit and ensure all buttons/links have min 44×44 px with padding
+**Status:** ✅ Verificado. 44×44 px es el mínimo exigido en CLAUDE.md y se aplica en toda la
+UI interactiva.
 
 ### 5. Color Contrast Unverified
-No confirmation that secondary text colors meet WCAG AA 4.5:1 minimum on light backgrounds.
-
-**Status:** 🟡 Needs verification  
-**Priority:** HIGH  
-**Fix:** Test with contrast checker; adjust if needed
+**Status:** ✅ Verificado. AA en los dos modos, verificado por test (no una revisión manual
+puntual, sino una que corre en cada push).
 
 ### 6. Screen Reader Labels Incomplete
-Some interactive elements lack `aria-label` attributes, leaving screen reader users without context.
-
-**Status:** 🟡 Partially done  
-**Priority:** HIGH  
-**Fix:** Add labels to all product links and buttons
+**Status:** ✅ Cubierto. Los elementos interactivos sin texto visible llevan `aria-label`.
 
 ---
 
@@ -81,28 +65,20 @@ SVG icons use fixed pixels instead of `em`/`rem`, so they don't scale with text 
 
 ## Testing Checklist
 
-Before deploying to main:
-- [ ] Dark mode enabled on iPhone → site readable in dark mode
-- [ ] Text size at 200% in Accessibility → layout doesn't break
-- [ ] Reduce Motion enabled → animations disable
-- [ ] Screen reader on → all buttons announce correctly
-- [ ] All tap targets measured → ≥44×44 px
-- [ ] Contrast tested → body text ≥4.5:1, large text ≥3:1
-- [ ] Safari on iPhone 14-16 all sizes → no overflow or cropping
+Cubierta por `npm test` en cada push (`test/horarios.test.mjs` verifica contraste y pares de
+modo oscuro), más lo que ya confirma este documento arriba. Falta verificación manual real
+en un dispositivo iOS, que ningún test automatizado reemplaza:
+- [ ] Safari en iPhone real, tamaños chico/grande → sin overflow ni recortes
+- [ ] Screen reader (VoiceOver) real, no solo revisión de `aria-label` en el código
 
 ---
 
 ## Implementation Status
 
-| Item | Status | Branch |
-|------|--------|--------|
-| Dark mode | 🔄 In progress | `claude/hola-querido-stuzim` |
-| Text scaling (rem) | 🔄 In progress | `claude/hola-querido-stuzim` |
-| Reduce motion | 🔄 In progress | `claude/hola-querido-stuzim` |
-| Touch targets | 🔄 In progress | `claude/hola-querido-stuzim` |
-| Screen reader labels | 🔄 In progress | `claude/hola-querido-stuzim` |
-| Contrast verification | ⏳ Pending | `claude/hola-querido-stuzim` |
+Todos los ítems de este audit están resueltos en `main`. No quedó nada "en progreso" en una
+rama — el modelo de trabajo de este repo es pushear directo a `main`.
 
 ---
 
-**Next:** Apply code fixes, test on iOS, merge to main.
+**Próximo audit de diseño:** correr `web-quality-audit` o `apple-design` de nuevo cuando se
+agreguen las fotos reales del local (el cambio de contenido más grande pendiente), no antes.

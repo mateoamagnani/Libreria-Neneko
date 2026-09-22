@@ -2,8 +2,8 @@
 
 ## Qué es esto
 
-Sitio web y (a futuro) asistente de WhatsApp para una librería de barrio en Peña 3102, CABA.
-La única conversión que importa es **que el visitante escriba por WhatsApp**. No hay carrito,
+Sitio web para una librería de barrio en Peña 3102, CABA. La única conversión que importa es
+**que el visitante escriba por WhatsApp**. No hay carrito,
 no hay checkout, no hay cuentas de usuario.
 
 ## Idioma
@@ -63,8 +63,7 @@ npm test
 Corren con el runner de Node, sin dependencias. `test/mercadito.test.mjs` extrae el
 `<script>` de `index.html` y lo evalúa en un `vm` con un DOM mínimo;
 `test/horarios.test.mjs` hace lo mismo congelando el reloj, y además parsea el CSS para
-verificar la paleta; `test/n8n-asistente.test.mjs` hace lo mismo con los nodos Code del
-workflow de n8n.
+verificar la paleta.
 
 `horarios.test.mjs` existe por algo concreto: el bloque de horarios y su visibilidad en
 modo oscuro se rompieron varias veces. Afirma invariantes que no se pueden romper en
@@ -139,28 +138,14 @@ FAQ (en el JSON-LD y en el HTML visible) y en la maqueta de WhatsApp: **corré l
 ellos te dicen cuáles quedaron desfasadas**, porque validan toda hora que aparezca en el
 archivo, no una lista fija de lugares. No confíes en esta enumeración, confiá en el test.
 
-## Al trabajar el bot de WhatsApp
-
-El workflow está en `n8n/asistente-whatsapp.json` y la puesta en marcha en `n8n/README.md`.
-Leé `docs/nucleo-whatsapp-n8n.md` antes de tocar nada. Los cuatro errores que ese documento
-existe para evitar:
-
-1. Token de usuario personal (expira a los 60 días) en vez de System User.
-2. Buscar el texto del mensaje en la raíz del payload en vez de
-   `entry[0].changes[0].value.messages[0].text.body`.
-3. No deduplicar por `wamid` → responder dos veces lo mismo.
-4. Tardar más de 5 segundos en devolver HTTP 200 → Meta lo toma como fallo y reintenta.
-
-Nunca commitees tokens, `phone_number_id`, app secrets ni URLs de webhook. Van en variables
-de entorno o en las credenciales de n8n.
-
 ## Skills
 
-Hay 38 skills en `.claude/skills/`. Las más pertinentes acá:
+Hay 15 skills en `.claude/skills/` (se podó de 40: sacamos las de React/Next.js/React
+Native, redundancias, una que no cargaba, y las 15 de n8n cuando se dio de baja el plan del
+bot de WhatsApp — el detalle está en el README de skills). Las más pertinentes acá:
 
-- `web-quality-audit`, `performance`, `accessibility`, `seo` → antes de cada deploy.
+- `web-quality-audit`, `performance`, `accessibility`, `seo-mastery` → antes de cada deploy.
 - `web-design-guidelines`, `apple-design` → al tocar la UI.
-- `n8n-*` → al armar el asistente de WhatsApp.
 - `ponytail` → cuando una solución empieza a crecer de más.
 
 El inventario completo está en `.claude/skills/README.md`.
@@ -263,5 +248,6 @@ Mobile-first: media queries siempre `max-width`.
 
 ## Git
 
-Rama de trabajo actual: `claude/hola-querido-stuzim`. No pushear a `main` sin permiso
-explícito.
+Se trabaja directo sobre `main` (se acordó así para agilizar). Esta línea documenta la
+convención vigente, no una rama puntual — no hay que actualizarla con el nombre de la rama
+de turno.

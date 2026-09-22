@@ -205,8 +205,6 @@ Abrí Analytics todos los meses y mirá:
 
 **Fase 3 (3-6 meses):** Si ves en Search Console que buscan "fotocopias CABA" pero no aparezco, hacer SEO local (optimizar palabras clave, agregar contenido, backlinks).
 
-**Fase 4 (6+ meses):** Si el volumen de consultas sube mucho, considerar un bot de WhatsApp para responder automáticamente.
-
 ---
 
 **Resumen en una frase:** Crea Google Business Profile (para Maps), verifica en Search Console (para indexación), y agrega Analytics (para medir). En ese orden.
