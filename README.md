@@ -101,10 +101,10 @@ Cubren el parser del catálogo y el escapado del contenido que baja de Google Sh
 
 ## Catálogo de productos
 
-El mercadito puede alimentarse desde una hoja de Google Sheets publicada como CSV, con
-columnas `Categoria | Producto | Precio`. Está sin configurar todavía: la constante
-`SHEET_CSV_URL` en `src/index.html` tiene un placeholder, y mientras tanto la página muestra
-productos de ejemplo sin romperse.
+El mercadito se alimenta de una hoja de Google Sheets publicada como CSV, con columnas
+`Categoria | Producto | Precio`. Ya está conectado: `SHEET_CSV_URL` en `src/index.html`
+apunta a la hoja real. Si en algún momento el fetch falla, la página muestra productos de
+ejemplo sin romperse.
 
 Paso a paso en [`docs/catalogo-google-sheets.md`](docs/catalogo-google-sheets.md).
 
@@ -117,14 +117,14 @@ Lo que está hecho:
 - ✅ Landing responsive, con SEO local (JSON-LD, Open Graph, sitemap) y accesibilidad revisada
 - ✅ Catálogo dinámico desde Google Sheets, con tests
 - ✅ Deploy automático a GitHub Pages, con los tests como condición
+- ✅ **GitHub Pages activo** — el sitio está publicado y se redeploya solo en cada push a `main`
+- ✅ **Google Sheet del catálogo conectado**, con precios reales
 - ✅ Los documentos base pasados a Markdown
 - ✅ 15 skills instaladas para trabajar el proyecto con Claude Code
 
 Lo que sigue:
 
-- ⬜ **Activar GitHub Pages** (Settings → Pages → Source: GitHub Actions) — ver [`docs/deploy.md`](docs/deploy.md)
-- ⬜ **Conectar el Google Sheet** del catálogo y actualizar precios — ver [`docs/catalogo-google-sheets.md`](docs/catalogo-google-sheets.md)
-- ⬜ Fotos reales del local y los productos (y con eso, el `og:image`)
+- ⬜ Fotos reales del local y los productos (y con eso, el `og:image`) — hoy es un gráfico con el logo, no una foto
 - ⬜ Dominio propio
 - ⬜ Alta en Google Search Console y sincronizar el Google Business Profile
 
