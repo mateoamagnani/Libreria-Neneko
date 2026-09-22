@@ -6,7 +6,7 @@ dist/
 build/
 .vercel/
 
-# Entorno y secretos — nunca commitear tokens de Meta ni credenciales de n8n
+# Entorno y secretos
 .env
 .env.*
 !.env.example
