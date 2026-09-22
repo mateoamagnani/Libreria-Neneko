@@ -248,5 +248,6 @@ Mobile-first: media queries siempre `max-width`.
 
 ## Git
 
-Rama de trabajo actual: `claude/hola-querido-stuzim`. No pushear a `main` sin permiso
-explícito.
+Se trabaja directo sobre `main` (se acordó así para agilizar). Esta línea documenta la
+convención vigente, no una rama puntual — no hay que actualizarla con el nombre de la rama
+de turno.

@@ -15,15 +15,22 @@ lo demás está al servicio de eso.
 .
 ├── src/                            # Lo que se publica
 │   ├── index.html                  #   La landing, un solo archivo autocontenido
-│   ├── robots.txt
-│   └── sitemap.xml
+│   ├── 404.html, privacy.html      #   Página de error y política de privacidad
+│   ├── logo.png, og-preview.png    #   Favicon/logo y la imagen de Open Graph
+│   ├── robots.txt, sitemap.xml, llms.txt
 ├── test/                           # Tests (node --test, sin dependencias)
 ├── docs/
 │   ├── concepto-landing.md         # Qué es el sitio, datos del negocio, pendientes
+│   ├── fundamentos-marketing-web.md# Principios de conversión que sigue el sitio
 │   ├── catalogo-google-sheets.md   # Cómo conectar el catálogo a una hoja
 │   ├── plantilla-catalogo.csv      #   Plantilla lista para copiar
 │   ├── deploy.md                   # Cómo se publica y qué hacer después
-│   ├── fundamentos-marketing-web.md# Principios de conversión que sigue el sitio
+│   ├── google-setup-guia-paso-a-paso.md  # Guion para el setup con la dueña
+│   ├── analytics-setup.md          # Puesta en marcha de Google Analytics 4
+│   ├── legal-argentina.md          # Términos y condiciones, requisitos legales
+│   ├── roadmap-productivo.md       # Plan de mejoras por fases
+│   ├── apple-design-audit.md       # Auditoría de diseño contra las HIG de Apple
+│   ├── expansion-categorias.md     # Estrategia para agregar categorías nuevas
 │   └── fuentes/                    # PDFs originales de los que salen los docs
 ├── .github/workflows/              # Tests en cada push, deploy a Pages desde main
 └── .claude/
@@ -42,6 +49,17 @@ lo demás está al servicio de eso.
 
 Los PDFs originales quedaron en `docs/fuentes/` como respaldo; las versiones en Markdown
 son las que hay que leer y mantener.
+
+### Otros documentos de trabajo
+
+| Documento | Qué responde |
+|---|---|
+| [`docs/google-setup-guia-paso-a-paso.md`](docs/google-setup-guia-paso-a-paso.md) | Guion para hacer el setup de Google Business/Search Console/Analytics con la dueña en vivo. |
+| [`docs/analytics-setup.md`](docs/analytics-setup.md) | Cómo instalar Google Analytics 4 en el sitio. |
+| [`docs/legal-argentina.md`](docs/legal-argentina.md) | Qué requisitos legales aplican (Términos y Condiciones, etc.) para un sitio así en Argentina. |
+| [`docs/roadmap-productivo.md`](docs/roadmap-productivo.md) | Plan de mejoras por fases, de lo urgente a lo opcional. |
+| [`docs/apple-design-audit.md`](docs/apple-design-audit.md) | Auditoría de diseño del sitio contra las Human Interface Guidelines de Apple. |
+| [`docs/expansion-categorias.md`](docs/expansion-categorias.md) | Estrategia para agregar categorías de productos nuevas sin romper el diseño. |
 
 ---
 
