@@ -76,10 +76,15 @@ silencio:
 - **Ninguna hora escrita en la página contradice a `HORARIOS`.** No se valida una lista de
   lugares, sino toda hora que aparezca en el archivo: el FAQ llegó a declarar que el local
   abría 12:00 mientras el resto decía 11:30, y nadie lo vio.
-- **Los textos inversos llegan a AA sobre las dos bandas oscuras**, `--surface-inv` y
-  `--surface-inv-2`. Antes se comparaba solo contra la primera, y `--text-inv-2` quedaba en
-  3,88:1 sobre la segunda: 45 elementos por debajo del mínimo. El par que hay que afirmar
-  no es el documentado, es el peor de los reales.
+- **Los textos inversos llegan a AA sobre todas las bandas oscuras**, y la lista de bandas
+  **no está escrita en el test**: sale de buscar los tokens `--surface-inv*` en el CSS. Hubo
+  un tiempo en que fueron dos, `--surface-inv` y `--surface-inv-2`; se comparaba solo contra
+  la primera y `--text-inv-2` quedaba en 3,88:1 sobre la segunda, 45 elementos por debajo del
+  mínimo. El par que hay que afirmar no es el documentado, es el peor de los reales — y la
+  lista tampoco se escribe a mano, porque se desincroniza en los dos sentidos: sobra una que
+  se borró y el test explota, o falta una que se agregó y el test no la cubre, que era el bug
+  original. Hoy hay una sola banda: las cuatro secciones que usaban la segunda volvieron a
+  fondo claro, porque dos tonos navy quedaban desordenados.
 
 Es decir: **los tests leen el código de producción, no una copia.** Si movés esas funciones
 de lugar, los tests se rompen — que es justamente lo que tienen que hacer.

@@ -355,18 +355,34 @@ test('el texto secundario también llega a AA', () => {
   });
 });
 
-// Las bandas oscuras no son una sola: hay dos superficies, --surface-inv (la
-// barra, el pie) y --surface-inv-2, más clara, que es el fondo de Servicios,
-// Reseñas, Ubicación y Blog. Los tests de acá abajo comparaban solo contra la
-// primera, y por eso nadie vio que --text-inv-2 daba 3,88:1 sobre la segunda:
-// 45 elementos por debajo de AA en modo claro, con el token documentado como
-// "5,6:1" porque ese era el número contra la superficie equivocada.
+// Las bandas oscuras no son necesariamente una sola. Hubo un momento en que
+// fueron dos: --surface-inv (la barra, el pie) y --surface-inv-2, más clara,
+// que era el fondo de Servicios, Reseñas, Ubicación y Blog. Los tests de acá
+// abajo comparaban solo contra la primera, y por eso nadie vio que
+// --text-inv-2 daba 3,88:1 sobre la segunda: 45 elementos por debajo de AA en
+// modo claro, con el token documentado como "5,6:1" porque ese era el número
+// contra la superficie equivocada.
 //
 // La lección es que el par que hay que afirmar no es el documentado sino el
-// peor de los reales. Este test recorre el producto completo de textos por
-// superficies, así que agregar una superficie oscura nueva obliga a que todos
-// los textos sigan siendo legibles sobre ella.
-const SUPERFICIES_OSCURAS = ['--surface-inv', '--surface-inv-2'];
+// peor de los reales — y que la lista de superficies tampoco se escribe a
+// mano, porque entonces se desincroniza del CSS en cualquiera de los dos
+// sentidos: sobra una que se borró (y el test explota) o falta una que se
+// agregó (y el test no la cubre, que es el bug original).
+//
+// Así que las superficies se descubren del CSS: todo token --surface-inv*
+// cuenta. Hoy hay una sola, porque las cuatro secciones volvieron a fondo
+// claro y dos tonos navy quedaban desordenados. Si mañana aparece una segunda,
+// queda cubierta sin tocar este archivo.
+const SUPERFICIES_OSCURAS = Object.keys(rootClaro)
+  .filter((t) => /^--surface-inv/.test(t))
+  .sort();
+
+test('el CSS tiene al menos una banda oscura y el test la encontró', () => {
+  // Si esto falla, o se renombraron los tokens o el parseo se rompió: sin
+  // superficies, los dos tests de abajo pasarían recorriendo una lista vacía.
+  assert.ok(SUPERFICIES_OSCURAS.length >= 1,
+    'no encontré ningún token --surface-inv* en :root');
+});
 
 test('los textos inversos llegan a AA sobre TODAS las bandas oscuras, no solo una', () => {
   [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
@@ -381,21 +397,28 @@ test('los textos inversos llegan a AA sobre TODAS las bandas oscuras, no solo un
 });
 
 // El acento carga el puntaje de Google, las estrellas y los hovers del pie.
-// Sobre --surface-inv llega a AA en los dos modos y eso se exige. Sobre
-// --surface-inv-2 en modo claro da 3,81:1 y no llega: se decidió no tocarlo
-// para no mover el color de marca, sabiendo que las estrellas son aria-hidden
-// y que el "4,4" también va en texto. El piso de 3:1 deja esa decisión por
-// escrito y frena que empeore; si algún día se aclara el acento, subir esto
-// a 4.5 y borrar el comentario.
+// Sobre --surface-inv, la banda principal, llega a AA en los dos modos y eso
+// se exige.
+//
+// Sobre cualquier banda secundaria el piso es 3:1, no 4,5:1. Viene de cuando
+// existía --surface-inv-2: ahí el acento daba 3,81:1 en modo claro y se
+// decidió no tocarlo para no mover el color de marca, sabiendo que las
+// estrellas son aria-hidden y que el "4,4" también va en texto. El piso más
+// bajo deja esa decisión por escrito y frena que empeore. Hoy no hay banda
+// secundaria, así que ese bucle no recorre nada; si vuelve a haber una, la
+// decisión ya está tomada. Si algún día se aclara el acento, subir el piso
+// a 4.5 y borrar este párrafo.
 test('el acento se lee sobre la banda oscura, en los dos modos', () => {
   [['claro', rootClaro], ['oscuro', rootOscuro]].forEach(([modo, t]) => {
     const ratio = contraste(t['--brand-bright'], t['--surface-inv']);
     assert.ok(ratio >= 4.5,
       `--brand-bright sobre --surface-inv en modo ${modo}: ${ratio.toFixed(2)}:1`);
 
-    const sobreLaOtra = contraste(t['--brand-bright'], t['--surface-inv-2']);
-    assert.ok(sobreLaOtra >= 3,
-      `--brand-bright sobre --surface-inv-2 en modo ${modo}: ${sobreLaOtra.toFixed(2)}:1, el piso es 3:1`);
+    SUPERFICIES_OSCURAS.filter((s) => s !== '--surface-inv').forEach((superficie) => {
+      const sobreLaOtra = contraste(t['--brand-bright'], t[superficie]);
+      assert.ok(sobreLaOtra >= 3,
+        `--brand-bright sobre ${superficie} en modo ${modo}: ${sobreLaOtra.toFixed(2)}:1, el piso es 3:1`);
+    });
   });
 });
 
