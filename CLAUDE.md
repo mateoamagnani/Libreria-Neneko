@@ -83,8 +83,7 @@ silencio:
   mínimo. El par que hay que afirmar no es el documentado, es el peor de los reales — y la
   lista tampoco se escribe a mano, porque se desincroniza en los dos sentidos: sobra una que
   se borró y el test explota, o falta una que se agregó y el test no la cubre, que era el bug
-  original. Hoy hay una sola banda: las cuatro secciones que usaban la segunda volvieron a
-  fondo claro, porque dos tonos navy quedaban desordenados.
+  original. Hoy son dos otra vez; si alguna vez vuelven a ser una, el test se adapta solo.
 
 Es decir: **los tests leen el código de producción, no una copia.** Si movés esas funciones
 de lugar, los tests se rompen — que es justamente lo que tienen que hacer.
