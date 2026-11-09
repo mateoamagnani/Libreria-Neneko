@@ -42,8 +42,8 @@ es **un mensaje de WhatsApp**, no una venta online: el cliente pide y retira en 
    En mobile el orden es headline → propuesta → CTA → confianza → maqueta: lo primero que
    se lee tiene que ser qué es el negocio, no una captura de chat.
 3. **Franja de servicios** — las cuatro cosas que hace el local, en una línea.
-4. **Catálogo** (`#productos`) — grilla agrupada por categoría, alimentada desde Google
-   Sheets con respaldo en el HTML.
+4. **Catálogo** (`#productos`) — grilla agrupada por categoría, alimentada desde la base
+   con respaldo en el HTML.
 5. **Reseñas** (`#resenas`) — banda oscura con el puntaje de Google y tres reseñas.
 6. **Ubicación** (`#ubicacion`) — dirección, teléfono, tabla de horarios y mapa embebido.
 7. **Footer** — navegación, contacto y horario.
@@ -110,18 +110,28 @@ Fuera del JS quedan dos lugares que hay que actualizar a mano si cambia el horar
 
 ---
 
-## Catálogo dinámico desde Google Sheets
+## Catálogo dinámico desde la base
 
-El bloque `#mercaditoDynamic` se alimenta de una hoja publicada como CSV. Paso a paso en
-[`catalogo-google-sheets.md`](./catalogo-google-sheets.md).
+El bloque `#mercaditoDynamic` se alimenta de `/api/productos`, que lee la tabla `productos`
+de Cloudflare D1. La dueña los carga desde el panel (`src/admin.html`); el esquema está en
+[`db/schema.sql`](../db/schema.sql) y la puesta en marcha en
+[`cloudflare-setup.md`](./cloudflare-setup.md).
 
-Columnas: `Categoria | Producto | Precio | Detalle` (la cuarta es opcional; la fila de
-encabezado se detecta sola). El parser soporta comas y saltos de línea dentro de un campo
-si va entre comillas. Todo lo que viene de la hoja se escapa antes de entrar al DOM.
+Campos: `categoria | subcategoria | nombre | precio | detalle | imagen | keywords`, más
+`seccion` (el mercadito o la carta de servicios), `orden` y `activo`. Todo lo que viene de
+la base se escapa antes de entrar al DOM.
 
-Si el Sheet no responde o tarda más de 8 segundos, quedan las tarjetas de respaldo del
+El precio se guarda como **texto**, no como número: los datos reales son `$ 100 c/u`,
+`$ 1.000` y algunos vacíos. Pasarlo a numérico obligaría a inventar un campo "unidad" y a
+decidir qué significa un precio ausente.
+
+Si la API no responde o tarda más de 8 segundos, quedan las tarjetas de respaldo del
 HTML. Esas tarjetas dicen "Consultar" en vez de un precio: un número desactualizado que
 después nadie respeta en el mostrador es peor que no mostrarlo.
+
+Hasta noviembre de 2026 los productos salían de una hoja de Google Sheets publicada como
+CSV. Se cambió para que la dueña tuviera un solo lugar donde cargar todo, con fotos subidas
+desde el teléfono en vez de URLs pegadas a mano.
 
 ---
 

@@ -10,9 +10,9 @@ Está dividido en **fases**. Hacé lo que se pueda en cada una, en orden.
 
 ## ✅ Fase 0: Ya está hecho
 
-- [x] Sitio web en vivo (GitHub Pages)
+- [x] Sitio web en vivo (GitHub Pages; migrando a Cloudflare Pages)
 - [x] Logo integrado
-- [x] Catálogo dinámico desde Google Sheets
+- [x] Catálogo dinámico desde la base, cargado por la dueña desde el panel
 - [x] Iconos semánticos
 - [x] Móvil optimizado
 - [x] WhatsApp CTA principal
