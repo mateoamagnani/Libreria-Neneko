@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · Librería Neneko</title>
+
+<!--
+  ============================================================
+  PANEL DE CARGA DE PRODUCTOS
+
+  Quién entra: lo decide Cloudflare Access, que corta esta ruta en el
+  borde antes de que se sirva el archivo. Acá no hay ni pantalla de
+  login ni contraseña: no habría forma honesta de hacerla, porque este
+  archivo se descarga entero al navegador.
+
+  Los pedidos a /api/* viajan con la cookie de Access y el Worker
+  vuelve a verificarla. O sea que la protección no depende de que esta
+  página se porte bien.
+
+  noindex porque no tiene que aparecer en Google.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS
+
+   Son los mismos de src/index.html, copiados tal cual. El panel tiene
+   que sentirse parte del sitio, no una herramienta ajena. Ningún
+   componente de acá abajo escribe un color literal: si el par del modo
+   oscuro tiene contraste, todo lo que lo usa lo tiene.
+   ============================================================ */
+:root{
+  --bg:#F8F9FA; --surface:#FFFFFF; --surface-2:#E9ECEF;
+  --surface-inv:#243C54; --surface-inv-2:#34556B;
+  --border:#CBD3DA; --border-strong:#A6B1BA;
+  --text:#333333; --text-2:#5A6169; --text-3:#696F77;
+  --text-inv:#F2F5F6; --text-inv-2:#BAC6CE;
+  --brand:#3F7575; --brand-bright:#6BC2C2;
+  --ok:#17795F; --closed:#A8452A;
+  --btn-bg:#6BC2C2; --btn-bg-hover:#56A4A4; --btn-text:#2B2B2B;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:64px;
+  --r-sm:8px; --r-md:12px; --r-lg:18px; --r-full:999px;
+  --shadow-sm: 0 1px 2px rgba(28,37,54,.06), 0 2px 8px rgba(28,37,54,.05);
+  --shadow-md: 0 4px 12px rgba(28,37,54,.07), 0 12px 32px -12px rgba(28,37,54,.16);
+  --maxw:860px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161B; --surface:#1A1F26; --surface-2:#232932;
+    --surface-inv:#16283A; --surface-inv-2:#25394D;
+    --border:#39434F; --border-strong:#4E5B6C;
+    --text:#E8ECEF; --text-2:#B0B7BE; --text-3:#8A9199;
+    --text-inv:#E8ECEF; --text-inv-2:#9AA5B3;
+    --brand:#6BC2C2; --brand-bright:#8AD3D3;
+    --ok:#4ECB93; --closed:#F0846A;
+    /* Se repiten con el mismo valor, no por descuido: el turquesa con
+       texto oscuro ya cumple AA en los dos modos, y la regla del
+       proyecto es que todo color de :root tenga su par acá. Un token
+       sin par es el bug que rompió el modo oscuro tres veces. */
+    --btn-bg:#6BC2C2; --btn-bg-hover:#56A4A4; --btn-text:#2B2B2B;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 2px 8px rgba(0,0,0,.25);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 12px 32px -12px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+}
+
+*{ box-sizing:border-box; }
+
+/* [hidden] tiene que ganarle a cualquier display de componente.
+   Sin esto, .btn{display:inline-flex} y .foto-previa{display:block}
+   le pasan por encima por especificidad, y los botones marcados como
+   ocultos se ven igual: "Quitar la foto" aparecía sin haber foto, y la
+   vista previa se dibujaba rota. Es un bug que no se ve leyendo el
+   código, solo abriendo la página. */
+[hidden]{ display:none !important; }
+
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans', system-ui, sans-serif;
+  font-size:17px; line-height:1.6;
+}
+h1,h2,h3{
+  font-family:'Bricolage Grotesque', sans-serif;
+  letter-spacing:-.02em; line-height:1.1; margin:0;
+}
+:focus-visible{ outline:2.5px solid var(--brand); outline-offset:3px; border-radius:var(--r-sm); }
+
+.container{ max-width:var(--maxw); margin:0 auto; padding-inline:var(--s4); }
+
+/* --- Barra superior --- */
+.barra{
+  background:var(--surface-inv); color:var(--text-inv);
+  padding-block:var(--s4); position:sticky; top:0; z-index:20;
+  box-shadow:var(--shadow-sm);
+}
+.barra .container{ display:flex; align-items:center; justify-content:space-between; gap:var(--s3); }
+.barra h1{ font-size:1.25rem; font-weight:700; }
+.barra .quien{
+  font-family:'IBM Plex Mono', monospace; font-size:.75rem;
+  color:var(--text-inv-2); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:45vw;
+}
+
+/* --- Solapas de sección --- */
+.solapas{
+  display:flex; gap:var(--s2); padding-block:var(--s4);
+  border-bottom:1px solid var(--border); margin-bottom:var(--s5);
+}
+.solapa{
+  flex:1; min-height:44px; padding:var(--s2) var(--s4);
+  border:1.5px solid var(--border); border-radius:var(--r-full);
+  background:var(--surface); color:var(--text-2);
+  font:inherit; font-weight:600; font-size:.9375rem; cursor:pointer;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+}
+.solapa:hover{ border-color:var(--border-strong); }
+.solapa[aria-selected="true"]{
+  background:var(--brand); border-color:var(--brand); color:var(--surface);
+}
+
+/* --- Botones --- */
+.btn{
+  min-height:44px; padding:var(--s2) var(--s5);
+  border-radius:var(--r-full); border:1.5px solid transparent;
+  font:inherit; font-weight:600; font-size:.9375rem; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:var(--s2);
+  transition:background .2s cubic-bezier(.4,0,.2,1), border-color .2s;
+}
+.btn-primario{ background:var(--btn-bg); color:var(--btn-text); }
+.btn-primario:hover{ background:var(--btn-bg-hover); }
+.btn-secundario{ background:var(--surface); color:var(--text); border-color:var(--border-strong); }
+.btn-secundario:hover{ background:var(--surface-2); }
+.btn-peligro{ background:transparent; color:var(--closed); border-color:var(--closed); }
+.btn-peligro:hover{ background:color-mix(in srgb, var(--closed) 10%, transparent); }
+.btn:disabled{ opacity:.55; cursor:not-allowed; }
+.btn-ancho{ width:100%; }
+
+/* --- Tarjeta de producto --- */
+.lista{ display:flex; flex-direction:column; gap:var(--s5); padding-bottom:var(--s8); }
+.grupo h2{
+  font-size:1rem; font-weight:600; color:var(--text-2);
+  text-transform:uppercase; letter-spacing:.04em;
+  font-family:'IBM Plex Mono', monospace;
+  margin-bottom:var(--s3); padding-bottom:var(--s2);
+  border-bottom:1px solid var(--border);
+}
+.tarjetas{ display:flex; flex-direction:column; gap:var(--s3); }
+.tarjeta{
+  display:flex; gap:var(--s3); align-items:flex-start; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:var(--s3); box-shadow:var(--shadow-sm);
+}
+.tarjeta[data-oculto="true"]{ opacity:.6; border-style:dashed; }
+.miniatura{
+  width:64px; height:64px; flex-shrink:0;
+  border-radius:var(--r-sm); background:var(--surface-2);
+  object-fit:cover; display:grid; place-items:center;
+  color:var(--text-3); font-size:.6875rem; text-align:center;
+}
+img.miniatura{ display:block; }
+.datos{ flex:1; min-width:min(200px, 100%); }
+.datos .nombre{ font-weight:600; display:block; }
+.datos .precio{ font-family:'IBM Plex Mono', monospace; font-size:.875rem; color:var(--brand); }
+.datos .detalle{ font-size:.875rem; color:var(--text-2); display:block; }
+.etiqueta{
+  display:inline-block; font-size:.6875rem; font-weight:600;
+  font-family:'IBM Plex Mono', monospace; text-transform:uppercase;
+  padding:2px var(--s2); border-radius:var(--r-full); margin-top:var(--s1);
+}
+.etiqueta[data-estado="oculto"]{
+  color:var(--closed); border:1px solid var(--closed);
+}
+/* En fila, no apilados: tres botones de 44px uno encima del otro
+   estiraban la tarjeta a 150px para 60px de contenido, y en el
+   teléfono eso es mucho scroll de más. Si no entran al lado, el
+   flex-wrap de la tarjeta los baja a su propio renglón. */
+.acciones{ display:flex; flex-direction:row; gap:var(--s2); margin-left:auto; }
+.icono-btn{
+  width:44px; height:44px; border-radius:var(--r-sm);
+  border:1.5px solid var(--border); background:var(--surface);
+  color:var(--text-2); cursor:pointer; display:grid; place-items:center;
+  transition:all .2s;
+}
+.icono-btn svg{ width:19px; height:19px; display:block; }
+.icono-btn:hover{ border-color:var(--border-strong); color:var(--text); }
+.icono-btn[data-accion="borrar"]{ color:var(--closed); }
+
+/* --- Formulario --- */
+.panel-form{
+  position:fixed; inset:0; z-index:30;
+  background:var(--bg); overflow-y:auto;
+  /* Holgado a propósito: la barra de Guardar es sticky al pie y flota
+     sobre el contenido. Sin este colchón, el último campo queda tapado
+     aunque scrollees hasta el final. */
+  padding-bottom:var(--s8);
+}
+.panel-form[hidden]{ display:none; }
+.form-barra{
+  position:sticky; top:0; background:var(--surface);
+  border-bottom:1px solid var(--border); padding-block:var(--s3);
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
+  z-index:1;
+}
+.campo{ margin-bottom:var(--s4); }
+.campo label{
+  display:block; font-weight:600; font-size:.875rem;
+  margin-bottom:var(--s1);
+}
+.campo .ayuda{ font-size:.8125rem; color:var(--text-3); margin-bottom:var(--s2); }
+.campo input[type="text"], .campo textarea, .campo select{
+  width:100%; min-height:44px; padding:var(--s2) var(--s3);
+  border:1.5px solid var(--border); border-radius:var(--r-sm);
+  background:var(--surface); color:var(--text);
+  font:inherit; font-size:1rem;
+}
+.campo textarea{ min-height:76px; resize:vertical; }
+.campo input:focus, .campo textarea:focus, .campo select:focus{
+  border-color:var(--brand); outline:none;
+}
+.fila-doble{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s3); }
+.interruptor{
+  display:flex; align-items:center; gap:var(--s3);
+  min-height:44px; cursor:pointer;
+}
+.interruptor input{ width:22px; height:22px; accent-color:var(--brand); cursor:pointer; }
+
+/* --- Foto --- */
+.foto-zona{
+  border:1.5px dashed var(--border-strong); border-radius:var(--r-md);
+  padding:var(--s4); text-align:center; background:var(--surface-2);
+}
+.foto-previa{
+  max-width:160px; max-height:160px; border-radius:var(--r-sm);
+  display:block; margin:0 auto var(--s3); object-fit:cover;
+}
+
+/* --- Avisos --- */
+.aviso{
+  padding:var(--s3) var(--s4); border-radius:var(--r-md);
+  border:1.5px solid; margin-bottom:var(--s4); font-size:.9375rem;
+}
+.aviso[data-tipo="error"]{ color:var(--closed); border-color:var(--closed); }
+.aviso[data-tipo="ok"]{ color:var(--ok); border-color:var(--ok); }
+.aviso ul{ margin:var(--s2) 0 0; padding-left:var(--s5); }
+
+.vacio{
+  text-align:center; padding:var(--s8) var(--s4); color:var(--text-2);
+}
+.cargando{ text-align:center; padding:var(--s8); color:var(--text-3); }
+
+/* Barra de guardado fija: en el teléfono el formulario es largo y el
+   botón quedaba fuera de alcance al final de todo. */
+.form-pie{
+  position:sticky; bottom:0; background:var(--surface);
+  border-top:1px solid var(--border);
+  padding:var(--s3) 0; display:flex; gap:var(--s3);
+}
+.form-pie .btn{ flex:1; }
+
+@media (min-width:640px){
+  body{ font-size:16px; }
+  .panel-form{ padding:0; }
+}
+@media (max-width:420px){
+  .fila-doble{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="barra">
+  <div class="container">
+    <h1>Panel · Neneko</h1>
+    <span class="quien" id="quien"></span>
+  </div>
+</header>
+
+<main class="container">
+  <div class="solapas" role="tablist" aria-label="Secciones del catálogo">
+    <button class="solapa" role="tab" data-seccion="novedades" aria-selected="true">Mercadito</button>
+    <button class="solapa" role="tab" data-seccion="menu" aria-selected="false">Servicios</button>
+  </div>
+
+  <div id="aviso-global"></div>
+
+  <button class="btn btn-primario btn-ancho" id="btn-nuevo" style="margin-bottom:var(--s5)">
+    + Agregar producto
+  </button>
+
+  <div id="contenido" class="cargando">Cargando el catálogo…</div>
+</main>
+
+
+<!-- Formulario de alta / edición -->
+<section class="panel-form" id="formulario" hidden aria-label="Editar producto">
+  <div class="form-barra">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:var(--s3);width:100%">
+      <h2 id="form-titulo" style="font-size:1.125rem">Nuevo producto</h2>
+      <button class="icono-btn" id="btn-cerrar" aria-label="Cerrar sin guardar">✕</button>
+    </div>
+  </div>
+
+  <form class="container" id="form" style="padding-top:var(--s5)" novalidate>
+    <div id="form-errores"></div>
+
+    <div class="campo">
+      <label for="f-nombre">Nombre del producto</label>
+      <input type="text" id="f-nombre" name="nombre" maxlength="120" required
+             autocomplete="off" placeholder="Cuaderno A4 rayado">
+    </div>
+
+    <div class="campo">
+      <label for="f-categoria">Categoría</label>
+      <p class="ayuda">Los productos se agrupan por categoría en la página. Si escribís una
+        que ya existe, se suma a ese grupo.</p>
+      <input type="text" id="f-categoria" name="categoria" maxlength="80" required
+             list="categorias-existentes" autocomplete="off"
+             placeholder="Útiles escolares y de oficina">
+      <datalist id="categorias-existentes"></datalist>
+    </div>
+
+    <div class="fila-doble">
+      <div class="campo">
+        <label for="f-precio">Precio</label>
+        <p class="ayuda">Como quieras que se vea.</p>
+        <input type="text" id="f-precio" name="precio" maxlength="40"
+               autocomplete="off" placeholder="$ 3.000">
+      </div>
+      <div class="campo">
+        <label for="f-orden">Orden</label>
+        <p class="ayuda">Más chico, más arriba.</p>
+        <input type="text" id="f-orden" name="orden" inputmode="numeric"
+               autocomplete="off" value="0">
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="f-detalle">Detalle</label>
+      <p class="ayuda">Una línea corta debajo del nombre. Opcional.</p>
+      <input type="text" id="f-detalle" name="detalle" maxlength="200"
+             autocomplete="off" placeholder="Tapa dura">
+    </div>
+
+    <div class="campo">
+      <label for="f-subcategoria">Subcategoría</label>
+      <p class="ayuda">Opcional.</p>
+      <input type="text" id="f-subcategoria" name="subcategoria" maxlength="80" autocomplete="off">
+    </div>
+
+    <div class="campo">
+      <label>Foto</label>
+      <p class="ayuda">Cuadrada queda mejor: la tarjeta recorta lo que sobra.
+        Hasta 500 KB, en JPG, PNG o WebP.</p>
+      <div class="foto-zona">
+        <img class="foto-previa" id="f-previa" alt="" hidden>
+        <p id="f-sin-foto" style="color:var(--text-3);font-size:.875rem;margin:0 0 var(--s3)">
+          Todavía no tiene foto. Se va a ver con un ícono.
+        </p>
+        <input type="file" id="f-archivo" accept="image/jpeg,image/png,image/webp" hidden>
+        <button type="button" class="btn btn-secundario" id="btn-foto">Elegir una foto</button>
+        <button type="button" class="btn btn-peligro" id="btn-quitar-foto" hidden
+                style="margin-top:var(--s2)">Quitar la foto</button>
+      </div>
+      <input type="hidden" id="f-imagen" name="imagen">
+    </div>
+
+    <div class="campo">
+      <label for="f-keywords">Palabras para el buscador</label>
+      <p class="ayuda">Separadas por coma. Ayudan a que el producto aparezca
+        cuando alguien lo busca en la página. Opcional.</p>
+      <input type="text" id="f-keywords" name="keywords" maxlength="300"
+             autocomplete="off" placeholder="cuaderno, escolar, abc">
+    </div>
+
+    <div class="campo">
+      <label class="interruptor">
+        <input type="checkbox" id="f-activo" checked>
+        <span>Mostrar en la página</span>
+      </label>
+      <p class="ayuda">Si lo destildás, el producto se guarda pero no se ve.
+        Sirve para algo que no tenés en stock.</p>
+    </div>
+
+    <div class="form-pie">
+      <button type="button" class="btn btn-secundario" id="btn-cancelar">Cancelar</button>
+      <button type="submit" class="btn btn-primario" id="btn-guardar">Guardar</button>
+    </div>
+  </form>
+</section>
+
+
+<script>
+(() => {
+  'use strict';
+
+  // ============================================================
+  // Estado
+  //
+  // Una sola fuente: todo lo que se ve sale de acá y cada cambio
+  // vuelve a dibujar. Es más barato que sincronizar el DOM a mano y
+  // evita la clase de bug en que la pantalla dice una cosa y el
+  // servidor tiene otra.
+  // ============================================================
+  const estado = {
+    seccion: 'novedades',
+    productos: [],
+    editando: null,   // null = cerrado; {} = alta; {id,...} = edición
+    cargando: true,
+  };
+
+  const $ = (sel) => document.querySelector(sel);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
+    (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+  // ============================================================
+  // Hablar con la API
+  //
+  // Los pedidos van con la cookie de Access (same-origin, va sola) y
+  // el Worker la verifica. Un 403 acá significa que la sesión venció:
+  // recargar manda de nuevo a la pantalla de Access.
+  // ============================================================
+  async function api(ruta, opciones = {}) {
+    const res = await fetch(ruta, opciones);
+
+    if (res.status === 403) {
+      throw new Error('Se cerró la sesión. Recargá la página para volver a entrar.');
+    }
+
+    let datos = null;
+    try { datos = await res.json(); } catch { /* respuesta sin cuerpo */ }
+
+    if (!res.ok) {
+      const err = new Error(datos?.error || `Algo falló (${res.status}).`);
+      err.detalles = datos?.detalles;
+      throw err;
+    }
+    return datos;
+  }
+
+  function avisar(mensaje, tipo = 'error', detalles) {
+    const caja = $('#aviso-global');
+    if (!mensaje) { caja.innerHTML = ''; return; }
+    caja.innerHTML = `<div class="aviso" data-tipo="${tipo}" role="alert">${esc(mensaje)}${
+      detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''
+    }</div>`;
+    caja.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ============================================================
+  // Cargar y dibujar
+  // ============================================================
+  async function cargar() {
+    estado.cargando = true;
+    dibujar();
+    try {
+      const { productos } = await api('/api/productos?todo=1');
+      estado.productos = productos || [];
+      avisar(null);
+    } catch (e) {
+      estado.productos = [];
+      avisar(e.message);
+    } finally {
+      estado.cargando = false;
+      dibujar();
+    }
+  }
+
+  function dibujar() {
+    const cont = $('#contenido');
+
+    if (estado.cargando) {
+      cont.className = 'cargando';
+      cont.textContent = 'Cargando el catálogo…';
+      return;
+    }
+
+    const delSeccion = estado.productos
+      .filter((p) => p.seccion === estado.seccion)
+      .sort((a, b) =>
+        a.categoria.localeCompare(b.categoria, 'es') ||
+        (a.orden - b.orden) ||
+        a.nombre.localeCompare(b.nombre, 'es'));
+
+    if (!delSeccion.length) {
+      cont.className = 'vacio';
+      cont.innerHTML = `<p>Todavía no hay nada acá.</p>
+        <p style="font-size:.9375rem">Tocá <strong>Agregar producto</strong> para empezar.</p>`;
+      return;
+    }
+
+    // Agrupadas por categoría, que es como se ven en la página.
+    const grupos = new Map();
+    for (const p of delSeccion) {
+      if (!grupos.has(p.categoria)) grupos.set(p.categoria, []);
+      grupos.get(p.categoria).push(p);
+    }
+
+    cont.className = 'lista';
+    cont.innerHTML = [...grupos].map(([categoria, items]) => `
+      <section class="grupo">
+        <h2>${esc(categoria)} <span style="opacity:.6">· ${items.length}</span></h2>
+        <div class="tarjetas">
+          ${items.map((p) => tarjeta(p)).join('')}
+        </div>
+      </section>
+    `).join('');
+
+    actualizarCategorias();
+  }
+
+  // ============================================================
+  // Iconos
+  //
+  // SVG inline, no emoji. El resto del sitio los hace así, y además un
+  // emoji lo dibuja cada sistema a su manera: el lápiz salía con cara
+  // de clip, y el tacho en color aunque el botón sea de un solo tono.
+  // ============================================================
+  const ICONO = {
+    editar: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+    ver: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+    oculto: '<path d="m3 3 18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.2 4.2"/>' +
+            '<path d="M9.9 5.2A10 10 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.5 3.4"/>' +
+            '<path d="M6.6 6.6A18 18 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 3.4-.6"/>',
+    borrar: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>',
+  };
+
+  const svg = (nombre) =>
+    `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONO[nombre]}</svg>`;
+
+  function tarjeta(p) {
+    const oculto = !p.activo;
+    const miniatura = p.imagen
+      ? `<img class="miniatura" src="${esc(p.imagen)}" alt="" loading="lazy"
+              onerror="this.replaceWith(Object.assign(document.createElement('div'),
+                       {className:'miniatura',textContent:'sin foto'}))">`
+      : `<div class="miniatura">sin foto</div>`;
+
+    return `
+      <article class="tarjeta" data-oculto="${oculto}">
+        ${miniatura}
+        <div class="datos">
+          <span class="nombre">${esc(p.nombre)}</span>
+          ${p.precio ? `<span class="precio">${esc(p.precio)}</span>` : ''}
+          ${p.detalle ? `<span class="detalle">${esc(p.detalle)}</span>` : ''}
+          ${oculto ? '<span class="etiqueta" data-estado="oculto">No se ve</span>' : ''}
+        </div>
+        <div class="acciones">
+          <button class="icono-btn" data-accion="editar" data-id="${esc(p.id)}"
+                  aria-label="Editar ${esc(p.nombre)}">${svg('editar')}</button>
+          <button class="icono-btn" data-accion="visibilidad" data-id="${esc(p.id)}"
+                  aria-label="${oculto ? 'Mostrar' : 'Ocultar'} ${esc(p.nombre)}"
+                  title="${oculto ? 'Mostrar en la página' : 'Ocultar de la página'}"
+                  >${svg(oculto ? 'oculto' : 'ver')}</button>
+          <button class="icono-btn" data-accion="borrar" data-id="${esc(p.id)}"
+                  aria-label="Borrar ${esc(p.nombre)}">${svg('borrar')}</button>
+        </div>
+      </article>`;
+  }
+
+  /** Las categorías que ya existen, para sugerirlas y no multiplicar variantes. */
+  function actualizarCategorias() {
+    const nombres = [...new Set(estado.productos.map((p) => p.categoria))].sort();
+    $('#categorias-existentes').innerHTML =
+      nombres.map((c) => `<option value="${esc(c)}">`).join('');
+  }
+
+  // ============================================================
+  // Formulario
+  // ============================================================
+  function abrirFormulario(producto) {
+    estado.editando = producto || {};
+    const p = estado.editando;
+    const esNuevo = !p.id;
+
+    $('#form-titulo').textContent = esNuevo ? 'Nuevo producto' : 'Editar producto';
+    $('#form-errores').innerHTML = '';
+    $('#f-nombre').value = p.nombre || '';
+    $('#f-categoria').value = p.categoria || '';
+    $('#f-subcategoria').value = p.subcategoria || '';
+    $('#f-precio').value = p.precio || '';
+    $('#f-detalle').value = p.detalle || '';
+    $('#f-keywords').value = p.keywords || '';
+    $('#f-orden').value = p.orden ?? 0;
+    $('#f-activo').checked = esNuevo ? true : !!p.activo;
+    ponerFoto(p.imagen || '');
+
+    $('#formulario').hidden = false;
+    document.body.style.overflow = 'hidden';
+    $('#f-nombre').focus();
+  }
+
+  function cerrarFormulario() {
+    estado.editando = null;
+    $('#formulario').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function ponerFoto(url) {
+    $('#f-imagen').value = url;
+    const previa = $('#f-previa');
+    if (url) {
+      previa.src = url;
+      previa.hidden = false;
+      $('#f-sin-foto').hidden = true;
+      $('#btn-quitar-foto').hidden = false;
+      $('#btn-foto').textContent = 'Cambiar la foto';
+    } else {
+      previa.removeAttribute('src');
+      previa.hidden = true;
+      $('#f-sin-foto').hidden = false;
+      $('#btn-quitar-foto').hidden = true;
+      $('#btn-foto').textContent = 'Elegir una foto';
+    }
+  }
+
+  function errorEnFormulario(mensaje, detalles) {
+    $('#form-errores').innerHTML = mensaje
+      ? `<div class="aviso" data-tipo="error" role="alert">${esc(mensaje)}${
+          detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''
+        }</div>`
+      : '';
+    if (mensaje) $('#form-errores').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ============================================================
+  // Subir la foto
+  //
+  // El Worker también valida tamaño y formato, pero chequear acá
+  // primero le ahorra a la dueña subir medio megabyte por una red de
+  // celular para que recién entonces le digan que no. El mensaje es el
+  // mismo en los dos lados.
+  // ============================================================
+  const MAX_BYTES = 500 * 1024;
+  const MIN_LADO = 200;
+
+  async function medir(archivo) {
+    try {
+      const bitmap = await createImageBitmap(archivo);
+      const medidas = { ancho: bitmap.width, alto: bitmap.height };
+      bitmap.close?.();
+      return medidas;
+    } catch {
+      return null; // si no se puede leer, que decida el servidor
+    }
+  }
+
+  async function subirFoto(archivo) {
+    if (archivo.size > MAX_BYTES) {
+      throw new Error(
+        `La foto pesa ${Math.round(archivo.size / 1024)} KB y el máximo es 500 KB. ` +
+        'Sacale calidad o achicala antes de subirla: una foto muy pesada hace que ' +
+        'la página tarde en cargar en el celular.');
+    }
+
+    const medidas = await medir(archivo);
+    if (medidas && (medidas.ancho < MIN_LADO || medidas.alto < MIN_LADO)) {
+      throw new Error(
+        `La foto es de ${medidas.ancho}×${medidas.alto} y queda pixelada. ` +
+        `Tiene que medir al menos ${MIN_LADO}×${MIN_LADO}.`);
+    }
+
+    const form = new FormData();
+    form.set('archivo', archivo);
+    const { url } = await api('/api/imagenes', { method: 'POST', body: form });
+    return url;
+  }
+
+  // ============================================================
+  // Guardar
+  // ============================================================
+  async function guardar(evento) {
+    evento.preventDefault();
+    const boton = $('#btn-guardar');
+    boton.disabled = true;
+    boton.textContent = 'Guardando…';
+    errorEnFormulario(null);
+
+    const orden = Number($('#f-orden').value.trim() || 0);
+    const cuerpo = {
+      seccion: estado.seccion,
+      nombre: $('#f-nombre').value,
+      categoria: $('#f-categoria').value,
+      subcategoria: $('#f-subcategoria').value,
+      precio: $('#f-precio').value,
+      detalle: $('#f-detalle').value,
+      keywords: $('#f-keywords').value,
+      imagen: $('#f-imagen').value,
+      orden: Number.isInteger(orden) ? orden : 0,
+      activo: $('#f-activo').checked,
+    };
+
+    const id = estado.editando?.id;
+
+    try {
+      await api(id ? `/api/productos/${encodeURIComponent(id)}` : '/api/productos', {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(cuerpo),
+      });
+      cerrarFormulario();
+      await cargar();
+      avisar(id ? 'Producto guardado.' : 'Producto agregado.', 'ok');
+    } catch (e) {
+      errorEnFormulario(e.message, e.detalles);
+    } finally {
+      boton.disabled = false;
+      boton.textContent = 'Guardar';
+    }
+  }
+
+  async function cambiarVisibilidad(id) {
+    const p = estado.productos.find((x) => x.id === id);
+    if (!p) return;
+    try {
+      await api(`/api/productos/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ activo: !p.activo }),
+      });
+      await cargar();
+    } catch (e) {
+      avisar(e.message, 'error', e.detalles);
+    }
+  }
+
+  async function borrar(id) {
+    const p = estado.productos.find((x) => x.id === id);
+    if (!p) return;
+
+    // Borrar no se deshace. El confirm nombra el producto para que no
+    // se pueda borrar el equivocado por tocar el botón de al lado.
+    if (!confirm(
+      `¿Borrar "${p.nombre}"?\n\nEsto no se puede deshacer. ` +
+      'Si solo querés sacarlo de la página por un tiempo, cerrá esto y usá el ojo para ocultarlo.'
+    )) return;
+
+    try {
+      await api(`/api/productos/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      await cargar();
+      avisar(`Se borró "${p.nombre}".`, 'ok');
+    } catch (e) {
+      avisar(e.message, 'error', e.detalles);
+    }
+  }
+
+  // ============================================================
+  // Eventos
+  // ============================================================
+  document.querySelectorAll('.solapa').forEach((b) => {
+    b.addEventListener('click', () => {
+      estado.seccion = b.dataset.seccion;
+      document.querySelectorAll('.solapa').forEach((o) =>
+        o.setAttribute('aria-selected', String(o === b)));
+      dibujar();
+    });
+  });
+
+  $('#contenido').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-accion]');
+    if (!btn) return;
+    const { accion, id } = btn.dataset;
+    if (accion === 'editar') abrirFormulario(estado.productos.find((p) => p.id === id));
+    if (accion === 'visibilidad') cambiarVisibilidad(id);
+    if (accion === 'borrar') borrar(id);
+  });
+
+  $('#btn-nuevo').addEventListener('click', () => abrirFormulario(null));
+  $('#btn-cerrar').addEventListener('click', cerrarFormulario);
+  $('#btn-cancelar').addEventListener('click', cerrarFormulario);
+  $('#form').addEventListener('submit', guardar);
+
+  $('#btn-foto').addEventListener('click', () => $('#f-archivo').click());
+  $('#btn-quitar-foto').addEventListener('click', () => ponerFoto(''));
+
+  $('#f-archivo').addEventListener('change', async (e) => {
+    const archivo = e.target.files?.[0];
+    if (!archivo) return;
+    const boton = $('#btn-foto');
+    const textoPrevio = boton.textContent;
+    boton.disabled = true;
+    boton.textContent = 'Subiendo…';
+    errorEnFormulario(null);
+    try {
+      ponerFoto(await subirFoto(archivo));
+    } catch (err) {
+      errorEnFormulario(err.message, err.detalles);
+    } finally {
+      boton.disabled = false;
+      boton.textContent = textoPrevio;
+      e.target.value = ''; // permite reintentar con el mismo archivo
+    }
+  });
+
+  // Escape cierra el formulario, como cualquier diálogo.
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#formulario').hidden) cerrarFormulario();
+  });
+
+  cargar();
+})();
+</script>
+</body>
+</html>
