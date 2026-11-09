@@ -154,12 +154,19 @@ test('GET con una sección que no existe da 400, no una lista vacía', async () 
   assert.equal(status, 400);
 });
 
-test('el listado público se cachea', async () => {
-  // Es el camino caliente: sin cache, cada visita pega contra D1 para
-  // traer exactamente lo mismo.
+test('el listado público se cachea, pero por poco tiempo', async () => {
+  // Es el camino caliente: sin cache, cada visita pega contra D1 para traer
+  // exactamente lo mismo. Pero el sitio dejó de mandar cache-buster cuando
+  // salió del Sheet, así que este max-age es ahora lo único que decide
+  // cuánto tarda en verse un cambio del panel. Si alguien lo sube a una
+  // hora, la dueña cambia un precio y no entiende por qué no pasa nada.
   const env = { DB: d1Falso() };
   const res = await listado.onRequestGet({ request: pedido('/api/productos'), env });
-  assert.match(res.headers.get('cache-control') || '', /max-age=\d+/);
+  const cc = res.headers.get('cache-control') || '';
+  const maxAge = Number((cc.match(/max-age=(\d+)/) || [])[1]);
+  assert.ok(Number.isInteger(maxAge), `no declara max-age: "${cc}"`);
+  assert.ok(maxAge > 0 && maxAge <= 300,
+    `max-age=${maxAge}: tiene que cachear algo pero no más de 5 minutos`);
 });
 
 

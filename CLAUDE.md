@@ -37,12 +37,13 @@ dependencias y no debería tenerlas.
 
 ### Imágenes de productos — performance
 
-Las imágenes de los productos vienen de Google Sheets (columna 6 en el formato de 7 columnas).
-Para mantener la página rápida:
+Las imágenes de los productos las sube la dueña desde el panel (`src/admin.html`) y se
+guardan en Cloudflare R2. Para mantener la página rápida:
 
 - **Tamaño máximo por imagen: 500 KB.** Las imágenes más grandes ralentizan la carga,
-  especialmente en móvil con conexión 3G/4G. Si es necesario subir una imagen más grande,
-  reducir resolución o comprimir en un editor antes de uploadear a Google Sheets.
+  especialmente en móvil con conexión 3G/4G. **El panel y el Worker rechazan las que pasan
+  ese límite**, así que no es una recomendación: si hace falta subir una foto más grande,
+  hay que reducir resolución o comprimirla en un editor antes.
 - **Formato preferido: JPEG.** PNG funciona pero es más pesado para fotos; WebP es ideal pero
   no todos los navegadores lo soportan todavía.
 - **Resolución mínima: 200×200 px.** Menos que eso se pixela; 400×400 es suficiente para casi

@@ -1020,7 +1020,7 @@ section{ padding-block:var(--s8); }
   pointer-events:none;
 }
 
-/* Navegación: acordeones dinámicos desde Google Sheets */
+/* Navegación: acordeones dinámicos, armados con los productos de la base */
 .menu-nav{
   flex:1; overflow-y:auto; padding:var(--s4) 0;
   list-style:none;
@@ -2275,7 +2275,7 @@ body[data-category-view="true"] section{
   </div>
 </header>
 
-<!-- Panel lateral del menú: categorías dinámicas desde Google Sheets -->
+<!-- Panel lateral del menú: categorías dinámicas, desde la base -->
 <div class="menu-overlay" id="menuOverlay"></div>
 <aside class="menu-panel" id="menuPanel">
   <div class="menu-header">
@@ -2289,7 +2289,7 @@ body[data-category-view="true"] section{
     <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
   </div>
   <nav class="menu-nav">
-    <!-- Las categorías y subcategorías se renderizan dinámicamente aquí desde Google Sheets -->
+    <!-- Las categorías y subcategorías se renderizan dinámicamente acá, desde la base -->
   </nav>
   <div class="menu-footer">
     <a class="btn btn-primary menu-wa-btn" href="https://wa.me/5491161691209?text=Hola!%20Escribo%20desde%20el%20sitio" target="_blank" rel="noopener">
@@ -2460,8 +2460,8 @@ body[data-category-view="true"] section{
         <h2>¡Novedades y Ofertas!</h2>
       </div>
 
-      <!-- El script reemplaza este bloque con los productos del Google Sheet.
-           Si el Sheet no responde, quedan estas tarjetas como respaldo. -->
+      <!-- El script reemplaza este bloque con los productos de la base.
+           Si la base no responde, quedan estas tarjetas como respaldo. -->
       <div id="mercaditoDynamic">
         <div class="shop-group">
           <div class="shop-group-head"><h3>Impresiones y copias</h3><span>4 productos</span></div>
@@ -2929,27 +2929,6 @@ body[data-category-view="true"] section{
 
 <script>
   // ============================================================
-  // MERCADITO — catálogo desde Google Sheets
-  //
-  // Cómo activarlo:
-  // 1. Armá una hoja con 5 columnas en este orden:
-  //    Categoria | Producto | Precio | Detalle | Imagen
-  //    (Detalle e Imagen son opcionales; el encabezado se detecta solo)
-  // 2. Archivo > Compartir > Publicar en la Web > elegí la hoja
-  //    puntual > formato "Valores separados por comas (.csv)" > Publicar
-  // 3. Pegá esa URL acá abajo, reemplazando el texto de ejemplo.
-  //
-  // Los productos se agrupan por categoría en el orden en que aparecen
-  // en la hoja. Se pueden usar comas dentro de un nombre si el campo va
-  // entre comillas — el parser las respeta. Las imágenes deben ser URLs
-  // completas (empiezan con "http"). Si no hay imagen, se usa el ícono SVG.
-  //
-  // Si la URL queda sin configurar, o el Sheet no responde, la página
-  // muestra los productos de ejemplo del HTML sin romperse.
-  //
-  // Paso a paso completo en docs/catalogo-google-sheets.md
-  // ============================================================
-  // ============================================================
   // TEMA CLARO / OSCURO
   //
   // Por defecto la página sigue al sistema operativo, que es lo que espera
@@ -3003,16 +2982,27 @@ body[data-category-view="true"] section{
       });
   }
 
-  // Dos solapas del mismo archivo: gid=0 (Novedades), gid=1 (Menú)
-  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
-  const SHEET_NOVEDADES_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=948958108&single=true&output=csv";
-  const SHEET_MENU_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vShaMoQ6BdR7FqaIKWAt61NJ6CEiGi9Z6F1DcLkaX4TnlELtveKcMTcP1w-VZ2deHYA6-urx573-YMs/pub?gid=1186742453&single=true&output=csv";
+  // ============================================================
+  // CATÁLOGO
+  //
+  // Los productos salen de la base (D1) a través del Worker. Antes
+  // salían de una planilla de Google publicada como CSV; se cambió
+  // cuando la dueña pasó a cargarlos desde el panel (/admin.html), que
+  // escribe en esa misma base.
+  //
+  // La ruta devuelve solo lo publicado y está cacheada un minuto en el
+  // borde, así que una visita normal no llega a tocar la base.
+  //
+  // Si no responde, quedan los productos de ejemplo escritos en el
+  // HTML: la página nunca se muestra vacía.
+  // ============================================================
+  const API_PRODUCTOS = '/api/productos';
 
   const WHATSAPP = "https://wa.me/5491161691209";
 
   // El contenido del Sheet lo escribe una persona, no el código. Si un nombre
   // de producto trae < o & sin escapar, se rompe el HTML; por eso todo lo que
-  // viene de la hoja pasa por acá antes de entrar al DOM.
+  // viene de la base pasa por acá antes de entrar al DOM.
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   })[c]);
@@ -3020,7 +3010,7 @@ body[data-category-view="true"] section{
   const linkConsulta = nombre =>
     `${WHATSAPP}?text=${encodeURIComponent('Hola Neneko! Como están? Queria consultar por "' + nombre + '"')}`;
 
-  // Generar acordeón dinámico de categorías y subcategorías desde Google Sheets
+  // Generar acordeón dinámico de categorías y subcategorías, desde la base
   function actualizarCategoriesEnMenu(categoriasMap){
     const menuNav = document.querySelector('.menu-nav');
     if(!menuNav || !categoriasMap || Object.keys(categoriasMap).length === 0) return;
@@ -3185,47 +3175,6 @@ body[data-category-view="true"] section{
     const n = sinAcentos(nombre);
     const regla = REGLAS_ICONO.find(([re]) => re.test(n));
     return ICONOS[regla ? regla[1] : 'generico'];
-  }
-
-  // Parser de CSV completo: soporta comas dentro de comillas, comillas
-  // escapadas ("" dentro de un campo) y saltos de línea dentro de una celda.
-  // Con esto ya no hace falta evitar comas al cargar los productos.
-  function parseCsv(text){
-    const s = text.replace(/\r\n?/g, '\n');
-    const rows = [];
-    let row = [], cell = '', inQuotes = false;
-    for(let i = 0; i < s.length; i++){
-      const ch = s[i];
-      if(inQuotes){
-        if(ch === '"'){
-          if(s[i + 1] === '"'){ cell += '"'; i++; }   // comilla escapada
-          else inQuotes = false;
-        } else cell += ch;
-      }
-      else if(ch === '"'){ inQuotes = true; }
-      else if(ch === ','){ row.push(cell); cell = ''; }
-      else if(ch === '\n'){ row.push(cell); rows.push(row); row = []; cell = ''; }
-      else cell += ch;
-    }
-    row.push(cell);
-    if(row.some(c => c !== '')) rows.push(row);
-    return rows.map(r => r.map(c => c.trim()));
-  }
-
-  // Deja solo las filas usables y descarta el encabezado si la hoja lo tiene.
-  function normalizarFilas(rows){
-    if(!rows.length) return [];
-    const primeraCelda = (rows[0][0] || '').toLowerCase();
-    const tieneEncabezado =
-      /^ubicacion|^home|^menu|^categor|^sub/.test(primeraCelda);
-
-    const filas = tieneEncabezado ? rows.slice(1) : rows;
-    return filas.filter(r => {
-      // Soporta: 6 cols (Cat|SubCat|Prod|Price|Detail|Image) o 3-5 cols (Cat|Prod|Price[|Detail[|Image]])
-      if(r.length >= 6) return r[0] && r[2]; // Nueva: Categoría | Sub-Categoría | Producto | ...
-      if(r.length >= 3) return r[0] && r[1]; // Antigua: Categoría | Producto | ...
-      return false;
-    });
   }
 
   function buildMercaditoHTML(rows, cardIndex = 0){
@@ -3459,7 +3408,7 @@ body[data-category-view="true"] section{
     // catálogo terminó de repintarse: sin el segundo paso la página crece debajo
     // del usuario y el salto se ve.
     _nenekoTrasPintar(() => window.scrollTo({ top:destino, left:0, behavior:'instant' }));
-    Promise.resolve(loadProductsFromSheet()).catch(() => {}).then(() => {
+    Promise.resolve(loadProductsFromAPI()).catch(() => {}).then(() => {
       _nenekoTrasPintar(() => window.scrollTo({ top:destino, left:0, behavior:'instant' }));
     });
   };
@@ -3480,121 +3429,94 @@ body[data-category-view="true"] section{
     _nenekoTrasPintar(() => _nenekoIrA(document.getElementById('productos')));
   };
 
-  async function loadProductsFromSheet(){
+  /**
+   * Los productos vienen como objetos y buildMercaditoHTML espera filas
+   * de 7 columnas, que es como venian del CSV. Se traduce aca y no se
+   * toca el dibujado: ese camino ya esta probado y no hay motivo para
+   * reescribirlo solo porque cambio de donde salen los datos.
+   */
+  function filasDesdeProductos(productos){
+    return productos.map(p => [
+      p.categoria, p.subcategoria, p.nombre,
+      p.precio, p.detalle, p.imagen, p.keywords,
+    ].map(v => v == null ? '' : String(v)));
+  }
+
+  function agruparProductos(productos){
+    const grupos = new Map();
+    for(const p of productos){
+      if(!p.categoria || !p.nombre) continue;
+      if(!grupos.has(p.categoria)) grupos.set(p.categoria, []);
+      grupos.get(p.categoria).push({
+        subcategoria: p.subcategoria || '', nombre: p.nombre,
+        precio: p.precio || '', detalle: p.detalle || '',
+        imagen: p.imagen || '', keywords: p.keywords || '',
+      });
+    }
+    return grupos;
+  }
+
+  async function pedirProductos(seccion, senal){
+    const res = await fetch(API_PRODUCTOS + '?seccion=' + seccion, { signal: senal });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const datos = await res.json();
+    return Array.isArray(datos.productos) ? datos.productos : [];
+  }
+
+  async function loadProductsFromAPI(){
     const wrap = document.getElementById('mercaditoDynamic');
     if(!wrap) return;
 
     try{
-      // Si el Sheet tarda o no responde, no dejamos la página colgada:
+      // Si la API tarda o no responde, no dejamos la pagina colgada:
       // a los 8 segundos abandonamos y quedan los productos de ejemplo.
       const ac = new AbortController();
       const timeout = setTimeout(() => ac.abort(), 8000);
 
-      // Cargar primero Novedades (gid=0) para el homepage
-      const cache = '_=' + Date.now();
-      const url = SHEET_CSV_URL + '&' + cache;
-
-      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
+      const productos = await pedirProductos('novedades', ac.signal);
       clearTimeout(timeout);
 
-      if(!res.ok) throw new Error('HTTP ' + res.status);
+      if(!productos.length) throw new Error('la base no devolvio productos');
 
-      const filas = normalizarFilas(parseCsv(await res.text()));
-      if(!filas.length) throw new Error('la hoja no tiene filas usables');
+      // Para los botones "Ver todo" de cada categoria.
+      window._neneko_home_products = Object.fromEntries(agruparProductos(productos));
 
-      // Almacenar productos de inicio para los botones "Ver todo"
-      const homeProducts = new Map();
-      filas.forEach(row => {
-        let categoria, subcategoria, nombre, precio, detalle, imagen, keywords;
-        const tieneSiete = filas.length > 0 && filas[0].length >= 7;
-        const tieneSeis = filas.length > 0 && filas[0].length >= 6;
-
-        if(tieneSiete){
-          [categoria, subcategoria, nombre, precio, detalle, imagen, keywords] = row;
-        } else if(tieneSeis){
-          [categoria, subcategoria, nombre, precio, detalle, imagen] = row;
-          keywords = '';
-        } else {
-          [categoria, nombre, precio, detalle, imagen] = row;
-          subcategoria = '';
-          keywords = '';
-        }
-
-        if(!categoria || !nombre) return;
-        if(!homeProducts.has(categoria)) homeProducts.set(categoria, []);
-        homeProducts.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
-      });
-      window._neneko_home_products = Object.fromEntries(homeProducts);
-
-      wrap.innerHTML = buildMercaditoHTML(filas);
+      wrap.innerHTML = buildMercaditoHTML(filasDesdeProductos(productos));
       revelarNuevasTarjetas(wrap);
-      // Verificar si hay parámetros de URL para navegar a una categoría
+      // Verificar si hay parametros de URL para navegar a una categoria
       checkURLParams();
     }catch(err){
-      console.warn('No se pudo cargar el mercadito desde Sheets; se muestran los productos de ejemplo.', err);
+      console.warn('No se pudo cargar el mercadito; se muestran los productos de ejemplo.', err);
     }finally{
-      // Lazy-load del menú después del homepage. En un finally, no en el try:
-      // si el fetch de productos falla, el menú tiene que poder cargar igual
-      // — si no, el hamburguesa queda sin categorías cada vez que el Sheet
-      // de arriba tarda o no responde, aunque el de Menú ande perfecto.
-      loadMenuFromSheet();
+      // Lazy-load del menu despues del homepage. En un finally, no en el try:
+      // si el pedido de productos falla, el menu tiene que poder cargar igual
+      // - si no, el hamburguesa queda sin categorias cada vez que la primera
+      // llamada tarda o no responde, aunque la segunda ande perfecto.
+      loadMenuFromAPI();
     }
   }
 
-  // Cargar la hoja de Menú de forma lazy: después de que la página renderice
-  async function loadMenuFromSheet(){
+  // Cargar la seccion Menu de forma lazy: despues de que la pagina renderice
+  async function loadMenuFromAPI(){
     try{
       const ac = new AbortController();
       const timeout = setTimeout(() => ac.abort(), 8000);
 
-      const cache = '_=' + Date.now();
-      const url = SHEET_MENU_URL + '&' + cache;
-
-      const res = await fetch(url, { signal: ac.signal, cache: 'no-store' });
+      const productos = await pedirProductos('menu', ac.signal);
       clearTimeout(timeout);
 
-      if(!res.ok) throw new Error('HTTP ' + res.status);
-
-      const rows = parseCsv(await res.text());
-      if(!rows.length) return;
-
-      // Detectar y saltar encabezado
-      const primeraCelda = (rows[0][0] || '').toLowerCase();
-      const tieneEncabezado = /^categor|^nombre|^menu|^producto|^sub/.test(primeraCelda);
-      const filas = tieneEncabezado ? rows.slice(1) : rows;
-
-      if(!filas.length) return;
-
-      // Procesar los productos del Menú: Categoría | Sub-Categoría | Producto | Precio | Detalle | Imagen [| Keywords]
-      const categoriesMenu = new Map();
-      filas.forEach(row => {
-        if(row.length < 6) return; // Necesita mínimo 6 columnas
-
-        const categoria = String(row[0] || '').trim();
-        const subcategoria = String(row[1] || '').trim();
-        const nombre = String(row[2] || '').trim();
-        const precio = String(row[3] || '').trim();
-        const detalle = String(row[4] || '').trim();
-        const imagen = String(row[5] || '').trim();
-        const keywords = row.length >= 7 ? String(row[6] || '').trim() : '';
-
-        if(!categoria || !nombre) return;
-
-        if(!categoriesMenu.has(categoria)) categoriesMenu.set(categoria, []);
-        categoriesMenu.get(categoria).push({ subcategoria, nombre, precio, detalle, imagen, keywords });
-      });
-
+      const categoriesMenu = agruparProductos(productos);
       if(categoriesMenu.size === 0) return;
 
       window._neneko_menu_products = Object.fromEntries(categoriesMenu);
 
-      // Actualizar el menú si ya está en la página
+      // Actualizar el menu si ya esta en la pagina
       const menuNav = document.querySelector('.menu-nav');
       if(menuNav){
         actualizarCategoriesEnMenu(window._neneko_menu_products);
       }
     }catch(err){
-      console.warn('No se pudo cargar el menú desde Sheets.', err);
+      console.warn('No se pudo cargar el menu.', err);
     }
   }
 
@@ -3918,8 +3840,8 @@ body[data-category-view="true"] section{
   observarAparicion(document.querySelectorAll('.product-card, .loc-list li, .section-head, .info-badges'));
 
   // Va al final: necesita revelarNuevasTarjetas ya definida.
-  // (loadMenuFromSheet se llama al final de loadProductsFromSheet para lazy-load)
-  loadProductsFromSheet();
+  // (loadMenuFromAPI se llama al final de loadProductsFromAPI para lazy-load)
+  loadProductsFromAPI();
 
   // ============================================================
   // BUSCADOR DE PRODUCTOS (E-COMMERCE)
@@ -3961,7 +3883,7 @@ body[data-category-view="true"] section{
   if(menuSearch){
     function ejecutarBusqueda(query){
       if(!query || query.trim().length === 0){
-        loadProductsFromSheet();
+        loadProductsFromAPI();
         window._nenekoIrAProductos?.();
         return;
       }

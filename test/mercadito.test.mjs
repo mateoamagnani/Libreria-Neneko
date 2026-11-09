@@ -1,9 +1,9 @@
 // Tests del catálogo del mercadito.
 //
 // Corren sin dependencias: extraen el <script> de src/index.html y lo evalúan
-// con un DOM mínimo simulado. Cubren el parseo del CSV que baja de Google
-// Sheets y el escapado del contenido, que es lo que puede romper la página en
-// producción si alguien carga un producto con un carácter raro.
+// con un DOM mínimo simulado. Cubren cómo se dibujan los productos que vienen
+// de la base y el escapado del contenido, que es lo que puede romper la página
+// en producción si alguien carga un producto con un carácter raro.
 //
 //   node --test test/
 //
@@ -46,11 +46,14 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext(js, ctx);
 
-const { parseCsv, normalizarFilas, buildMercaditoHTML } = ctx;
+const { buildMercaditoHTML } = ctx;
 
 // Corre el script otra vez con un DOM propio, para poder mirar qué termina
-// dentro del mercadito cuando la respuesta del Sheet es la que le damos.
-function correrConSheet(respuesta) {
+// dentro del mercadito cuando la respuesta de la API es la que le damos.
+//
+// `respuesta` puede ser un array de productos (el caso normal) o una función
+// que recibe la URL y devuelve la respuesta cruda, para simular fallas.
+function correrConApi(respuesta) {
   const pedidos = [];
   const wrap = { innerHTML: '', querySelectorAll: () => [] };
   const c = {
@@ -58,57 +61,29 @@ function correrConSheet(respuesta) {
     document: { ...ctx.document, getElementById: (id) => (id === 'mercaditoDynamic' ? wrap : null) },
     fetch: async (url) => {
       pedidos.push(url);
-      return typeof respuesta === 'function'
-        ? respuesta(url)
-        : { ok: true, text: async () => respuesta };
+      if (typeof respuesta === 'function') return respuesta(url);
+      // Solo la sección pedida, como hace el Worker.
+      const seccion = (String(url).match(/seccion=(\w+)/) || [])[1];
+      return {
+        ok: true,
+        json: async () => ({
+          productos: respuesta.filter((p) => (p.seccion || 'novedades') === seccion),
+        }),
+      };
     },
   };
   vm.createContext(c);
   vm.runInContext(js, c);
-  // loadProductsFromSheet() se llama al final del script y es async
+  // loadProductsFromAPI() se llama al final del script y es async
   return new Promise((r) => setImmediate(() => r({ pedidos, html: wrap.innerHTML })));
 }
 
-// Los arrays vienen de otro realm (el vm), así que no comparten prototipo con
-// los de acá: deepStrictEqual los rechazaría por eso aunque el contenido sea
-// idéntico. Comparamos la forma serializada.
-const igual = (a, b) => assert.equal(JSON.stringify(a), JSON.stringify(b));
+/** Atajo: un producto del mercadito con lo mínimo. */
+const prod = (categoria, nombre, precio = '', extra = {}) =>
+  ({ categoria, nombre, precio, subcategoria: '', detalle: '', imagen: '', keywords: '', ...extra });
 
-test('parseCsv: respeta comas dentro de comillas', () => {
-  igual(parseCsv('Utiles,"Lapicera azul, x3",900'),
-    [['Utiles', 'Lapicera azul, x3', '900']]);
-});
 
-test('parseCsv: entiende comillas escapadas', () => {
-  assert.equal(parseCsv('A,"Cuaderno ""Rivadavia"" A4",100')[0][1],
-    'Cuaderno "Rivadavia" A4');
-});
-
-test('parseCsv: soporta saltos de línea de Windows', () => {
-  assert.equal(parseCsv('A,B,1\r\nC,D,2').length, 2);
-});
-
-test('parseCsv: soporta un salto de línea dentro de una celda', () => {
-  assert.equal(parseCsv('A,"linea1\nlinea2",5')[0][1], 'linea1\nlinea2');
-});
-
-test('parseCsv: ignora la fila vacía del final', () => {
-  assert.equal(parseCsv('A,B,1\n').length, 1);
-});
-
-test('normalizarFilas: descarta el encabezado si la hoja lo tiene', () => {
-  assert.equal(normalizarFilas(parseCsv('Categoria,Producto,Precio\nUtiles,Bic,900')).length, 1);
-});
-
-test('normalizarFilas: no descarta nada si no hay encabezado', () => {
-  assert.equal(normalizarFilas(parseCsv('Utiles,Bic,900\nUtiles,Goma,300')).length, 2);
-});
-
-test('normalizarFilas: descarta filas sin categoría o sin producto', () => {
-  assert.equal(normalizarFilas(parseCsv('Utiles,Bic,900\n,,\nUtiles,,')).length, 1);
-});
-
-test('buildMercaditoHTML: escapa el contenido que viene del Sheet', () => {
+test('buildMercaditoHTML: escapa el contenido que viene de la base', () => {
   const out = buildMercaditoHTML([['Utiles', '<img src=x onerror=alert(1)>', '$100']]);
   // El nombre tiene que terminar como texto visible, nunca como markup.
   assert.ok(out.includes('&lt;img src=x onerror=alert(1)&gt;'));
@@ -140,54 +115,81 @@ test('buildMercaditoHTML: si no hay precio muestra "Consultar"', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Conexión con el Sheet publicado
+// Conexion con la base
 // ---------------------------------------------------------------------------
 
-test('el catálogo apunta a un Sheet publicado, no al placeholder', () => {
-  const url = js.match(/const SHEET_CSV_URL = "([^"]*)"/)[1];
-  assert.ok(!url.startsWith('PEGAR_ACA'), 'quedó el placeholder sin reemplazar');
-  assert.match(url, /^https:\/\/docs\.google\.com\/spreadsheets\/d\/e\/2PACX-/,
-    'no es una URL de "Publicar en la Web" (un link de "Compartir" no sirve)');
-  assert.match(url, /output=csv/, 'la hoja no está publicada como CSV');
+test('el catalogo pide los productos a la API del sitio', () => {
+  // Antes esto afirmaba que la URL del Sheet no hubiera quedado en el
+  // placeholder. La intencion es la misma: que el origen del catalogo este
+  // configurado de verdad y no a medio hacer.
+  const ruta = js.match(/const API_PRODUCTOS = '([^']*)'/)[1];
+  assert.equal(ruta, '/api/productos');
+  assert.ok(ruta.startsWith('/'),
+    'tiene que ser relativa: el dominio va a cambiar y una absoluta quedaria rota');
+  assert.ok(!/docs\.google\.com/.test(js),
+    'quedo una referencia al Sheet; los productos ahora salen de la base');
 });
 
-test('cada carga pide los precios de nuevo, sin usar copia guardada', async () => {
-  // Dos pedidos: el Sheet de productos y, siempre después (en un finally,
-  // no importa si el de arriba salió bien), el Sheet de Menú — así el
-  // hamburguesa no se queda sin categorías cuando el primero falla.
-  const { pedidos } = await correrConSheet('Categoria,Producto,Precio\nUtiles,Bic,$ 900');
+test('cada carga pide las dos secciones', async () => {
+  // Dos pedidos: el mercadito y, siempre despues (en un finally, no importa
+  // si el de arriba salio bien), el menu - asi el hamburguesa no se queda
+  // sin categorias cuando el primero falla.
+  const { pedidos } = await correrConApi([prod('Utiles', 'Bic', '$ 900')]);
   assert.equal(pedidos.length, 2);
-  assert.match(pedidos[0], /[?&]_=\d+/, 'falta el parámetro que evita el caché del navegador');
-  assert.match(pedidos[1], /[?&]_=\d+/, 'falta el parámetro que evita el caché del navegador');
+  assert.match(pedidos[0], /seccion=novedades/);
+  assert.match(pedidos[1], /seccion=menu/);
 });
 
-test('los precios del Sheet reemplazan a los de ejemplo', async () => {
-  const { html } = await correrConSheet(
-    'Categoria,Producto,Precio\nImpresiones,Fotocopia B/N,$ 90 c/u\nUtiles,Cuaderno,$ 4.100');
+test('el sitio no le pone cache-buster a la API', async () => {
+  // Con el Sheet se agregaba ?_=timestamp para esquivar el cache del
+  // navegador. Ahora la frescura la controla el Worker con un max-age corto,
+  // asi que un cache-buster solo tiraria abajo el cache del borde y haria
+  // que cada visita pegue contra la base.
+  const { pedidos } = await correrConApi([prod('Utiles', 'Bic', '$ 900')]);
+  for (const url of pedidos) {
+    assert.ok(!/[?&]_=\d+/.test(url), `quedo un cache-buster en ${url}`);
+  }
+});
+
+test('los precios de la base reemplazan a los de ejemplo', async () => {
+  const { html } = await correrConApi([
+    prod('Impresiones', 'Fotocopia B/N', '$ 90 c/u'),
+    prod('Utiles', 'Cuaderno', '$ 4.100'),
+  ]);
   assert.match(html, /\$ 90 c\/u/);
   assert.match(html, /\$ 4\.100/);
-  assert.ok(!html.includes('$ 150 c/u'), 'quedó un precio de ejemplo');
+  assert.ok(!html.includes('$ 150 c/u'), 'quedo un precio de ejemplo');
 });
 
-test('si el Sheet no responde, no se toca el mercadito', async () => {
-  const { html } = await correrConSheet(() => ({ ok: false, status: 404 }));
+test('si la API no responde, no se toca el mercadito', async () => {
+  const { html } = await correrConApi(() => ({ ok: false, status: 404 }));
   assert.equal(html, '', 'no debe vaciar ni pisar los productos de ejemplo');
 });
 
-test('si el Sheet de productos falla, el de Menú se pide igual', async () => {
-  // Antes el menú se cargaba adentro del try, después del sheet de arriba:
-  // si ese fetch fallaba, el catch cortaba la cadena y el hamburguesa se
-  // quedaba sin categorías. Tiene que pedirse pase lo que pase.
-  const { pedidos } = await correrConSheet(() => ({ ok: false, status: 404 }));
-  assert.ok(
-    pedidos.some(url => url.includes('gid=1186742453')),
-    'no se pidió el Sheet de Menú (gid=1186742453) cuando el de productos falló'
-  );
+test('si el pedido de productos falla, el del menu se hace igual', async () => {
+  // Antes el menu se cargaba adentro del try, despues del de arriba: si ese
+  // fetch fallaba, el catch cortaba la cadena y el hamburguesa se quedaba
+  // sin categorias. Tiene que pedirse pase lo que pase.
+  const { pedidos } = await correrConApi(() => ({ ok: false, status: 404 }));
+  assert.ok(pedidos.some((url) => /seccion=menu/.test(url)),
+    'no se pidio la seccion menu cuando la de productos fallo');
 });
 
-test('si el Sheet viene vacío, tampoco se toca', async () => {
-  const { html } = await correrConSheet('');
+test('si la base viene vacia, tampoco se toca', async () => {
+  const { html } = await correrConApi([]);
   assert.equal(html, '');
+});
+
+test('un producto sin nombre o sin categoria no entra a la grilla', async () => {
+  // La base lo impide con sus CHECK, pero si alguna vez llegara igual no
+  // tiene que dejar una tarjeta fantasma.
+  const { html } = await correrConApi([
+    prod('Utiles', 'Bic', '$ 900'),
+    prod('', 'Sin categoria', '$ 1'),
+    prod('Utiles', '', '$ 2'),
+  ]);
+  assert.ok(html.includes('Bic'));
+  assert.ok(!html.includes('Sin categoria'));
 });
 
 // ---------------------------------------------------------------------------
@@ -250,7 +252,7 @@ test('el detalle también se escapa', () => {
 });
 
 test('el HTML de respaldo no trae precios inventados', () => {
-  // Si el Sheet falla se ven estas tarjetas: mejor "Consultar" que un número
+  // Si la API falla se ven estas tarjetas: mejor "Consultar" que un número
   // que nadie va a respetar en el mostrador.
   const cuerpo = html.slice(html.indexOf('id="productos"'), html.indexOf('</section>', html.indexOf('id="productos"')));
   const precios = [...cuerpo.matchAll(/<div class="price">([^<]*)<\/div>/g)].map((m) => m[1]);
