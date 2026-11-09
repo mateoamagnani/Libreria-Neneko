@@ -24,6 +24,7 @@ lo demás está al servicio de eso.
 │   ├── api/                        #   /api/productos y /api/imagenes
 │   └── img/                        #   Sirve las fotos desde la base
 ├── db/schema.sql                   # El esquema del catálogo (D1)
+├── tools/migrar-csv.mjs            # Migración de la planilla a la base (una sola vez)
 ├── test/                           # Tests (node --test, sin dependencias)
 ├── docs/
 │   ├── concepto-landing.md         # Qué es el sitio, datos del negocio, pendientes
