@@ -28,6 +28,18 @@ const LARGOS = {
 const texto = (v) => (v === null || v === undefined ? '' : String(v)).trim();
 
 /**
+ * Las dos formas de imagen que el sitio sabe dibujar.
+ *
+ * El "//" descartado en la ruta relativa no es paranoia de más:
+ * "//evil.com/x.jpg" es una URL protocol-relative, así que el navegador
+ * la va a buscar a otro dominio aunque parezca una ruta local.
+ */
+export function esImagenValida(v) {
+  if (/^https?:\/\//i.test(v)) return true;
+  return v.startsWith('/img/') && !v.startsWith('//');
+}
+
+/**
  * Normaliza y valida lo que viene del panel.
  *
  * Devuelve { ok:true, producto } o { ok:false, errores:[...] }. Nunca
@@ -75,17 +87,26 @@ export function validarProducto(entrada, { parcial = false } = {}) {
   }
 
   // --- imagen ---
-  // El sitio solo muestra la imagen si empieza con "http"; cualquier
-  // otra cosa cae al ícono SVG en silencio. Validar acá convierte ese
-  // silencio en un mensaje que la dueña puede entender.
+  // Se aceptan dos formas, a propósito:
+  //
+  //   /img/algo.jpg          → subida desde el panel, guardada en R2
+  //   https://…/algo.jpg     → URL vieja de Drive, de la época del Sheet
+  //
+  // Las nuevas van relativas porque el dominio va a cambiar (GitHub
+  // Pages → Cloudflare Pages → quizás uno propio) y una URL absoluta
+  // guardada hoy quedaría rota en cada mudanza.
+  //
+  // Cualquier otra cosa se rechaza: el sitio solo dibuja la imagen si
+  // reconoce la forma, y si no cae al ícono SVG en silencio. Validar
+  // acá convierte ese silencio en un mensaje que la dueña entiende.
   if (!parcial || entrada.imagen !== undefined) {
     const v = texto(entrada.imagen);
     if (!v) {
       p.imagen = null;
     } else if (v.length > LARGOS.imagen) {
       errores.push(`La dirección de la imagen no puede pasar de ${LARGOS.imagen} caracteres.`);
-    } else if (!/^https?:\/\//i.test(v)) {
-      errores.push('La imagen tiene que ser una dirección que empiece con http:// o https://.');
+    } else if (!esImagenValida(v)) {
+      errores.push('La imagen tiene que ser una foto subida desde el panel, o una dirección que empiece con http:// o https://.');
     } else {
       p.imagen = v;
     }

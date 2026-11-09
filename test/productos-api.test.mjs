@@ -79,21 +79,37 @@ test('la sección tiene que ser una de las conocidas', () => {
   assert.match(r.errores.join(' '), /blog/);
 });
 
-test('la imagen tiene que ser una URL http, no un texto cualquiera', () => {
+test('la imagen tiene que ser una foto del panel o una URL http', () => {
   // Este es el bug que el validador existe para frenar: el sitio solo
-  // dibuja la imagen si empieza con "http" y si no cae al ícono SVG sin
+  // dibuja la imagen si reconoce la forma y si no cae al ícono SVG sin
   // avisar. Sin esto, la dueña pega la ruta de un archivo de su compu,
   // ve el ícono genérico y no entiende por qué.
   const malo = validarProducto({ categoria: 'C', nombre: 'N', imagen: 'C:\\fotos\\lapiz.jpg' });
   assert.equal(malo.ok, false);
-  assert.match(malo.errores.join(' '), /http/);
+  assert.match(malo.errores.join(' '), /panel|http/i);
 
-  const bueno = validarProducto({ categoria: 'C', nombre: 'N', imagen: 'https://x.r2.dev/a.jpg' });
-  assert.ok(bueno.ok);
-  assert.equal(bueno.producto.imagen, 'https://x.r2.dev/a.jpg');
+  // URL absoluta: las que quedan de la época del Sheet (Drive).
+  const drive = validarProducto({ categoria: 'C', nombre: 'N', imagen: 'https://x.dev/a.jpg' });
+  assert.ok(drive.ok);
+
+  // Ruta relativa: las que sube el panel a R2. Van relativas porque el
+  // dominio va a cambiar y una absoluta quedaría rota.
+  const subida = validarProducto({ categoria: 'C', nombre: 'N', imagen: '/img/abc.jpg' });
+  assert.ok(subida.ok);
+  assert.equal(subida.producto.imagen, '/img/abc.jpg');
 
   // Vacía es válida: significa "sin foto", y el sitio usa el ícono.
   assert.equal(validarProducto({ categoria: 'C', nombre: 'N', imagen: '' }).producto.imagen, null);
+});
+
+test('una URL sin protocolo disfrazada de ruta local se rechaza', () => {
+  // "//evil.com/x.jpg" parece una ruta del sitio pero el navegador la
+  // va a buscar a otro dominio. Si pasara, el panel serviría para
+  // meter una imagen ajena en la página.
+  for (const trampa of ['//evil.com/x.jpg', '///evil.com/x.jpg']) {
+    const r = validarProducto({ categoria: 'C', nombre: 'N', imagen: trampa });
+    assert.equal(r.ok, false, `dejó pasar: ${trampa}`);
+  }
 });
 
 test('activo acepta las formas en que puede llegar desde el panel', () => {
