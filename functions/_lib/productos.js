@@ -89,7 +89,7 @@ export function validarProducto(entrada, { parcial = false } = {}) {
   // --- imagen ---
   // Se aceptan dos formas, a propósito:
   //
-  //   /img/algo.jpg          → subida desde el panel, guardada en R2
+  //   /img/algo.jpg          → subida desde el panel, guardada en la base
   //   https://…/algo.jpg     → URL vieja de Drive, de la época del Sheet
   //
   // Las nuevas van relativas porque el dominio va a cambiar (GitHub
@@ -190,6 +190,33 @@ export function consultaEdicion(id, p) {
 
 export function consultaBaja(id) {
   return { sql: 'delete from productos where id = ?', binds: [id] };
+}
+
+/**
+ * Borra las fotos que ya no usa ningún producto.
+ *
+ * Se juntan solas: cada vez que la dueña cambia la foto de un producto
+ * o lo borra, la anterior queda ocupando lugar sin que nadie la pida.
+ * El plan gratis da 500 MB por base, así que no es infinito.
+ *
+ * El corte por antigüedad evita la carrera obvia: el panel sube la foto
+ * primero y recién después guarda el producto, así que una foto recién
+ * subida todavía no figura en ninguna fila. Un día de gracia es de
+ * sobra y hace que el peor caso sea "ocupa lugar un rato más", nunca
+ * "desaparece la foto que acabo de subir".
+ *
+ * Se usa el mismo formato de fecha que el default de la tabla; si no,
+ * la comparación de textos daría cualquier cosa.
+ */
+export function consultaLimpiarHuerfanas() {
+  return {
+    sql: `delete from imagenes
+           where creado_en < strftime('%Y-%m-%dT%H:%M:%SZ', 'now', '-1 day')
+             and ('/img/' || clave) not in (
+                   select coalesce(imagen, '') from productos
+                 )`,
+    binds: [],
+  };
 }
 
 /**

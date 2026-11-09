@@ -5,6 +5,12 @@
 // Devuelve { url: "/img/xxxx.jpg" }, que es lo que se guarda en la
 // columna imagen del producto.
 //
+// Las fotos van a D1, no a R2. Es una decisión de costo, no técnica:
+// R2 obliga a pasar por un checkout y dejar datos de pago para
+// activarse, aunque después no cobre, y el requisito del proyecto es
+// que no quede ningún medio de pago cargado. D1 no pide nada de eso y
+// entran de sobra.
+//
 // El límite de 500 KB y el formato preferido ya estaban escritos en
 // CLAUDE.md, pero hasta acá eran una recomendación que nadie hacía
 // cumplir: la dueña subía al Sheet lo que quisiera. Ahora el pedido se
@@ -14,6 +20,10 @@ import { json, error } from '../_lib/http.js';
 import { verificarAcceso } from '../_lib/acceso.js';
 
 // CLAUDE.md: "Tamaño máximo por imagen: 500 KB."
+//
+// D1 admite hasta 2 MB por fila, así que el techo real está cuatro
+// veces más arriba: este límite es por la velocidad de la página, no
+// por la base.
 const MAX_BYTES = 500 * 1024;
 
 // JPEG es el preferido para fotos; PNG anda pero pesa más; WebP es
@@ -64,16 +74,12 @@ export async function onRequestPost({ request, env }) {
   }
 
   const clave = `${crypto.randomUUID()}.${ext}`;
+  const bytes = new Uint8Array(await archivo.arrayBuffer());
 
-  await env.IMAGENES.put(clave, archivo.stream(), {
-    httpMetadata: {
-      contentType: tipo,
-      // Las fotos nunca se pisan: cada subida genera una clave nueva.
-      // Por eso se pueden cachear para siempre sin miedo a servir una
-      // versión vieja.
-      cacheControl: 'public, max-age=31536000, immutable',
-    },
-  });
+  await env.DB
+    .prepare('insert into imagenes (clave, tipo, bytes) values (?, ?, ?)')
+    .bind(clave, tipo, bytes)
+    .run();
 
   // Relativa, no absoluta: el dominio va a cambiar y una URL absoluta
   // guardada hoy quedaría rota en cada mudanza.

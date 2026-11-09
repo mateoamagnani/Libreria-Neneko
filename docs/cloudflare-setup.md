@@ -3,11 +3,6 @@
 Cómo queda montado el sitio cuando el catálogo sale de una base y la dueña lo carga desde
 el panel, en vez de editar una planilla.
 
-> **Antes de seguir, leé [Lo que no pude verificar](#lo-que-no-pude-verificar) al final.**
-> Esta guía se escribió sin acceso a la documentación de Cloudflare, así que los nombres
-> exactos de los menús del panel pueden haber cambiado. Los conceptos y el orden son los
-> correctos; si un menú no se llama igual, buscá el equivalente.
-
 ---
 
 ## Qué vamos a montar
@@ -21,14 +16,55 @@ Cloudflare Pages ── sirve el sitio (src/)
             DELETE /api/productos/:id  protegido
             POST   /api/imagenes       protegido
             GET    /img/:clave         público
-      ├── D1 ── la tabla productos
-      └── R2 ── las fotos
+      └── D1 ── los productos y las fotos
 
 Cloudflare Access ── corta /admin.html antes de que se sirva
 ```
 
-Nada de esto tiene servidor que mantener. El costo esperado para una librería de barrio es
-cero, salvo por lo que se aclara más abajo sobre R2.
+Una sola base para todo. Las fotos también viven ahí: ver [Costos](#costos) para entender
+por qué, que es la razón de la que cuelga medio diseño.
+
+---
+
+## Costos
+
+**Todo entra en los planes gratuitos, por varios órdenes de magnitud.** Los números están
+verificados contra la documentación de Cloudflare en noviembre de 2026:
+
+| Pieza | Lo que da gratis | Lo que usa una librería de barrio |
+|---|---|---|
+| Pages (archivos del sitio) | Ilimitado | — |
+| Pages Functions | 100.000 pedidos/día | Cientos |
+| D1 lecturas | 5.000.000 filas/día | Cientos |
+| D1 escrituras | 100.000 filas/día | Decenas |
+| D1 almacenamiento | 500 MB por base | Unos pocos MB |
+| Access | Plan Free | 1 usuaria |
+
+**Si se pasara de los límites, D1 devuelve error; no factura.** Está dicho explícitamente en
+la documentación. O sea que el peor caso de un pico de tráfico es que el catálogo no cargue
+un rato, no una cuenta que pagar.
+
+### Por qué las fotos van en la base y no en R2
+
+R2 es el almacenamiento de archivos de Cloudflare y sería el lugar natural para las fotos.
+**Se descartó porque obliga a pasar por un flujo de checkout y dejar datos de pago** para
+activarse, aunque después no cobre nada dentro del tier gratuito.
+
+Guardarlas en D1 evita eso del todo. Entran holgadas: D1 admite hasta 2 MB por fila, el
+panel rechaza cualquier foto de más de 500 KB, y en los 500 MB de una base entran más de
+mil fotos.
+
+### La única pieza que pide datos de pago
+
+**Cloudflare Access sí los pide**, incluso en el plan gratuito. La documentación lo dice así:
+
+> "Completá tu onboarding seleccionando un plan de suscripción e ingresando tus datos de
+> pago. Si elegiste el plan Zero Trust Free, este paso igual es necesario pero **no se te
+> va a cobrar**."
+
+Se decidió aceptarlo. La alternativa era programar el login a mano, y cambiar autenticación
+seria y mantenida por código propio —justo en la pieza donde un error significa que
+cualquiera te edita o borra el catálogo— para evitar un formulario es mal negocio.
 
 ---
 
@@ -37,10 +73,10 @@ cero, salvo por lo que se aclara más abajo sobre R2.
 La migración tiene que hacerse en este orden para que el sitio nunca quede mostrando datos
 que no son:
 
-1. Montar Cloudflare (pasos 1 a 7).
+1. Montar Cloudflare (pasos 1 a 6).
 2. Cargar los productos en D1.
 3. Verificar que `/api/productos` devuelva el catálogo real.
-4. Recién ahí, publicar la rama y apagar el deploy viejo (paso 8).
+4. Recién ahí, publicar la rama y apagar el deploy viejo (paso 7).
 
 **No publiques el sitio nuevo antes del punto 3.** El código de `src/index.html` ya no sabe
 leer la planilla: si la base está vacía o la API no responde, la página cae a los productos
@@ -55,9 +91,9 @@ npx wrangler login
 npx wrangler d1 create neneko
 ```
 
-El comando imprime un `database_id`. Guardalo, hace falta en el paso 4.
+El comando imprime un `database_id`. Guardalo, hace falta en el paso 3.
 
-Aplicá el esquema:
+Aplicá el esquema, que crea las dos tablas (`productos` e `imagenes`):
 
 ```bash
 npx wrangler d1 execute neneko --remote --file=db/schema.sql
@@ -69,26 +105,15 @@ vacía.
 Para confirmar que quedó bien:
 
 ```bash
-npx wrangler d1 execute neneko --remote --command="select name from sqlite_master where type='table'"
+npx wrangler d1 execute neneko --remote \
+  --command="select name from sqlite_master where type='table'"
 ```
 
-Tiene que aparecer `productos`.
+Tienen que aparecer `productos` e `imagenes`.
 
 ---
 
-## 2. Las fotos (R2)
-
-```bash
-npx wrangler r2 bucket create neneko-imagenes
-```
-
-No hace falta hacerlo público: las fotos se sirven por `/img/...`, que las lee del bucket
-desde el Worker. Eso las deja en el mismo dominio que el sitio, evita CORS, y hace que las
-rutas guardadas en la base sobrevivan un cambio de dominio.
-
----
-
-## 3. El proyecto en Pages
+## 2. El proyecto en Pages
 
 En el panel de Cloudflare: **Workers & Pages → Create → Pages → conectar a Git**, y elegí
 el repositorio `mateoamagnani/Libreria-Neneko`.
@@ -111,22 +136,20 @@ es `src/` tal cual.
 
 ---
 
-## 4. Conectar la base y el bucket
+## 3. Conectar la base
 
 En el proyecto de Pages: **Settings → Functions** (o **Bindings**, según la versión del
-panel), y agregá dos bindings **para producción y también para preview**:
+panel), y agregá el binding **para producción y también para preview**:
 
 | Tipo | Nombre del binding | Apunta a |
 |---|---|---|
 | D1 database | `DB` | `neneko` |
-| R2 bucket | `IMAGENES` | `neneko-imagenes` |
 
-Los nombres `DB` e `IMAGENES` tienen que ser exactamente esos: son los que el código usa
-(`env.DB`, `env.IMAGENES`).
+El nombre `DB` tiene que ser exactamente ése: es el que el código usa (`env.DB`).
 
 ---
 
-## 5. Cloudflare Access para el panel
+## 4. Cloudflare Access para el panel
 
 Esto es lo que decide quién entra a `/admin.html`.
 
@@ -146,6 +169,9 @@ larga de hexadecimal. Copiala.
 
 También necesitás tu **team domain**, que tiene la forma `algo.cloudflareaccess.com`.
 
+Si es la primera vez que entrás a Zero Trust, te va a pedir elegir plan y cargar datos de
+pago. Elegí **Free**: según la documentación, el paso es obligatorio pero no cobra.
+
 ### ⚠️ No protejas `/api/*` con Access
 
 Access filtra por ruta, no por método. Si protegés `/api/*` entero, también bloqueás el
@@ -157,14 +183,14 @@ en el código, y eso ya está probado. Los pedidos del panel viajan con la cooki
 
 ---
 
-## 6. Las variables de Access
+## 5. Las variables de Access
 
 En el proyecto de Pages: **Settings → Environment variables**, para producción y preview:
 
 | Variable | Valor |
 |---|---|
 | `ACCESS_TEAM_DOMAIN` | `algo.cloudflareaccess.com` (sin `https://`) |
-| `ACCESS_AUD` | el AUD Tag del paso 5 |
+| `ACCESS_AUD` | el AUD Tag del paso 4 |
 
 **Si estas dos faltan, el Worker rechaza toda escritura.** Es deliberado: falla cerrada. La
 alternativa cómoda —"si no hay configuración, no verifico"— convertiría un olvido al
@@ -175,7 +201,7 @@ bug: es que estas variables no llegaron al entorno.
 
 ---
 
-## 7. Probar antes de migrar
+## 6. Probar antes de migrar
 
 Con el primer deploy hecho, verificá en este orden:
 
@@ -190,28 +216,28 @@ curl -X POST https://TU-SITIO.pages.dev/api/productos \
 ```
 
 El segundo tiene que devolver **403**. Si devuelve 201, **parás todo**: las variables del
-paso 6 no están llegando y cualquiera puede escribir el catálogo.
+paso 5 no están llegando y cualquiera puede escribir el catálogo.
 
 Después, en el navegador:
 
 3. Entrá a `https://TU-SITIO.pages.dev/admin.html`. Tiene que pedirte identificarte con
-   Access. Si entra directo, la política del paso 5 no está aplicando.
+   Access. Si entra directo, la política del paso 4 no está aplicando.
 4. Probá desde una ventana privada con otro mail: tiene que rechazarte.
 
 ---
 
-## 8. Migrar y apagar lo viejo
+## 7. Migrar y apagar lo viejo
 
-Una vez que los cuatro puntos del paso 7 dan bien:
+Una vez que los cuatro puntos del paso 6 dan bien:
 
-1. Cargá los productos en D1 (el SQL de migración sale de los CSV de la planilla).
+1. Cargá los productos en D1 (el SQL de migración sale de los CSV exportados).
 2. Verificá que `/api/productos` devuelva el catálogo real, no la lista vacía.
 3. Entrá al sitio y confirmá que los precios son los correctos.
 4. Recién ahora, apagá el workflow viejo de GitHub Pages
    (`.github/workflows/deploy.yml`), para que no haya dos sitios publicados diciendo cosas
    distintas.
-5. La planilla se puede archivar. No la borres el mismo día: si algo sale mal, es el único
-   lugar donde están los datos originales.
+5. El archivo de origen se puede archivar. No lo borres el mismo día: si algo sale mal, es
+   el único lugar donde están los datos originales.
 
 ---
 
@@ -225,20 +251,13 @@ tiempo, así que no se lo va a pedir todos los días.
 
 ---
 
-## Lo que no pude verificar
+## Lo que no está verificado
 
-Esta guía se escribió sin acceso a internet, así que no pude contrastarla con la
-documentación de Cloudflare. Lo que sé con confianza es la arquitectura, el orden de los
-pasos y los nombres que usa **nuestro** código (`DB`, `IMAGENES`, `ACCESS_TEAM_DOMAIN`,
-`ACCESS_AUD`). Lo que puede haber cambiado:
+Los límites, los costos y el requisito de datos de pago se confirmaron contra la
+documentación oficial en noviembre de 2026. Lo que no pude chequear:
 
 - **Los nombres exactos de los menús del panel.** Cloudflare los reacomoda seguido. Si no
-  encontrás "Settings → Functions", buscá "Bindings".
-- **Si R2 pide tarjeta.** Tiene capa gratuita, pero no sé si hoy exige medio de pago para
-  activarse. Si lo exige y no querés darlo, decímelo: las fotos son la única pieza que
-  habría que replantear; todo lo demás queda igual.
-- **Los límites del plan gratis** de D1, R2, Pages y Access. Para el volumen de una librería
-  de barrio deberían sobrar por mucho, pero no te puedo dar los números actuales.
-- **Si Pages sigue usando "Build command" y "Build output directory"** con esos nombres.
-
-Cuando tenga acceso a la documentación puedo revisar esta guía y corregir lo que haga falta.
+  encontrás "Settings → Functions", buscá "Bindings"; si no encontrás "Build command",
+  buscá la sección de build del proyecto. Los conceptos no cambian.
+- **Si Access en el plan Free alcanza para más usuarias** de la que vamos a dar de alta. Con
+  una sola no es un problema; si algún día entra un empleado más, conviene mirarlo.

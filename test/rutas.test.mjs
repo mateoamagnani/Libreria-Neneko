@@ -21,6 +21,7 @@ import { dirname, join } from 'node:path';
 import * as listado from '../functions/api/productos.js';
 import * as unitario from '../functions/api/productos/[id].js';
 import * as imagenes from '../functions/api/imagenes.js';
+import * as servirImagen from '../functions/img/[[clave]].js';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const esquema = readFileSync(join(raiz, 'db/schema.sql'), 'utf8');
@@ -39,6 +40,7 @@ function d1Falso() {
       const api = {
         bind(...b) { binds = b; return api; },
         async all() { return { results: db.prepare(sql).all(...binds) }; },
+        async first() { return db.prepare(sql).get(...binds) ?? null; },
         async run() {
           const r = db.prepare(sql).run(...binds);
           return { meta: { changes: Number(r.changes ?? 0) } };
@@ -50,14 +52,8 @@ function d1Falso() {
   };
 }
 
-function r2Falso() {
-  const guardado = new Map();
-  return {
-    async put(clave, _cuerpo, opciones) { guardado.set(clave, opciones); return {}; },
-    async get(clave) { return guardado.has(clave) ? { body: 'x' } : null; },
-    _guardado: guardado,
-  };
-}
+const imagenesGuardadas = (env) =>
+  env.DB._db.prepare('select clave, tipo, length(bytes) bytes from imagenes').all();
 
 // Access siempre dice que sí / que no, según el test. Las rutas lo
 // llaman por el módulo real, así que se controla con la configuración:
@@ -125,10 +121,11 @@ const autenticado = async (url, opciones = {}) => {
 };
 
 const alta = (env, o) => env.DB._db.prepare(
-  `insert into productos (id,seccion,categoria,nombre,precio,activo,orden)
-   values (?,?,?,?,?,?,?)`,
+  `insert into productos (id,seccion,categoria,nombre,precio,activo,orden,imagen)
+   values (?,?,?,?,?,?,?,?)`,
 ).run(o.id, o.seccion ?? 'novedades', o.categoria ?? 'Impresiones',
-      o.nombre ?? 'Fotocopia', o.precio ?? null, o.activo ?? 1, o.orden ?? 0);
+      o.nombre ?? 'Fotocopia', o.precio ?? null, o.activo ?? 1, o.orden ?? 0,
+      o.imagen ?? null);
 
 
 // ------------------------------------------------------------
@@ -220,12 +217,12 @@ test('DELETE SIN Access da 403 y no borra', async () => {
 });
 
 test('POST a /api/imagenes SIN Access da 403', async () => {
-  const env = { IMAGENES: r2Falso() };
+  const env = { DB: d1Falso() };
   const { status } = await leer(await imagenes.onRequestPost({
     request: pedido('/api/imagenes', { metodo: 'POST' }), env,
   }));
   assert.equal(status, 403);
-  assert.equal(env.IMAGENES._guardado.size, 0);
+  assert.equal(imagenesGuardadas(env).length, 0);
 });
 
 
@@ -332,52 +329,146 @@ const subir = async (env, { bytes, tipo, nombre = 'foto.jpg' }) => {
   return leer(await imagenes.onRequestPost({ request: r, env }));
 };
 
-test('una foto dentro del límite se guarda y devuelve ruta relativa', async () => {
-  const env = envConAccess({ IMAGENES: r2Falso() });
+test('una foto dentro del limite se guarda en la base y devuelve ruta relativa', async () => {
+  const env = envConAccess({ DB: d1Falso() });
   const { status, datos } = await subir(env, { bytes: 100 * 1024, tipo: 'image/jpeg' });
 
   assert.equal(status, 201);
   assert.match(datos.url, /^\/img\/[0-9a-f-]+\.jpg$/,
     'relativa, porque el dominio va a cambiar');
-  assert.equal(env.IMAGENES._guardado.size, 1);
+
+  const guardadas = imagenesGuardadas(env);
+  assert.equal(guardadas.length, 1);
+  assert.equal(guardadas[0].tipo, 'image/jpeg');
+  assert.equal(guardadas[0].bytes, 100 * 1024, 'se guardaron todos los bytes');
+  assert.equal(`/img/${guardadas[0].clave}`, datos.url, 'la url apunta a la fila guardada');
 });
 
-test('una foto de más de 500 KB se rechaza y explica qué hacer', async () => {
-  // CLAUDE.md lo documentaba desde siempre, pero nada lo hacía cumplir:
-  // la dueña subía al Sheet lo que quisiera.
-  const env = envConAccess({ IMAGENES: r2Falso() });
+test('una foto de mas de 500 KB se rechaza y explica que hacer', async () => {
+  // CLAUDE.md lo documentaba desde siempre, pero nada lo hacia cumplir:
+  // la duena subia al Sheet lo que quisiera.
+  const env = envConAccess({ DB: d1Falso() });
   const { status, datos } = await subir(env, { bytes: 600 * 1024, tipo: 'image/jpeg' });
 
   assert.equal(status, 400);
   assert.match(datos.error, /500 KB/);
-  assert.match(datos.error, /celular|achic/i, 'tiene que decirle qué hacer, no solo que no');
-  assert.equal(env.IMAGENES._guardado.size, 0);
+  assert.match(datos.error, /celular|achic/i, 'tiene que decirle que hacer, no solo que no');
+  assert.equal(imagenesGuardadas(env).length, 0);
 });
 
 test('un formato que no es imagen se rechaza', async () => {
-  const env = envConAccess({ IMAGENES: r2Falso() });
+  const env = envConAccess({ DB: d1Falso() });
   const { status } = await subir(env, { bytes: 10, tipo: 'application/pdf', nombre: 'a.pdf' });
   assert.equal(status, 400);
-  assert.equal(env.IMAGENES._guardado.size, 0);
+  assert.equal(imagenesGuardadas(env).length, 0);
 });
 
-test('un archivo vacío se rechaza', async () => {
-  const env = envConAccess({ IMAGENES: r2Falso() });
+test('un archivo vacio se rechaza', async () => {
+  const env = envConAccess({ DB: d1Falso() });
   const { status } = await subir(env, { bytes: 0, tipo: 'image/jpeg' });
   assert.equal(status, 400);
 });
 
+test('la foto se puede volver a leer por su url', async () => {
+  const env = envConAccess({ DB: d1Falso() });
+  const { datos } = await subir(env, { bytes: 2048, tipo: 'image/png', nombre: 'a.png' });
+  const clave = datos.url.replace('/img/', '');
+
+  const res = await servirImagen.onRequestGet({
+    params: { clave }, env, request: new Request('https://x' + datos.url),
+  });
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('content-type'), 'image/png');
+  assert.match(res.headers.get('cache-control'), /immutable/,
+    'la clave es unica por subida, asi que el contenido no cambia nunca');
+  assert.equal((await res.arrayBuffer()).byteLength, 2048);
+});
+
+test('una foto que no existe da 404', async () => {
+  const env = { DB: d1Falso() };
+  const res = await servirImagen.onRequestGet({
+    params: { clave: 'no-existe.jpg' }, env, request: new Request('https://x/img/no-existe.jpg'),
+  });
+  assert.equal(res.status, 404);
+});
+
+test('si el navegador ya la tiene, no se vuelve a mandar el cuerpo', async () => {
+  const env = envConAccess({ DB: d1Falso() });
+  const { datos } = await subir(env, { bytes: 4096, tipo: 'image/jpeg' });
+  const clave = datos.url.replace('/img/', '');
+
+  const res = await servirImagen.onRequestGet({
+    params: { clave }, env,
+    request: new Request('https://x' + datos.url, { headers: { 'if-none-match': `"${clave}"` } }),
+  });
+  assert.equal(res.status, 304);
+  assert.equal(await res.text(), '');
+});
+
 
 // ------------------------------------------------------------
-// La guía de puesta en marcha no puede quedar mintiendo
+// Las fotos huerfanas se juntan solas
 // ------------------------------------------------------------
 
-test('los nombres que documenta la guía son los que usa el código', () => {
-  // docs/cloudflare-setup.md le dice a quien monte esto que los bindings se
-  // llaman DB e IMAGENES y las variables ACCESS_TEAM_DOMAIN y ACCESS_AUD.
-  // Si alguien los renombra en el código, la guía queda mandando a configurar
-  // algo que no existe, y el síntoma es un panel que no guarda nada sin decir
-  // por qué. Esto lo convierte en un test roto.
+/** Mete una foto con fecha vieja, para saltear el dia de gracia. */
+const fotoVieja = (env, clave) => env.DB._db.prepare(
+  "insert into imagenes (clave,tipo,bytes,creado_en) values (?,?,?,'2020-01-01T00:00:00Z')",
+).run(clave, 'image/jpeg', new Uint8Array([1, 2, 3]));
+
+test('al borrar un producto se borra la foto que nadie mas usa', async () => {
+  const env = envConAccess({ DB: d1Falso() });
+  fotoVieja(env, 'sola.jpg');
+  alta(env, { id: 'a', imagen: '/img/sola.jpg' });
+
+  await unitario.onRequestDelete({
+    request: await autenticado('/api/productos/a', { metodo: 'DELETE' }),
+    env, params: { id: 'a' },
+  });
+
+  assert.equal(imagenesGuardadas(env).length, 0, 'quedo una foto sin dueno ocupando lugar');
+});
+
+test('no se borra una foto que otro producto sigue usando', async () => {
+  const env = envConAccess({ DB: d1Falso() });
+  fotoVieja(env, 'compartida.jpg');
+  alta(env, { id: 'a', imagen: '/img/compartida.jpg' });
+  alta(env, { id: 'b', imagen: '/img/compartida.jpg' });
+
+  await unitario.onRequestDelete({
+    request: await autenticado('/api/productos/a', { metodo: 'DELETE' }),
+    env, params: { id: 'a' },
+  });
+
+  assert.equal(imagenesGuardadas(env).length, 1, 'se borro una foto que todavia se usa');
+});
+
+test('una foto recien subida NO se borra aunque no tenga producto', async () => {
+  // El panel sube la foto primero y guarda el producto despues. Sin el
+  // dia de gracia, cualquier edicion hecha en el medio se llevaria
+  // puesta la foto que la duena acaba de subir.
+  const env = envConAccess({ DB: d1Falso() });
+  const { datos } = await subir(env, { bytes: 1024, tipo: 'image/jpeg' });
+  alta(env, { id: 'otro' });
+
+  await unitario.onRequestDelete({
+    request: await autenticado('/api/productos/otro', { metodo: 'DELETE' }),
+    env, params: { id: 'otro' },
+  });
+
+  assert.equal(imagenesGuardadas(env).length, 1,
+    `se borro la foto recien subida (${datos.url})`);
+});
+
+
+// ------------------------------------------------------------
+// La guia de puesta en marcha no puede quedar mintiendo
+// ------------------------------------------------------------
+
+test('los nombres que documenta la guia son los que usa el codigo', () => {
+  // docs/cloudflare-setup.md le dice a quien monte esto como se llama el
+  // binding de la base y las variables de Access. Si alguien los renombra en
+  // el codigo, la guia manda a configurar algo que no existe, y el sintoma
+  // seria un panel que no guarda nada sin decir por que.
   const guia = readFileSync(join(raiz, 'docs/cloudflare-setup.md'), 'utf8');
   const codigo = [
     'functions/api/productos.js',
@@ -387,22 +478,30 @@ test('los nombres que documenta la guía son los que usa el código', () => {
     'functions/_lib/acceso.js',
   ].map((f) => readFileSync(join(raiz, f), 'utf8')).join('\n');
 
-  for (const nombre of ['env.DB', 'env.IMAGENES']) {
-    assert.ok(codigo.includes(nombre), `el código ya no usa ${nombre}`);
-    assert.ok(guia.includes(nombre.replace('env.', '')),
-      `la guía no menciona el binding ${nombre.replace('env.', '')}`);
-  }
+  assert.ok(codigo.includes('env.DB'), 'el codigo ya no usa env.DB');
+  assert.ok(guia.includes('DB'), 'la guia no menciona el binding DB');
+
   for (const v of ['ACCESS_TEAM_DOMAIN', 'ACCESS_AUD']) {
-    assert.ok(codigo.includes(v), `el código ya no lee ${v}`);
-    assert.ok(guia.includes(v), `la guía no menciona ${v}`);
+    assert.ok(codigo.includes(v), `el codigo ya no lee ${v}`);
+    assert.ok(guia.includes(v), `la guia no menciona ${v}`);
   }
 });
 
-test('la guía avisa de no proteger /api/* con Access', () => {
+test('la guia avisa de no proteger /api/* con Access', () => {
   // Es el error que rompe el sitio para los visitantes: Access filtra por
-  // ruta y no por método, así que proteger /api/* también corta el GET
-  // público y el catálogo deja de verse.
+  // ruta y no por metodo, asi que proteger /api/* tambien corta el GET
+  // publico y el catalogo deja de verse.
   const guia = readFileSync(join(raiz, 'docs/cloudflare-setup.md'), 'utf8');
   assert.match(guia, /No protejas `\/api\/\*`/,
     'falta la advertencia sobre proteger /api/* con Access');
+});
+
+test('la guia no manda a crear un bucket de R2', () => {
+  // R2 se saco a proposito: obliga a pasar por un checkout y dejar datos de
+  // pago para activarse, y el requisito es que no quede ninguno cargado. Si
+  // la guia lo vuelve a pedir, manda al usuario justo a la caja que se
+  // quiso evitar.
+  const guia = readFileSync(join(raiz, 'docs/cloudflare-setup.md'), 'utf8');
+  assert.ok(!/r2 bucket create|crear.*bucket|R2 bucket/i.test(guia),
+    'la guia sigue mandando a crear un bucket de R2');
 });

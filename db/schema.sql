@@ -99,6 +99,34 @@ create index if not exists productos_listado_idx
 
 
 -- ============================================================
+-- TABLA imagenes — las fotos de los productos
+--
+-- Las fotos viven acá y no en R2 por una razón de costo, no técnica:
+-- R2 exige pasar por un checkout y dejar datos de pago para activarse,
+-- aunque después no cobre. D1 no pide nada de eso, y el requisito del
+-- proyecto es que no quede ningún medio de pago cargado.
+--
+-- Entran holgadas: D1 admite hasta 2 MB por fila y el panel rechaza
+-- cualquier foto de más de 500 KB. En los 500 MB que da el plan gratis
+-- por base entran más de mil fotos, contra un catálogo que tiene
+-- decenas de productos.
+--
+-- Tabla aparte y no una columna en productos: un "select *" del
+-- catálogo se traería todas las fotos en cada carga de la página.
+-- ============================================================
+create table if not exists imagenes (
+  clave      text primary key,
+  tipo       text not null,
+  bytes      blob not null,
+  creado_en  text not null default (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+
+  constraint imagenes_tipo_conocido
+    check (tipo in ('image/jpeg', 'image/png', 'image/webp'))
+);
+
+
+
+-- ============================================================
 -- actualizado_en se mantiene solo
 --
 -- Si dependiera de que el panel lo mande, cualquier edición hecha desde

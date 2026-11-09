@@ -22,13 +22,13 @@ lo demás está al servicio de eso.
 ├── functions/                      # La API (Cloudflare Pages Functions)
 │   ├── _lib/                       #   Validación, consultas y verificación de Access
 │   ├── api/                        #   /api/productos y /api/imagenes
-│   └── img/                        #   Sirve las fotos desde R2
+│   └── img/                        #   Sirve las fotos desde la base
 ├── db/schema.sql                   # El esquema del catálogo (D1)
 ├── test/                           # Tests (node --test, sin dependencias)
 ├── docs/
 │   ├── concepto-landing.md         # Qué es el sitio, datos del negocio, pendientes
 │   ├── fundamentos-marketing-web.md# Principios de conversión que sigue el sitio
-│   ├── cloudflare-setup.md         # Puesta en marcha: D1, R2, Pages y Access
+│   ├── cloudflare-setup.md         # Puesta en marcha: D1, Pages y Access, y los costos
 │   ├── deploy.md                   # Cómo se publica y qué hacer después
 │   ├── google-setup-guia-paso-a-paso.md  # Guion para el setup con la dueña
 │   ├── analytics-setup.md          # Puesta en marcha de Google Analytics 4

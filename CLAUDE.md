@@ -38,7 +38,7 @@ dependencias y no debería tenerlas.
 ### Imágenes de productos — performance
 
 Las imágenes de los productos las sube la dueña desde el panel (`src/admin.html`) y se
-guardan en Cloudflare R2. Para mantener la página rápida:
+guardan en la misma base (D1), en la tabla `imagenes`. Para mantener la página rápida:
 
 - **Tamaño máximo por imagen: 500 KB.** Las imágenes más grandes ralentizan la carga,
   especialmente en móvil con conexión 3G/4G. **El panel y el Worker rechazan las que pasan

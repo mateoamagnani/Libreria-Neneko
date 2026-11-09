@@ -9,9 +9,26 @@
 // ============================================================
 import { json, error, leerJson } from '../../_lib/http.js';
 import { verificarAcceso } from '../../_lib/acceso.js';
-import { validarProducto, consultaEdicion, consultaBaja } from '../../_lib/productos.js';
+import {
+  validarProducto, consultaEdicion, consultaBaja, consultaLimpiarHuerfanas,
+} from '../../_lib/productos.js';
 
 const correr = (env, { sql, binds }) => env.DB.prepare(sql).bind(...binds);
+
+/**
+ * Cambiar o borrar un producto puede dejar su foto sin dueño. Se limpia
+ * acá y no en una tarea aparte porque son los dos únicos momentos en que
+ * eso pasa, y una tarea programada sería otra pieza que mantener.
+ *
+ * No se deja que un fallo de la limpieza voltee la operación: la dueña
+ * ya hizo lo que quería, y que sobre una foto es mucho menos grave que
+ * decirle que no se guardó algo que sí se guardó.
+ */
+async function limpiarHuerfanas(env) {
+  try {
+    await correr(env, consultaLimpiarHuerfanas()).run();
+  } catch { /* se vuelve a intentar en la próxima edición */ }
+}
 
 export async function onRequestPut({ request, env, params }) {
   const permiso = await verificarAcceso(request, env);
@@ -35,6 +52,7 @@ export async function onRequestPut({ request, env, params }) {
   // sobre un producto que alguien borró en otra pestaña.
   if (meta?.changes === 0) return error('Ese producto ya no existe.', { status: 404 });
 
+  await limpiarHuerfanas(env);
   return json({ id: params.id, ...v.producto });
 }
 
@@ -45,5 +63,6 @@ export async function onRequestDelete({ request, env, params }) {
   const { meta } = await correr(env, consultaBaja(params.id)).run();
   if (meta?.changes === 0) return error('Ese producto ya no existe.', { status: 404 });
 
+  await limpiarHuerfanas(env);
   return json({ borrado: params.id });
 }
