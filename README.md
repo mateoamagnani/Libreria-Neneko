@@ -15,15 +15,20 @@ lo demás está al servicio de eso.
 .
 ├── src/                            # Lo que se publica
 │   ├── index.html                  #   La landing, un solo archivo autocontenido
+│   ├── admin.html                  #   Panel de carga de la dueña (lo corta Access)
 │   ├── 404.html, privacy.html      #   Página de error y política de privacidad
 │   ├── logo.png, og-preview.png    #   Favicon/logo y la imagen de Open Graph
 │   ├── robots.txt, sitemap.xml, llms.txt
+├── functions/                      # La API (Cloudflare Pages Functions)
+│   ├── _lib/                       #   Validación, consultas y verificación de Access
+│   ├── api/                        #   /api/productos y /api/imagenes
+│   └── img/                        #   Sirve las fotos desde R2
+├── db/schema.sql                   # El esquema del catálogo (D1)
 ├── test/                           # Tests (node --test, sin dependencias)
 ├── docs/
 │   ├── concepto-landing.md         # Qué es el sitio, datos del negocio, pendientes
 │   ├── fundamentos-marketing-web.md# Principios de conversión que sigue el sitio
-│   ├── catalogo-google-sheets.md   # Cómo conectar el catálogo a una hoja
-│   ├── plantilla-catalogo.csv      #   Plantilla lista para copiar
+│   ├── cloudflare-setup.md         # Puesta en marcha: D1, R2, Pages y Access
 │   ├── deploy.md                   # Cómo se publica y qué hacer después
 │   ├── google-setup-guia-paso-a-paso.md  # Guion para el setup con la dueña
 │   ├── analytics-setup.md          # Puesta en marcha de Google Analytics 4
@@ -95,18 +100,21 @@ Sin dependencias que instalar: usan el runner que ya trae Node.
 npm test
 ```
 
-Cubren el parser del catálogo y el escapado del contenido que baja de Google Sheets.
+Cubren cómo se dibuja el catálogo, el escapado del contenido, el horario, la API y el panel.
 
 ---
 
 ## Catálogo de productos
 
-El mercadito se alimenta de una hoja de Google Sheets publicada como CSV, con columnas
-`Categoria | Producto | Precio`. Ya está conectado: `SHEET_CSV_URL` en `src/index.html`
-apunta a la hoja real. Si en algún momento el fetch falla, la página muestra productos de
-ejemplo sin romperse.
+El mercadito se alimenta de una base (Cloudflare D1). La dueña carga los productos desde el
+panel (`src/admin.html`), que escribe en esa misma base a través del Worker. Si la API falla,
+la página muestra productos de ejemplo sin romperse.
 
-Paso a paso en [`docs/catalogo-google-sheets.md`](docs/catalogo-google-sheets.md).
+Hasta noviembre de 2026 los productos salían de una hoja de Google Sheets publicada como
+CSV. Se cambió para que la dueña tuviera un solo lugar donde cargar todo, con fotos subidas
+desde el teléfono.
+
+Puesta en marcha en [`docs/cloudflare-setup.md`](docs/cloudflare-setup.md).
 
 ---
 
@@ -115,10 +123,9 @@ Paso a paso en [`docs/catalogo-google-sheets.md`](docs/catalogo-google-sheets.md
 Lo que está hecho:
 
 - ✅ Landing responsive, con SEO local (JSON-LD, Open Graph, sitemap) y accesibilidad revisada
-- ✅ Catálogo dinámico desde Google Sheets, con tests
-- ✅ Deploy automático a GitHub Pages, con los tests como condición
-- ✅ **GitHub Pages activo** — el sitio está publicado y se redeploya solo en cada push a `main`
-- ✅ **Google Sheet del catálogo conectado**, con precios reales
+- ✅ Catálogo dinámico desde la base, con tests
+- ✅ Panel de carga para la dueña, protegido con Cloudflare Access
+- ✅ Deploy automático, con los tests como condición
 - ✅ Los documentos base pasados a Markdown
 - ✅ 15 skills instaladas para trabajar el proyecto con Claude Code
 

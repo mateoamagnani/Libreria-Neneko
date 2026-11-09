@@ -366,3 +366,43 @@ test('un archivo vacío se rechaza', async () => {
   const { status } = await subir(env, { bytes: 0, tipo: 'image/jpeg' });
   assert.equal(status, 400);
 });
+
+
+// ------------------------------------------------------------
+// La guía de puesta en marcha no puede quedar mintiendo
+// ------------------------------------------------------------
+
+test('los nombres que documenta la guía son los que usa el código', () => {
+  // docs/cloudflare-setup.md le dice a quien monte esto que los bindings se
+  // llaman DB e IMAGENES y las variables ACCESS_TEAM_DOMAIN y ACCESS_AUD.
+  // Si alguien los renombra en el código, la guía queda mandando a configurar
+  // algo que no existe, y el síntoma es un panel que no guarda nada sin decir
+  // por qué. Esto lo convierte en un test roto.
+  const guia = readFileSync(join(raiz, 'docs/cloudflare-setup.md'), 'utf8');
+  const codigo = [
+    'functions/api/productos.js',
+    'functions/api/productos/[id].js',
+    'functions/api/imagenes.js',
+    'functions/img/[[clave]].js',
+    'functions/_lib/acceso.js',
+  ].map((f) => readFileSync(join(raiz, f), 'utf8')).join('\n');
+
+  for (const nombre of ['env.DB', 'env.IMAGENES']) {
+    assert.ok(codigo.includes(nombre), `el código ya no usa ${nombre}`);
+    assert.ok(guia.includes(nombre.replace('env.', '')),
+      `la guía no menciona el binding ${nombre.replace('env.', '')}`);
+  }
+  for (const v of ['ACCESS_TEAM_DOMAIN', 'ACCESS_AUD']) {
+    assert.ok(codigo.includes(v), `el código ya no lee ${v}`);
+    assert.ok(guia.includes(v), `la guía no menciona ${v}`);
+  }
+});
+
+test('la guía avisa de no proteger /api/* con Access', () => {
+  // Es el error que rompe el sitio para los visitantes: Access filtra por
+  // ruta y no por método, así que proteger /api/* también corta el GET
+  // público y el catálogo deja de verse.
+  const guia = readFileSync(join(raiz, 'docs/cloudflare-setup.md'), 'utf8');
+  assert.match(guia, /No protejas `\/api\/\*`/,
+    'falta la advertencia sobre proteger /api/* con Access');
+});
