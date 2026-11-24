@@ -2,9 +2,9 @@
 <html lang="es-AR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Panel · Librería Neneko</title>
+<title>Productos · Librería Neneko</title>
 
 <!--
   ============================================================
@@ -15,11 +15,32 @@
   login ni contraseña: no habría forma honesta de hacerla, porque este
   archivo se descarga entero al navegador.
 
-  Los pedidos a /api/* viajan con la cookie de Access y el Worker
-  vuelve a verificarla. O sea que la protección no depende de que esta
-  página se porte bien.
+  ------------------------------------------------------------
+  CÓMO ESTÁ PENSADO
 
-  noindex porque no tiene que aparecer en Google.
+  Para una persona que no se maneja rápido con esto y que lo va a usar
+  desde el teléfono. De ahí salen las decisiones que parecen de más:
+
+  · DOS NIVELES, como Ajustes del iPhone. Primero las categorías,
+    después los productos de esa categoría. Con una lista sola, a los
+    cincuenta productos la página se vuelve un scroll interminable y
+    agregar algo obliga a pasar por todo lo demás.
+
+  · UNA SOLA ACCIÓN PRINCIPAL, siempre arriba y siempre visible:
+    "Agregar un producto". No compite con nada.
+
+  · LAS FILAS NO TIENEN BOTONES. Antes cada producto llevaba editar,
+    ocultar y borrar uno al lado del otro, con el tacho pegado al ojo.
+    Ahora se toca la fila y se abre la ficha; las acciones peligrosas
+    viven adentro, lejos del dedo que solo quería mirar.
+
+  · LA FICHA MUESTRA CUATRO CAMPOS. El resto vive detrás de "Más
+    opciones", cerrado. Un formulario de ocho campos asusta.
+
+  · LA CATEGORÍA SE ELIGE DE UNA LISTA, no se escribe. Escribir a mano
+    termina en "Útiles escolares" y "Utiles escolares" como dos grupos
+    distintos, y nadie entiende por qué el producto no aparece donde
+    debería.
   ============================================================
 -->
 
@@ -31,10 +52,9 @@
 /* ============================================================
    TOKENS
 
-   Son los mismos de src/index.html, copiados tal cual. El panel tiene
-   que sentirse parte del sitio, no una herramienta ajena. Ningún
-   componente de acá abajo escribe un color literal: si el par del modo
-   oscuro tiene contraste, todo lo que lo usa lo tiene.
+   Los mismos de src/index.html. Ningún componente de acá abajo escribe
+   un color literal: si el par del modo oscuro tiene contraste, todo lo
+   que lo usa lo tiene, y los tests lo verifican.
    ============================================================ */
 :root{
   --bg:#F8F9FA; --surface:#FFFFFF; --surface-2:#E9ECEF;
@@ -50,7 +70,9 @@
   --r-sm:8px; --r-md:12px; --r-lg:18px; --r-full:999px;
   --shadow-sm: 0 1px 2px rgba(28,37,54,.06), 0 2px 8px rgba(28,37,54,.05);
   --shadow-md: 0 4px 12px rgba(28,37,54,.07), 0 12px 32px -12px rgba(28,37,54,.16);
-  --maxw:860px;
+  --maxw:620px;
+  /* Curva de iOS: arranca rápido y frena suave. */
+  --curva: cubic-bezier(.32,.72,0,1);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark){
@@ -62,10 +84,9 @@
     --text-inv:#E8ECEF; --text-inv-2:#9AA5B3;
     --brand:#6BC2C2; --brand-bright:#8AD3D3;
     --ok:#4ECB93; --closed:#F0846A;
-    /* Se repiten con el mismo valor, no por descuido: el turquesa con
-       texto oscuro ya cumple AA en los dos modos, y la regla del
-       proyecto es que todo color de :root tenga su par acá. Un token
-       sin par es el bug que rompió el modo oscuro tres veces. */
+    /* Mismo valor en los dos modos: el turquesa con texto oscuro ya
+       cumple AA en ambos. Se repiten igual porque la regla del
+       proyecto es que todo color de :root tenga su par acá. */
     --btn-bg:#6BC2C2; --btn-bg-hover:#56A4A4; --btn-text:#2B2B2B;
     --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 2px 8px rgba(0,0,0,.25);
     --shadow-md: 0 4px 12px rgba(0,0,0,.35), 0 12px 32px -12px rgba(0,0,0,.5);
@@ -75,176 +96,136 @@
 
 *{ box-sizing:border-box; }
 
-/* [hidden] tiene que ganarle a cualquier display de componente.
-   Sin esto, .btn{display:inline-flex} y .foto-previa{display:block}
-   le pasan por encima por especificidad, y los botones marcados como
-   ocultos se ven igual: "Quitar la foto" aparecía sin haber foto, y la
-   vista previa se dibujaba rota. Es un bug que no se ve leyendo el
-   código, solo abriendo la página. */
+/* [hidden] tiene que ganarle a cualquier display de componente. Sin
+   esto, .btn{display:inline-flex} y los demás le pasan por encima por
+   especificidad y los elementos marcados como ocultos se ven igual.
+   Es un bug que no se ve leyendo el código, solo abriendo la página. */
 [hidden]{ display:none !important; }
 
 html{ -webkit-text-size-adjust:100%; }
 body{
   margin:0; background:var(--bg); color:var(--text);
   font-family:'IBM Plex Sans', system-ui, sans-serif;
-  font-size:17px; line-height:1.6;
+  font-size:17px; line-height:1.5;
+  padding-bottom:env(safe-area-inset-bottom, 0px);
 }
-h1,h2,h3{
-  font-family:'Bricolage Grotesque', sans-serif;
-  letter-spacing:-.02em; line-height:1.1; margin:0;
-}
+h1,h2,h3{ font-family:'Bricolage Grotesque', sans-serif; letter-spacing:-.02em; margin:0; }
 :focus-visible{ outline:2.5px solid var(--brand); outline-offset:3px; border-radius:var(--r-sm); }
 
 .container{ max-width:var(--maxw); margin:0 auto; padding-inline:var(--s4); }
 
-/* --- Barra superior --- */
-.barra{
-  background:var(--surface-inv); color:var(--text-inv);
-  padding-block:var(--s4); position:sticky; top:0; z-index:20;
-  box-shadow:var(--shadow-sm);
+/* --- Barra de navegación --- */
+.nav{
+  position:sticky; top:0; z-index:20;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding-block:var(--s2);
 }
-.barra .container{ display:flex; align-items:center; justify-content:space-between; gap:var(--s3); }
-.barra h1{ font-size:1.25rem; font-weight:700; }
-.barra .quien{
-  font-family:'IBM Plex Mono', monospace; font-size:.75rem;
-  color:var(--text-inv-2); white-space:nowrap;
-  overflow:hidden; text-overflow:ellipsis; max-width:45vw;
+.nav .container{ display:flex; align-items:center; gap:var(--s2); min-height:52px; }
+.nav h2{ font-size:1.0625rem; font-weight:600; flex:1; text-align:center;
+         overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.volver{
+  display:inline-flex; align-items:center; gap:2px;
+  min-height:44px; padding-inline:var(--s2) var(--s3);
+  background:none; border:none; cursor:pointer;
+  color:var(--brand); font:inherit; font-size:1rem; font-weight:500;
+}
+.volver svg{ width:20px; height:20px; }
+/* Mismo ancho que el botón de volver, para que el título quede centrado. */
+.nav .equilibrio{ width:84px; flex-shrink:0; }
+
+/* --- Título grande --- */
+.titulo-grande{ padding-top:var(--s5); padding-bottom:var(--s4); }
+.titulo-grande h1{ font-size:2.125rem; font-weight:700; line-height:1.1; }
+.titulo-grande p{ margin:var(--s2) 0 0; color:var(--text-2); font-size:.9375rem; }
+
+/* --- Acción principal --- */
+.accion-principal{
+  display:flex; align-items:center; justify-content:center; gap:var(--s2);
+  width:100%; min-height:54px; margin-bottom:var(--s5);
+  background:var(--btn-bg); color:var(--btn-text);
+  border:none; border-radius:var(--r-md);
+  font:inherit; font-size:1.0625rem; font-weight:600; cursor:pointer;
+  transition:background .2s var(--curva), transform .1s var(--curva);
+}
+.accion-principal:hover{ background:var(--btn-bg-hover); }
+.accion-principal:active{ transform:scale(.985); }
+.accion-principal svg{ width:22px; height:22px; }
+
+/* --- Selector de sección --- */
+.segmentos{
+  display:flex; gap:2px; padding:3px; margin-bottom:var(--s4);
+  background:var(--surface-2); border-radius:var(--r-sm);
+}
+.segmento{
+  flex:1; min-height:44px; border:none; border-radius:6px;
+  background:none; color:var(--text-2);
+  font:inherit; font-size:.9375rem; font-weight:600; cursor:pointer;
+  transition:background .25s var(--curva), color .25s var(--curva);
+}
+.segmento[aria-selected="true"]{
+  background:var(--surface); color:var(--text); box-shadow:var(--shadow-sm);
 }
 
-/* --- Solapas de sección --- */
-.solapas{
-  display:flex; gap:var(--s2); padding-block:var(--s4);
-  border-bottom:1px solid var(--border); margin-bottom:var(--s5);
+/* --- Buscador --- */
+.buscador{ position:relative; margin-bottom:var(--s5); }
+.buscador svg{
+  position:absolute; left:var(--s3); top:50%; transform:translateY(-50%);
+  width:18px; height:18px; color:var(--text-3); pointer-events:none;
 }
-.solapa{
-  flex:1; min-height:44px; padding:var(--s2) var(--s4);
-  border:1.5px solid var(--border); border-radius:var(--r-full);
-  background:var(--surface); color:var(--text-2);
-  font:inherit; font-weight:600; font-size:.9375rem; cursor:pointer;
-  transition:all .2s cubic-bezier(.4,0,.2,1);
-}
-.solapa:hover{ border-color:var(--border-strong); }
-.solapa[aria-selected="true"]{
-  background:var(--brand); border-color:var(--brand); color:var(--surface);
-}
-
-/* --- Botones --- */
-.btn{
-  min-height:44px; padding:var(--s2) var(--s5);
-  border-radius:var(--r-full); border:1.5px solid transparent;
-  font:inherit; font-weight:600; font-size:.9375rem; cursor:pointer;
-  display:inline-flex; align-items:center; justify-content:center; gap:var(--s2);
-  transition:background .2s cubic-bezier(.4,0,.2,1), border-color .2s;
-}
-.btn-primario{ background:var(--btn-bg); color:var(--btn-text); }
-.btn-primario:hover{ background:var(--btn-bg-hover); }
-.btn-secundario{ background:var(--surface); color:var(--text); border-color:var(--border-strong); }
-.btn-secundario:hover{ background:var(--surface-2); }
-.btn-peligro{ background:transparent; color:var(--closed); border-color:var(--closed); }
-.btn-peligro:hover{ background:color-mix(in srgb, var(--closed) 10%, transparent); }
-.btn:disabled{ opacity:.55; cursor:not-allowed; }
-.btn-ancho{ width:100%; }
-
-/* --- Tarjeta de producto --- */
-.lista{ display:flex; flex-direction:column; gap:var(--s5); padding-bottom:var(--s8); }
-.grupo h2{
-  font-size:1rem; font-weight:600; color:var(--text-2);
-  text-transform:uppercase; letter-spacing:.04em;
-  font-family:'IBM Plex Mono', monospace;
-  margin-bottom:var(--s3); padding-bottom:var(--s2);
-  border-bottom:1px solid var(--border);
-}
-.tarjetas{ display:flex; flex-direction:column; gap:var(--s3); }
-.tarjeta{
-  display:flex; gap:var(--s3); align-items:flex-start; flex-wrap:wrap;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--r-md); padding:var(--s3); box-shadow:var(--shadow-sm);
-}
-.tarjeta[data-oculto="true"]{ opacity:.6; border-style:dashed; }
-.miniatura{
-  width:64px; height:64px; flex-shrink:0;
-  border-radius:var(--r-sm); background:var(--surface-2);
-  object-fit:cover; display:grid; place-items:center;
-  color:var(--text-3); font-size:.6875rem; text-align:center;
-}
-img.miniatura{ display:block; }
-.datos{ flex:1; min-width:min(200px, 100%); }
-.datos .nombre{ font-weight:600; display:block; }
-.datos .precio{ font-family:'IBM Plex Mono', monospace; font-size:.875rem; color:var(--brand); }
-.datos .detalle{ font-size:.875rem; color:var(--text-2); display:block; }
-.etiqueta{
-  display:inline-block; font-size:.6875rem; font-weight:600;
-  font-family:'IBM Plex Mono', monospace; text-transform:uppercase;
-  padding:2px var(--s2); border-radius:var(--r-full); margin-top:var(--s1);
-}
-.etiqueta[data-estado="oculto"]{
-  color:var(--closed); border:1px solid var(--closed);
-}
-/* En fila, no apilados: tres botones de 44px uno encima del otro
-   estiraban la tarjeta a 150px para 60px de contenido, y en el
-   teléfono eso es mucho scroll de más. Si no entran al lado, el
-   flex-wrap de la tarjeta los baja a su propio renglón. */
-.acciones{ display:flex; flex-direction:row; gap:var(--s2); margin-left:auto; }
-.icono-btn{
-  width:44px; height:44px; border-radius:var(--r-sm);
-  border:1.5px solid var(--border); background:var(--surface);
-  color:var(--text-2); cursor:pointer; display:grid; place-items:center;
-  transition:all .2s;
-}
-.icono-btn svg{ width:19px; height:19px; display:block; }
-.icono-btn:hover{ border-color:var(--border-strong); color:var(--text); }
-.icono-btn[data-accion="borrar"]{ color:var(--closed); }
-
-/* --- Formulario --- */
-.panel-form{
-  position:fixed; inset:0; z-index:30;
-  background:var(--bg); overflow-y:auto;
-  /* Holgado a propósito: la barra de Guardar es sticky al pie y flota
-     sobre el contenido. Sin este colchón, el último campo queda tapado
-     aunque scrollees hasta el final. */
-  padding-bottom:var(--s8);
-}
-.panel-form[hidden]{ display:none; }
-.form-barra{
-  position:sticky; top:0; background:var(--surface);
-  border-bottom:1px solid var(--border); padding-block:var(--s3);
-  display:flex; align-items:center; justify-content:space-between; gap:var(--s3);
-  z-index:1;
-}
-.campo{ margin-bottom:var(--s4); }
-.campo label{
-  display:block; font-weight:600; font-size:.875rem;
-  margin-bottom:var(--s1);
-}
-.campo .ayuda{ font-size:.8125rem; color:var(--text-3); margin-bottom:var(--s2); }
-.campo input[type="text"], .campo textarea, .campo select{
-  width:100%; min-height:44px; padding:var(--s2) var(--s3);
-  border:1.5px solid var(--border); border-radius:var(--r-sm);
-  background:var(--surface); color:var(--text);
+.buscador input{
+  width:100%; min-height:44px; padding:var(--s2) var(--s3) var(--s2) var(--s7);
+  background:var(--surface-2); color:var(--text);
+  border:1px solid transparent; border-radius:var(--r-sm);
   font:inherit; font-size:1rem;
 }
-.campo textarea{ min-height:76px; resize:vertical; }
-.campo input:focus, .campo textarea:focus, .campo select:focus{
-  border-color:var(--brand); outline:none;
+.buscador input:focus{ border-color:var(--brand); outline:none; background:var(--surface); }
+
+/* --- Lista agrupada, estilo Ajustes --- */
+.grupo{
+  background:var(--surface); border-radius:14px;
+  overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:var(--s5);
 }
-.fila-doble{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s3); }
-.interruptor{
+.fila{
   display:flex; align-items:center; gap:var(--s3);
-  min-height:44px; cursor:pointer;
+  width:100%; min-height:60px; padding:var(--s3) var(--s4);
+  background:none; border:none; text-align:left;
+  font:inherit; color:inherit; cursor:pointer;
+  transition:background .15s var(--curva);
 }
-.interruptor input{ width:22px; height:22px; accent-color:var(--brand); cursor:pointer; }
+.fila:hover{ background:var(--surface-2); }
+.fila:active{ background:var(--surface-2); }
+/* La línea arranca después de la miniatura, como en iOS. */
+.fila + .fila{ box-shadow:inset 0 1px 0 var(--border); }
+.fila-cuerpo{ flex:1; min-width:0; }
+.fila-titulo{ font-weight:500; display:block; }
+.fila-sub{ font-size:.875rem; color:var(--text-2); display:block;
+           overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fila-precio{ font-family:'IBM Plex Mono', monospace; font-size:.875rem; color:var(--brand); }
+.chevron{ width:18px; height:18px; color:var(--text-3); flex-shrink:0; }
 
-/* --- Foto --- */
-.foto-zona{
-  border:1.5px dashed var(--border-strong); border-radius:var(--r-md);
-  padding:var(--s4); text-align:center; background:var(--surface-2);
+.mini{
+  width:48px; height:48px; flex-shrink:0; border-radius:10px;
+  background:var(--surface-2); object-fit:cover;
+  display:grid; place-items:center;
+  color:var(--text-3); font-size:.625rem; text-align:center; line-height:1.2;
 }
-.foto-previa{
-  max-width:160px; max-height:160px; border-radius:var(--r-sm);
-  display:block; margin:0 auto var(--s3); object-fit:cover;
+img.mini{ display:block; }
+
+.fila[data-oculto="true"] .fila-titulo,
+.fila[data-oculto="true"] .fila-sub{ opacity:.5; }
+.marca-oculto{
+  display:inline-block; margin-top:2px;
+  font-family:'IBM Plex Mono', monospace; font-size:.625rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.04em;
+  color:var(--closed); border:1px solid var(--closed);
+  padding:1px var(--s2); border-radius:var(--r-full);
 }
 
-/* --- Avisos --- */
+/* --- Estados --- */
+.vacio, .cargando{
+  text-align:center; padding:var(--s8) var(--s4); color:var(--text-2);
+}
+.vacio strong{ color:var(--text); }
 .aviso{
   padding:var(--s3) var(--s4); border-radius:var(--r-md);
   border:1.5px solid; margin-bottom:var(--s4); font-size:.9375rem;
@@ -253,149 +234,267 @@ img.miniatura{ display:block; }
 .aviso[data-tipo="ok"]{ color:var(--ok); border-color:var(--ok); }
 .aviso ul{ margin:var(--s2) 0 0; padding-left:var(--s5); }
 
-.vacio{
-  text-align:center; padding:var(--s8) var(--s4); color:var(--text-2);
+/* --- Ficha (hoja que sube) --- */
+.ficha{
+  position:fixed; inset:0; z-index:40;
+  background:var(--bg); overflow-y:auto;
+  animation:subir .35s var(--curva);
 }
-.cargando{ text-align:center; padding:var(--s8); color:var(--text-3); }
+@keyframes subir{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
+@media (prefers-reduced-motion: reduce){ .ficha{ animation:none; } }
 
-/* Barra de guardado fija: en el teléfono el formulario es largo y el
-   botón quedaba fuera de alcance al final de todo. */
-.form-pie{
-  position:sticky; bottom:0; background:var(--surface);
-  border-top:1px solid var(--border);
-  padding:var(--s3) 0; display:flex; gap:var(--s3);
+.ficha-barra{
+  position:sticky; top:0; z-index:1;
+  background:var(--surface); border-bottom:1px solid var(--border);
 }
-.form-pie .btn{ flex:1; }
+.ficha-barra .container{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s2); min-height:56px;
+}
+.ficha-barra h2{ font-size:1.0625rem; font-weight:600; }
+.texto-btn{
+  min-height:44px; padding-inline:var(--s2);
+  background:none; border:none; cursor:pointer;
+  color:var(--brand); font:inherit; font-size:1rem;
+}
+.texto-btn[data-peso="fuerte"]{ font-weight:600; }
+.texto-btn:disabled{ opacity:.5; cursor:not-allowed; }
 
-@media (min-width:640px){
-  body{ font-size:16px; }
-  .panel-form{ padding:0; }
+.ficha form{ padding-top:var(--s5); padding-bottom:var(--s8); }
+
+/* --- Campos --- */
+.campo{ margin-bottom:var(--s5); }
+.campo > label{ display:block; font-weight:600; font-size:.9375rem; margin-bottom:var(--s1); }
+.ayuda{ font-size:.8125rem; color:var(--text-3); margin:0 0 var(--s2); line-height:1.4; }
+.campo input[type="text"], .campo select{
+  width:100%; min-height:50px; padding:var(--s2) var(--s3);
+  background:var(--surface); color:var(--text);
+  border:1px solid var(--border); border-radius:var(--r-sm);
+  font:inherit; font-size:1.0625rem;
 }
-@media (max-width:420px){
-  .fila-doble{ grid-template-columns:1fr; }
+.campo select{ appearance:none; background-image:none; padding-right:var(--s7); }
+.campo input:focus, .campo select:focus{ border-color:var(--brand); outline:none; }
+
+/* El select sin apariencia nativa queda igual que un campo de texto, y
+   entonces nadie sabe que se despliega. La flechita lo delata. Se dibuja
+   con bordes y rotación, como el resto del sitio: sin imágenes. */
+.con-flecha{ position:relative; }
+.con-flecha::after{
+  content:''; position:absolute; right:var(--s4); top:50%;
+  width:8px; height:8px; margin-top:-6px;
+  border-right:2px solid var(--text-3); border-bottom:2px solid var(--text-3);
+  transform:rotate(45deg); pointer-events:none;
 }
+
+/* --- Interruptor --- */
+.interruptor{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+  min-height:44px; cursor:pointer;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:var(--s3) var(--s4);
+}
+.interruptor span{ font-weight:500; }
+.interruptor input{ width:22px; height:22px; accent-color:var(--brand); cursor:pointer; flex-shrink:0; }
+
+/* --- Foto --- */
+.foto-zona{
+  display:flex; flex-direction:column; align-items:center; gap:var(--s3);
+  padding:var(--s5); text-align:center;
+  background:var(--surface); border:1.5px dashed var(--border-strong);
+  border-radius:var(--r-md);
+}
+.foto-previa{ width:120px; height:120px; border-radius:var(--r-md); object-fit:cover; }
+.foto-vacia{
+  width:120px; height:120px; border-radius:var(--r-md);
+  background:var(--surface-2); display:grid; place-items:center;
+  color:var(--text-3);
+}
+.foto-vacia svg{ width:34px; height:34px; }
+.btn-chico{
+  min-height:44px; padding-inline:var(--s5);
+  border-radius:var(--r-full); border:1.5px solid var(--border-strong);
+  background:var(--surface); color:var(--text);
+  font:inherit; font-size:.9375rem; font-weight:600; cursor:pointer;
+}
+.btn-chico:hover{ background:var(--surface-2); }
+.btn-chico[data-tono="peligro"]{ color:var(--closed); border-color:var(--closed); background:none; }
+
+/* --- Más opciones --- */
+.mas{ margin-bottom:var(--s5); }
+.mas > summary{
+  display:flex; align-items:center; gap:var(--s2);
+  min-height:44px; cursor:pointer; list-style:none;
+  color:var(--brand); font-weight:600; font-size:.9375rem;
+}
+.mas > summary::-webkit-details-marker{ display:none; }
+.mas > summary svg{ width:16px; height:16px; transition:transform .25s var(--curva); }
+.mas[open] > summary svg{ transform:rotate(90deg); }
+.mas-cuerpo{ padding-top:var(--s4); }
+
+/* --- Zona peligrosa --- */
+.peligro{
+  margin-top:var(--s7); padding-top:var(--s5);
+  border-top:1px solid var(--border); text-align:center;
+}
+.peligro .ayuda{ margin-top:var(--s2); }
+
+/* --- Pie de la ficha --- */
+.ficha-pie{
+  position:sticky; bottom:0;
+  background:var(--surface); border-top:1px solid var(--border);
+  padding:var(--s3) 0 calc(var(--s3) + env(safe-area-inset-bottom, 0px));
+}
+.ficha-pie .container{ display:flex; }
+.ficha-pie .accion-principal{ margin:0; }
+
+@media (min-width:640px){ body{ font-size:16px; } }
 </style>
 </head>
 <body>
 
-<header class="barra">
-  <div class="container">
-    <h1>Panel · Neneko</h1>
-    <span class="quien" id="quien"></span>
-  </div>
-</header>
+<!-- ============ Pantalla de lista ============ -->
+<div id="pantalla">
+  <nav class="nav">
+    <div class="container">
+      <button class="volver" id="btn-volver" hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        Productos
+      </button>
+      <h2 id="nav-titulo">Librería Neneko</h2>
+      <span class="equilibrio"></span>
+    </div>
+  </nav>
 
-<main class="container">
-  <div class="solapas" role="tablist" aria-label="Secciones del catálogo">
-    <button class="solapa" role="tab" data-seccion="novedades" aria-selected="true">Mercadito</button>
-    <button class="solapa" role="tab" data-seccion="menu" aria-selected="false">Servicios</button>
-  </div>
+  <main class="container">
+    <div class="titulo-grande" id="encabezado">
+      <h1>Productos</h1>
+      <p id="encabezado-sub">Lo que se ve en la página</p>
+    </div>
 
-  <div id="aviso-global"></div>
+    <div id="aviso-global"></div>
 
-  <button class="btn btn-primario btn-ancho" id="btn-nuevo" style="margin-bottom:var(--s5)">
-    + Agregar producto
-  </button>
+    <button class="accion-principal" id="btn-nuevo">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      Agregar un producto
+    </button>
 
-  <div id="contenido" class="cargando">Cargando el catálogo…</div>
-</main>
+    <div class="segmentos" role="tablist" aria-label="Qué parte de la página">
+      <button class="segmento" role="tab" data-seccion="novedades" aria-selected="true">Mercadito</button>
+      <button class="segmento" role="tab" data-seccion="menu" aria-selected="false">Servicios</button>
+    </div>
+
+    <div class="buscador">
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input type="search" id="buscar" placeholder="Buscar un producto" aria-label="Buscar un producto" autocomplete="off">
+    </div>
+
+    <div id="contenido" class="cargando">Cargando…</div>
+  </main>
+</div>
 
 
-<!-- Formulario de alta / edición -->
-<section class="panel-form" id="formulario" hidden aria-label="Editar producto">
-  <div class="form-barra">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:var(--s3);width:100%">
-      <h2 id="form-titulo" style="font-size:1.125rem">Nuevo producto</h2>
-      <button class="icono-btn" id="btn-cerrar" aria-label="Cerrar sin guardar">✕</button>
+<!-- ============ Ficha del producto ============ -->
+<section class="ficha" id="ficha" hidden aria-label="Ficha del producto">
+  <div class="ficha-barra">
+    <div class="container">
+      <button class="texto-btn" id="btn-cancelar">Cancelar</button>
+      <h2 id="ficha-titulo">Nuevo producto</h2>
+      <span style="width:72px"></span>
     </div>
   </div>
 
-  <form class="container" id="form" style="padding-top:var(--s5)" novalidate>
+  <form class="container" id="form" novalidate>
     <div id="form-errores"></div>
 
     <div class="campo">
-      <label for="f-nombre">Nombre del producto</label>
-      <input type="text" id="f-nombre" name="nombre" maxlength="120" required
-             autocomplete="off" placeholder="Cuaderno A4 rayado">
+      <label for="f-nombre">¿Qué es?</label>
+      <p class="ayuda">El nombre como lo va a leer el cliente.</p>
+      <input type="text" id="f-nombre" maxlength="120" autocomplete="off"
+             placeholder="Cuaderno A4 rayado" required>
     </div>
 
     <div class="campo">
-      <label for="f-categoria">Categoría</label>
-      <p class="ayuda">Los productos se agrupan por categoría en la página. Si escribís una
-        que ya existe, se suma a ese grupo.</p>
-      <input type="text" id="f-categoria" name="categoria" maxlength="80" required
-             list="categorias-existentes" autocomplete="off"
-             placeholder="Útiles escolares y de oficina">
-      <datalist id="categorias-existentes"></datalist>
-    </div>
-
-    <div class="fila-doble">
-      <div class="campo">
-        <label for="f-precio">Precio</label>
-        <p class="ayuda">Como quieras que se vea.</p>
-        <input type="text" id="f-precio" name="precio" maxlength="40"
-               autocomplete="off" placeholder="$ 3.000">
-      </div>
-      <div class="campo">
-        <label for="f-orden">Orden</label>
-        <p class="ayuda">Más chico, más arriba.</p>
-        <input type="text" id="f-orden" name="orden" inputmode="numeric"
-               autocomplete="off" value="0">
-      </div>
+      <label for="f-precio">¿Cuánto sale?</label>
+      <p class="ayuda">Escribilo como quieras que se vea. Si lo dejás vacío, en la página
+        dice "Consultar".</p>
+      <input type="text" id="f-precio" maxlength="40" autocomplete="off" placeholder="$ 3.000">
     </div>
 
     <div class="campo">
-      <label for="f-detalle">Detalle</label>
-      <p class="ayuda">Una línea corta debajo del nombre. Opcional.</p>
-      <input type="text" id="f-detalle" name="detalle" maxlength="200"
-             autocomplete="off" placeholder="Tapa dura">
-    </div>
-
-    <div class="campo">
-      <label for="f-subcategoria">Subcategoría</label>
-      <p class="ayuda">Opcional.</p>
-      <input type="text" id="f-subcategoria" name="subcategoria" maxlength="80" autocomplete="off">
+      <label for="f-categoria">¿En qué grupo va?</label>
+      <p class="ayuda">Los productos se muestran agrupados. Elegí uno de la lista.</p>
+      <div class="con-flecha"><select id="f-categoria"></select></div>
+      <input type="text" id="f-categoria-nueva" maxlength="80" autocomplete="off" hidden
+             placeholder="Nombre del grupo nuevo" style="margin-top:var(--s2)"
+             aria-label="Nombre del grupo nuevo">
     </div>
 
     <div class="campo">
       <label>Foto</label>
-      <p class="ayuda">Cuadrada queda mejor: la tarjeta recorta lo que sobra.
-        Hasta 500 KB, en JPG, PNG o WebP.</p>
+      <p class="ayuda">Cuadrada queda mejor. Si no ponés, se ve un dibujito.</p>
       <div class="foto-zona">
         <img class="foto-previa" id="f-previa" alt="" hidden>
-        <p id="f-sin-foto" style="color:var(--text-3);font-size:.875rem;margin:0 0 var(--s3)">
-          Todavía no tiene foto. Se va a ver con un ícono.
-        </p>
+        <div class="foto-vacia" id="f-sin-foto">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5L5 19"/></svg>
+        </div>
         <input type="file" id="f-archivo" accept="image/jpeg,image/png,image/webp" hidden>
-        <button type="button" class="btn btn-secundario" id="btn-foto">Elegir una foto</button>
-        <button type="button" class="btn btn-peligro" id="btn-quitar-foto" hidden
-                style="margin-top:var(--s2)">Quitar la foto</button>
+        <button type="button" class="btn-chico" id="btn-foto">Elegir una foto</button>
+        <button type="button" class="btn-chico" data-tono="peligro" id="btn-quitar-foto" hidden>Quitar la foto</button>
       </div>
-      <input type="hidden" id="f-imagen" name="imagen">
+      <input type="hidden" id="f-imagen">
     </div>
 
     <div class="campo">
-      <label for="f-keywords">Palabras para el buscador</label>
-      <p class="ayuda">Separadas por coma. Ayudan a que el producto aparezca
-        cuando alguien lo busca en la página. Opcional.</p>
-      <input type="text" id="f-keywords" name="keywords" maxlength="300"
-             autocomplete="off" placeholder="cuaderno, escolar, abc">
-    </div>
-
-    <div class="campo">
-      <label class="interruptor">
-        <input type="checkbox" id="f-activo" checked>
+      <label class="interruptor" for="f-activo">
         <span>Mostrar en la página</span>
+        <input type="checkbox" id="f-activo" checked>
       </label>
-      <p class="ayuda">Si lo destildás, el producto se guarda pero no se ve.
-        Sirve para algo que no tenés en stock.</p>
+      <p class="ayuda">Destildalo si no tenés stock. El producto se guarda igual y no se pierde.</p>
     </div>
 
-    <div class="form-pie">
-      <button type="button" class="btn btn-secundario" id="btn-cancelar">Cancelar</button>
-      <button type="submit" class="btn btn-primario" id="btn-guardar">Guardar</button>
+    <details class="mas">
+      <summary>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+        Más opciones
+      </summary>
+      <div class="mas-cuerpo">
+        <div class="campo">
+          <label for="f-detalle">Una línea más</label>
+          <p class="ayuda">Aparece abajo del nombre, en letra chica.</p>
+          <input type="text" id="f-detalle" maxlength="200" autocomplete="off" placeholder="Tapa dura">
+        </div>
+        <div class="campo">
+          <label for="f-keywords">Palabras para encontrarlo</label>
+          <p class="ayuda">Separadas por coma. Ayudan a que aparezca cuando alguien lo busca.</p>
+          <input type="text" id="f-keywords" maxlength="300" autocomplete="off" placeholder="cuaderno, escolar">
+        </div>
+        <div class="campo">
+          <label for="f-orden">Lugar en la lista</label>
+          <p class="ayuda">Más chico, más arriba.</p>
+          <input type="text" id="f-orden" inputmode="numeric" autocomplete="off" value="0">
+        </div>
+        <div class="campo">
+          <label for="f-subcategoria">Subgrupo</label>
+          <p class="ayuda">Casi nunca hace falta.</p>
+          <input type="text" id="f-subcategoria" maxlength="80" autocomplete="off">
+        </div>
+      </div>
+    </details>
+
+    <div class="peligro" id="zona-peligro" hidden>
+      <button type="button" class="btn-chico" data-tono="peligro" id="btn-borrar">
+        Borrar este producto
+      </button>
+      <p class="ayuda">Esto no se puede deshacer. Si solo querés sacarlo un tiempo,
+        destildá "Mostrar en la página".</p>
     </div>
   </form>
+
+  <div class="ficha-pie">
+    <div class="container">
+      <button class="accion-principal" id="btn-guardar" type="button">Guardar</button>
+    </div>
+  </div>
 </section>
 
 
@@ -403,62 +502,58 @@ img.miniatura{ display:block; }
 (() => {
   'use strict';
 
-  // ============================================================
-  // Estado
-  //
-  // Una sola fuente: todo lo que se ve sale de acá y cada cambio
-  // vuelve a dibujar. Es más barato que sincronizar el DOM a mano y
-  // evita la clase de bug en que la pantalla dice una cosa y el
-  // servidor tiene otra.
-  // ============================================================
+  const NUEVA = '\u0000nueva';   // valor centinela del selector de categoría
+
   const estado = {
     seccion: 'novedades',
+    categoria: null,    // null = pantalla de categorías
     productos: [],
-    editando: null,   // null = cerrado; {} = alta; {id,...} = edición
+    editando: null,
+    busqueda: '',
     cargando: true,
   };
 
-  const $ = (sel) => document.querySelector(sel);
+  const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
     (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
+  const ICONO = {
+    chevron: '<path d="M9 6l6 6-6 6"/>',
+    foto: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5L5 19"/>',
+  };
+  const svg = (n, w = 2) =>
+    `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONO[n]}</svg>`;
+
   // ============================================================
-  // Hablar con la API
+  // API
   //
-  // Los pedidos van con la cookie de Access (same-origin, va sola) y
-  // el Worker la verifica. Un 403 acá significa que la sesión venció:
-  // recargar manda de nuevo a la pantalla de Access.
+  // Los pedidos van con la cookie de Access (same-origin, va sola) y el
+  // Worker la verifica. Un 403 significa que la sesión venció.
   // ============================================================
   async function api(ruta, opciones = {}) {
     const res = await fetch(ruta, opciones);
-
     if (res.status === 403) {
       throw new Error('Se cerró la sesión. Recargá la página para volver a entrar.');
     }
-
     let datos = null;
-    try { datos = await res.json(); } catch { /* respuesta sin cuerpo */ }
-
+    try { datos = await res.json(); } catch { /* sin cuerpo */ }
     if (!res.ok) {
-      const err = new Error(datos?.error || `Algo falló (${res.status}).`);
-      err.detalles = datos?.detalles;
-      throw err;
+      const e = new Error(datos?.error || `Algo falló (${res.status}).`);
+      e.detalles = datos?.detalles;
+      throw e;
     }
     return datos;
   }
 
   function avisar(mensaje, tipo = 'error', detalles) {
     const caja = $('#aviso-global');
-    if (!mensaje) { caja.innerHTML = ''; return; }
-    caja.innerHTML = `<div class="aviso" data-tipo="${tipo}" role="alert">${esc(mensaje)}${
-      detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''
-    }</div>`;
-    caja.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    caja.innerHTML = mensaje
+      ? `<div class="aviso" data-tipo="${tipo}" role="alert">${esc(mensaje)}${
+          detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}</div>`
+      : '';
   }
 
-  // ============================================================
-  // Cargar y dibujar
-  // ============================================================
   async function cargar() {
     estado.cargando = true;
     dibujar();
@@ -475,134 +570,170 @@ img.miniatura{ display:block; }
     }
   }
 
+  // ============================================================
+  // Dibujado
+  // ============================================================
+  const deSeccion = () => estado.productos.filter((p) => p.seccion === estado.seccion);
+
+  const ordenar = (lista) => lista.slice().sort((a, b) =>
+    (a.orden - b.orden) || a.nombre.localeCompare(b.nombre, 'es'));
+
   function dibujar() {
     const cont = $('#contenido');
+    const enBusqueda = estado.busqueda.trim().length > 0;
+
+    // La barra y el encabezado cambian según dónde estemos.
+    $('#btn-volver').hidden = !estado.categoria;
+    $('#nav-titulo').textContent = estado.categoria || 'Librería Neneko';
+    $('#encabezado').hidden = !!estado.categoria;
+    document.querySelector('.segmentos').hidden = !!estado.categoria;
 
     if (estado.cargando) {
       cont.className = 'cargando';
-      cont.textContent = 'Cargando el catálogo…';
+      cont.textContent = 'Cargando…';
       return;
     }
 
-    const delSeccion = estado.productos
-      .filter((p) => p.seccion === estado.seccion)
-      .sort((a, b) =>
-        a.categoria.localeCompare(b.categoria, 'es') ||
-        (a.orden - b.orden) ||
-        a.nombre.localeCompare(b.nombre, 'es'));
+    // Buscar atraviesa las categorías: cuando se busca algo, lo que
+    // importa es encontrarlo, no dónde está guardado.
+    if (enBusqueda) return dibujarProductos(cont, buscar(), true);
+    if (estado.categoria) return dibujarProductos(cont, porCategoria(estado.categoria));
+    return dibujarCategorias(cont);
+  }
 
-    if (!delSeccion.length) {
-      cont.className = 'vacio';
-      cont.innerHTML = `<p>Todavía no hay nada acá.</p>
-        <p style="font-size:.9375rem">Tocá <strong>Agregar producto</strong> para empezar.</p>`;
-      return;
-    }
+  const normal = (s) => String(s ?? '').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '');
 
-    // Agrupadas por categoría, que es como se ven en la página.
+  function buscar() {
+    const q = normal(estado.busqueda);
+    return ordenar(deSeccion().filter((p) =>
+      normal(p.nombre).includes(q) || normal(p.categoria).includes(q) ||
+      normal(p.detalle).includes(q) || normal(p.keywords).includes(q)));
+  }
+
+  const porCategoria = (cat) => ordenar(deSeccion().filter((p) => p.categoria === cat));
+
+  function dibujarCategorias(cont) {
     const grupos = new Map();
-    for (const p of delSeccion) {
-      if (!grupos.has(p.categoria)) grupos.set(p.categoria, []);
-      grupos.get(p.categoria).push(p);
+    for (const p of deSeccion()) {
+      if (!grupos.has(p.categoria)) grupos.set(p.categoria, { total: 0, ocultos: 0 });
+      const g = grupos.get(p.categoria);
+      g.total++;
+      if (!p.activo) g.ocultos++;
     }
 
-    cont.className = 'lista';
-    cont.innerHTML = [...grupos].map(([categoria, items]) => `
-      <section class="grupo">
-        <h2>${esc(categoria)} <span style="opacity:.6">· ${items.length}</span></h2>
-        <div class="tarjetas">
-          ${items.map((p) => tarjeta(p)).join('')}
-        </div>
-      </section>
-    `).join('');
+    if (!grupos.size) {
+      cont.className = 'vacio';
+      cont.innerHTML = `<p><strong>Todavía no hay nada acá.</strong></p>
+        <p>Tocá <strong>Agregar un producto</strong> para empezar.</p>`;
+      return;
+    }
 
-    actualizarCategorias();
+    const orden = [...grupos.keys()].sort((a, b) => a.localeCompare(b, 'es'));
+    cont.className = '';
+    cont.innerHTML = `<div class="grupo">${orden.map((cat) => {
+      const g = grupos.get(cat);
+      const sub = g.ocultos
+        ? `${g.total} ${g.total === 1 ? 'producto' : 'productos'} · ${g.ocultos} sin mostrar`
+        : `${g.total} ${g.total === 1 ? 'producto' : 'productos'}`;
+      return `
+        <button class="fila" data-categoria="${esc(cat)}">
+          <span class="fila-cuerpo">
+            <span class="fila-titulo">${esc(cat)}</span>
+            <span class="fila-sub">${esc(sub)}</span>
+          </span>
+          <span class="chevron">${svg('chevron', 2.2)}</span>
+        </button>`;
+    }).join('')}</div>`;
+  }
+
+  function dibujarProductos(cont, lista, esBusqueda = false) {
+    if (!lista.length) {
+      cont.className = 'vacio';
+      cont.innerHTML = esBusqueda
+        ? `<p><strong>No encontré nada.</strong></p><p>Probá con otra palabra.</p>`
+        : `<p><strong>Este grupo quedó vacío.</strong></p>`;
+      return;
+    }
+    cont.className = '';
+    cont.innerHTML = `<div class="grupo">${lista.map((p) => {
+      const mini = p.imagen
+        ? `<img class="mini" src="${esc(p.imagen)}" alt="" loading="lazy"
+                onerror="this.replaceWith(Object.assign(document.createElement('div'),
+                         {className:'mini',textContent:'sin foto'}))">`
+        : `<div class="mini">${svg('foto', 1.5)}</div>`;
+      const sub = [
+        p.precio ? `<span class="fila-precio">${esc(p.precio)}</span>` : '',
+        esBusqueda ? esc(p.categoria) : esc(p.detalle || ''),
+      ].filter(Boolean).join(' · ');
+      return `
+        <button class="fila" data-id="${esc(p.id)}" data-oculto="${!p.activo}">
+          ${mini}
+          <span class="fila-cuerpo">
+            <span class="fila-titulo">${esc(p.nombre)}</span>
+            ${sub ? `<span class="fila-sub">${sub}</span>` : ''}
+            ${p.activo ? '' : '<span class="marca-oculto">No se ve</span>'}
+          </span>
+          <span class="chevron">${svg('chevron', 2.2)}</span>
+        </button>`;
+    }).join('')}</div>`;
   }
 
   // ============================================================
-  // Iconos
-  //
-  // SVG inline, no emoji. El resto del sitio los hace así, y además un
-  // emoji lo dibuja cada sistema a su manera: el lápiz salía con cara
-  // de clip, y el tacho en color aunque el botón sea de un solo tono.
+  // Ficha
   // ============================================================
-  const ICONO = {
-    editar: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
-    ver: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
-    oculto: '<path d="m3 3 18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.2 4.2"/>' +
-            '<path d="M9.9 5.2A10 10 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.5 3.4"/>' +
-            '<path d="M6.6 6.6A18 18 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 3.4-.6"/>',
-    borrar: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>',
-  };
-
-  const svg = (nombre) =>
-    `<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONO[nombre]}</svg>`;
-
-  function tarjeta(p) {
-    const oculto = !p.activo;
-    const miniatura = p.imagen
-      ? `<img class="miniatura" src="${esc(p.imagen)}" alt="" loading="lazy"
-              onerror="this.replaceWith(Object.assign(document.createElement('div'),
-                       {className:'miniatura',textContent:'sin foto'}))">`
-      : `<div class="miniatura">sin foto</div>`;
-
-    return `
-      <article class="tarjeta" data-oculto="${oculto}">
-        ${miniatura}
-        <div class="datos">
-          <span class="nombre">${esc(p.nombre)}</span>
-          ${p.precio ? `<span class="precio">${esc(p.precio)}</span>` : ''}
-          ${p.detalle ? `<span class="detalle">${esc(p.detalle)}</span>` : ''}
-          ${oculto ? '<span class="etiqueta" data-estado="oculto">No se ve</span>' : ''}
-        </div>
-        <div class="acciones">
-          <button class="icono-btn" data-accion="editar" data-id="${esc(p.id)}"
-                  aria-label="Editar ${esc(p.nombre)}">${svg('editar')}</button>
-          <button class="icono-btn" data-accion="visibilidad" data-id="${esc(p.id)}"
-                  aria-label="${oculto ? 'Mostrar' : 'Ocultar'} ${esc(p.nombre)}"
-                  title="${oculto ? 'Mostrar en la página' : 'Ocultar de la página'}"
-                  >${svg(oculto ? 'oculto' : 'ver')}</button>
-          <button class="icono-btn" data-accion="borrar" data-id="${esc(p.id)}"
-                  aria-label="Borrar ${esc(p.nombre)}">${svg('borrar')}</button>
-        </div>
-      </article>`;
+  function categoriasConocidas() {
+    return [...new Set(deSeccion().map((p) => p.categoria))].sort((a, b) => a.localeCompare(b, 'es'));
   }
 
-  /** Las categorías que ya existen, para sugerirlas y no multiplicar variantes. */
-  function actualizarCategorias() {
-    const nombres = [...new Set(estado.productos.map((p) => p.categoria))].sort();
-    $('#categorias-existentes').innerHTML =
-      nombres.map((c) => `<option value="${esc(c)}">`).join('');
+  function llenarSelector(elegida) {
+    const cats = categoriasConocidas();
+    const sel = $('#f-categoria');
+    sel.innerHTML = [
+      ...cats.map((c) => `<option value="${esc(c)}"${c === elegida ? ' selected' : ''}>${esc(c)}</option>`),
+      `<option value="${NUEVA}">➕ Crear un grupo nuevo…</option>`,
+    ].join('');
+    // Sin categorías todavía, la única salida es crear una.
+    if (!cats.length) sel.value = NUEVA;
+    mostrarCampoNuevo();
   }
 
-  // ============================================================
-  // Formulario
-  // ============================================================
-  function abrirFormulario(producto) {
+  function mostrarCampoNuevo() {
+    const nueva = $('#f-categoria').value === NUEVA;
+    $('#f-categoria-nueva').hidden = !nueva;
+    if (nueva) $('#f-categoria-nueva').focus();
+  }
+
+  function abrirFicha(producto) {
     estado.editando = producto || {};
     const p = estado.editando;
     const esNuevo = !p.id;
 
-    $('#form-titulo').textContent = esNuevo ? 'Nuevo producto' : 'Editar producto';
+    $('#ficha-titulo').textContent = esNuevo ? 'Nuevo producto' : 'Editar';
     $('#form-errores').innerHTML = '';
     $('#f-nombre').value = p.nombre || '';
-    $('#f-categoria').value = p.categoria || '';
-    $('#f-subcategoria').value = p.subcategoria || '';
     $('#f-precio').value = p.precio || '';
     $('#f-detalle').value = p.detalle || '';
     $('#f-keywords').value = p.keywords || '';
+    $('#f-subcategoria').value = p.subcategoria || '';
     $('#f-orden').value = p.orden ?? 0;
     $('#f-activo').checked = esNuevo ? true : !!p.activo;
+    $('#f-categoria-nueva').value = '';
+    // Si venimos de una categoría, ya sabemos en cuál va: una decisión
+    // menos que tomar.
+    llenarSelector(p.categoria || estado.categoria || '');
     ponerFoto(p.imagen || '');
+    $('#zona-peligro').hidden = esNuevo;
+    $('.mas').open = false;
 
-    $('#formulario').hidden = false;
+    $('#ficha').hidden = false;
     document.body.style.overflow = 'hidden';
     $('#f-nombre').focus();
   }
 
-  function cerrarFormulario() {
+  function cerrarFicha() {
     estado.editando = null;
-    $('#formulario').hidden = true;
+    $('#ficha').hidden = true;
     document.body.style.overflow = '';
   }
 
@@ -610,49 +741,43 @@ img.miniatura{ display:block; }
     $('#f-imagen').value = url;
     const previa = $('#f-previa');
     if (url) {
-      previa.src = url;
-      previa.hidden = false;
+      previa.src = url; previa.hidden = false;
       $('#f-sin-foto').hidden = true;
       $('#btn-quitar-foto').hidden = false;
       $('#btn-foto').textContent = 'Cambiar la foto';
     } else {
-      previa.removeAttribute('src');
-      previa.hidden = true;
+      previa.removeAttribute('src'); previa.hidden = true;
       $('#f-sin-foto').hidden = false;
       $('#btn-quitar-foto').hidden = true;
       $('#btn-foto').textContent = 'Elegir una foto';
     }
   }
 
-  function errorEnFormulario(mensaje, detalles) {
+  function errorEnFicha(mensaje, detalles) {
     $('#form-errores').innerHTML = mensaje
       ? `<div class="aviso" data-tipo="error" role="alert">${esc(mensaje)}${
-          detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''
-        }</div>`
+          detalles?.length ? `<ul>${detalles.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}</div>`
       : '';
-    if (mensaje) $('#form-errores').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (mensaje) $('#ficha').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ============================================================
-  // Subir la foto
+  // Foto
   //
-  // El Worker también valida tamaño y formato, pero chequear acá
-  // primero le ahorra a la dueña subir medio megabyte por una red de
-  // celular para que recién entonces le digan que no. El mensaje es el
-  // mismo en los dos lados.
+  // El Worker también valida, pero chequear acá primero le ahorra subir
+  // medio megabyte por red de celular para que recién entonces le digan
+  // que no. El mensaje es el mismo en los dos lados.
   // ============================================================
   const MAX_BYTES = 500 * 1024;
   const MIN_LADO = 200;
 
   async function medir(archivo) {
     try {
-      const bitmap = await createImageBitmap(archivo);
-      const medidas = { ancho: bitmap.width, alto: bitmap.height };
-      bitmap.close?.();
-      return medidas;
-    } catch {
-      return null; // si no se puede leer, que decida el servidor
-    }
+      const b = await createImageBitmap(archivo);
+      const m = { ancho: b.width, alto: b.height };
+      b.close?.();
+      return m;
+    } catch { return null; }
   }
 
   async function subirFoto(archivo) {
@@ -662,14 +787,11 @@ img.miniatura{ display:block; }
         'Sacale calidad o achicala antes de subirla: una foto muy pesada hace que ' +
         'la página tarde en cargar en el celular.');
     }
-
-    const medidas = await medir(archivo);
-    if (medidas && (medidas.ancho < MIN_LADO || medidas.alto < MIN_LADO)) {
-      throw new Error(
-        `La foto es de ${medidas.ancho}×${medidas.alto} y queda pixelada. ` +
+    const m = await medir(archivo);
+    if (m && (m.ancho < MIN_LADO || m.alto < MIN_LADO)) {
+      throw new Error(`La foto es de ${m.ancho}×${m.alto} y queda pixelada. ` +
         `Tiene que medir al menos ${MIN_LADO}×${MIN_LADO}.`);
     }
-
     const form = new FormData();
     form.set('archivo', archivo);
     const { url } = await api('/api/imagenes', { method: 'POST', body: form });
@@ -677,20 +799,24 @@ img.miniatura{ display:block; }
   }
 
   // ============================================================
-  // Guardar
+  // Guardar / borrar
   // ============================================================
-  async function guardar(evento) {
-    evento.preventDefault();
+  function categoriaElegida() {
+    const sel = $('#f-categoria').value;
+    return sel === NUEVA ? $('#f-categoria-nueva').value : sel;
+  }
+
+  async function guardar() {
     const boton = $('#btn-guardar');
     boton.disabled = true;
     boton.textContent = 'Guardando…';
-    errorEnFormulario(null);
+    errorEnFicha(null);
 
-    const orden = Number($('#f-orden').value.trim() || 0);
+    const orden = Number(String($('#f-orden').value).trim() || 0);
     const cuerpo = {
       seccion: estado.seccion,
       nombre: $('#f-nombre').value,
-      categoria: $('#f-categoria').value,
+      categoria: categoriaElegida(),
       subcategoria: $('#f-subcategoria').value,
       precio: $('#f-precio').value,
       detalle: $('#f-detalle').value,
@@ -699,7 +825,6 @@ img.miniatura{ display:block; }
       orden: Number.isInteger(orden) ? orden : 0,
       activo: $('#f-activo').checked,
     };
-
     const id = estado.editando?.id;
 
     try {
@@ -708,77 +833,82 @@ img.miniatura{ display:block; }
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(cuerpo),
       });
-      cerrarFormulario();
+      // Quedarse en la categoría del producto recién guardado: si no,
+      // lo agrega y no lo ve por ningún lado.
+      if (cuerpo.categoria) estado.categoria = cuerpo.categoria;
+      cerrarFicha();
       await cargar();
-      avisar(id ? 'Producto guardado.' : 'Producto agregado.', 'ok');
+      avisar(id ? 'Listo, se guardó.' : 'Listo, se agregó.', 'ok');
     } catch (e) {
-      errorEnFormulario(e.message, e.detalles);
+      errorEnFicha(e.message, e.detalles);
     } finally {
       boton.disabled = false;
       boton.textContent = 'Guardar';
     }
   }
 
-  async function cambiarVisibilidad(id) {
-    const p = estado.productos.find((x) => x.id === id);
-    if (!p) return;
-    try {
-      await api(`/api/productos/${encodeURIComponent(id)}`, {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ activo: !p.activo }),
-      });
-      await cargar();
-    } catch (e) {
-      avisar(e.message, 'error', e.detalles);
-    }
-  }
+  async function borrar() {
+    const p = estado.editando;
+    if (!p?.id) return;
 
-  async function borrar(id) {
-    const p = estado.productos.find((x) => x.id === id);
-    if (!p) return;
-
-    // Borrar no se deshace. El confirm nombra el producto para que no
-    // se pueda borrar el equivocado por tocar el botón de al lado.
+    // Borrar no se deshace. El confirm nombra el producto para que no se
+    // borre el equivocado, y recuerda la alternativa.
     if (!confirm(
       `¿Borrar "${p.nombre}"?\n\nEsto no se puede deshacer. ` +
-      'Si solo querés sacarlo de la página por un tiempo, cerrá esto y usá el ojo para ocultarlo.'
-    )) return;
+      'Si solo querés sacarlo de la página por un tiempo, cerrá esto y ' +
+      'destildá "Mostrar en la página".')) return;
 
     try {
-      await api(`/api/productos/${encodeURIComponent(id)}`, { method: 'DELETE' });
+      await api(`/api/productos/${encodeURIComponent(p.id)}`, { method: 'DELETE' });
+      cerrarFicha();
       await cargar();
       avisar(`Se borró "${p.nombre}".`, 'ok');
     } catch (e) {
-      avisar(e.message, 'error', e.detalles);
+      errorEnFicha(e.message, e.detalles);
     }
   }
 
   // ============================================================
   // Eventos
   // ============================================================
-  document.querySelectorAll('.solapa').forEach((b) => {
+  document.querySelectorAll('.segmento').forEach((b) => {
     b.addEventListener('click', () => {
       estado.seccion = b.dataset.seccion;
-      document.querySelectorAll('.solapa').forEach((o) =>
+      estado.categoria = null;
+      document.querySelectorAll('.segmento').forEach((o) =>
         o.setAttribute('aria-selected', String(o === b)));
       dibujar();
     });
   });
 
   $('#contenido').addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-accion]');
-    if (!btn) return;
-    const { accion, id } = btn.dataset;
-    if (accion === 'editar') abrirFormulario(estado.productos.find((p) => p.id === id));
-    if (accion === 'visibilidad') cambiarVisibilidad(id);
-    if (accion === 'borrar') borrar(id);
+    const fila = e.target.closest('.fila');
+    if (!fila) return;
+    if (fila.dataset.categoria !== undefined) {
+      estado.categoria = fila.dataset.categoria;
+      window.scrollTo({ top: 0 });
+      dibujar();
+    } else {
+      abrirFicha(estado.productos.find((p) => p.id === fila.dataset.id));
+    }
   });
 
-  $('#btn-nuevo').addEventListener('click', () => abrirFormulario(null));
-  $('#btn-cerrar').addEventListener('click', cerrarFormulario);
-  $('#btn-cancelar').addEventListener('click', cerrarFormulario);
-  $('#form').addEventListener('submit', guardar);
+  $('#btn-volver').addEventListener('click', () => {
+    estado.categoria = null;
+    dibujar();
+  });
+
+  $('#buscar').addEventListener('input', (e) => {
+    estado.busqueda = e.target.value;
+    dibujar();
+  });
+
+  $('#btn-nuevo').addEventListener('click', () => abrirFicha(null));
+  $('#btn-cancelar').addEventListener('click', cerrarFicha);
+  $('#btn-guardar').addEventListener('click', guardar);
+  $('#btn-borrar').addEventListener('click', borrar);
+  $('#form').addEventListener('submit', (e) => { e.preventDefault(); guardar(); });
+  $('#f-categoria').addEventListener('change', mostrarCampoNuevo);
 
   $('#btn-foto').addEventListener('click', () => $('#f-archivo').click());
   $('#btn-quitar-foto').addEventListener('click', () => ponerFoto(''));
@@ -787,24 +917,21 @@ img.miniatura{ display:block; }
     const archivo = e.target.files?.[0];
     if (!archivo) return;
     const boton = $('#btn-foto');
-    const textoPrevio = boton.textContent;
+    const antes = boton.textContent;
     boton.disabled = true;
     boton.textContent = 'Subiendo…';
-    errorEnFormulario(null);
-    try {
-      ponerFoto(await subirFoto(archivo));
-    } catch (err) {
-      errorEnFormulario(err.message, err.detalles);
-    } finally {
+    errorEnFicha(null);
+    try { ponerFoto(await subirFoto(archivo)); }
+    catch (err) { errorEnFicha(err.message, err.detalles); }
+    finally {
       boton.disabled = false;
-      boton.textContent = textoPrevio;
-      e.target.value = ''; // permite reintentar con el mismo archivo
+      boton.textContent = antes;
+      e.target.value = '';   // permite reintentar con el mismo archivo
     }
   });
 
-  // Escape cierra el formulario, como cualquier diálogo.
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !$('#formulario').hidden) cerrarFormulario();
+    if (e.key === 'Escape' && !$('#ficha').hidden) cerrarFicha();
   });
 
   cargar();

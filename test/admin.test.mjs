@@ -118,11 +118,16 @@ test('[hidden] le gana a los display de los componentes', () => {
 
 test('las áreas de tap llegan a 44px', () => {
   // CLAUDE.md: "Área de tap mínima 44×44 px." La dueña va a usar esto
-  // desde el teléfono.
-  for (const sel of ['.btn', '.icono-btn', '.solapa', '.interruptor']) {
-    const regla = (css.match(new RegExp(`\\${sel}\\{[^}]*\\}`)) || [''])[0];
-    assert.match(regla, /(min-height|height):\s*44px/,
-      `${sel} no declara 44px de alto`);
+  // desde el teléfono, y es la que menos margen tiene para errarle.
+  const controles = ['.accion-principal', '.segmento', '.fila', '.volver',
+                     '.texto-btn', '.btn-chico', '.interruptor', '.buscador input',
+                     '.mas > summary'];
+  for (const sel of controles) {
+    const escapado = sel.replace(/[.>]/g, (c) => `\\${c}`).replace(/\s+/g, '\\s*');
+    const regla = (css.match(new RegExp(`${escapado}\\{[^}]*\\}`)) || [''])[0];
+    assert.ok(regla, `no encontré la regla de ${sel}`);
+    assert.match(regla, /(min-height|height):\s*(4[4-9]|[5-9]\d|\d{3})px/,
+      `${sel} no llega a 44px de alto`);
   }
 });
 
@@ -142,20 +147,49 @@ test('el límite de peso de las fotos coincide con el del servidor', () => {
     `el panel permite ${delPanel} KB y el servidor ${delServidor} KB`);
 });
 
-test('las acciones de cada producto tienen nombre accesible', () => {
-  // Son botones de ícono: sin aria-label, un lector de pantalla dice
-  // "botón" tres veces y no se sabe cuál borra.
-  for (const accion of ['editar', 'visibilidad', 'borrar']) {
-    const re = new RegExp(`data-accion="${accion}"[^>]*aria-label=`, 's');
-    assert.match(html, re, `el botón de ${accion} no tiene aria-label`);
+test('ningún botón queda sin nombre que pueda leer un lector de pantalla', () => {
+  // Antes esto afirmaba que los tres botones de icono de cada fila
+  // tuvieran aria-label. Ya no existen: las filas son botones con el
+  // nombre del producto adentro, y las acciones peligrosas se mudaron
+  // a la ficha. El invariante que queda es el de fondo, y es más
+  // fuerte: ningún botón del HTML puede quedar sin nombre accesible,
+  // sea por su texto o por un aria-label. Un botón que solo tiene un
+  // SVG adentro se anuncia como "botón" y no se sabe cuál es.
+  const sinNombre = [];
+  for (const m of html.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)) {
+    const [, attrs, contenido] = m;
+    const tieneAria = /aria-label\s*=\s*"[^"]+"/.test(attrs);
+    const texto = contenido.replace(/<svg[\s\S]*?<\/svg>/g, '')
+                           .replace(/<[^>]+>/g, '').trim();
+    if (!tieneAria && !texto) {
+      sinNombre.push(attrs.trim().slice(0, 70));
+    }
   }
+  assert.deepEqual(sinNombre, [],
+    `botones sin nombre accesible:\n  ${sinNombre.join('\n  ')}`);
 });
 
-test('borrar pide confirmación y nombra el producto', () => {
-  // Borrar no se deshace. El confirm tiene que nombrar el producto
-  // para que no se borre el de al lado por tocar mal.
-  const fn = html.match(/async function borrar\([\s\S]*?\n  \}/)[0];
+test('el buscador tiene nombre accesible', () => {
+  const campo = html.match(/<input[^>]*id="buscar"[^>]*>/)[0];
+  assert.match(campo, /aria-label\s*=\s*"[^"]+"/,
+    'el buscador no tiene label visible, así que necesita aria-label');
+});
+
+test('borrar pide confirmación, nombra el producto y ofrece la alternativa', () => {
+  // Borrar no se deshace. El confirm tiene que nombrar el producto para
+  // que no se borre el de al lado por tocar mal, y tiene que recordar
+  // que existe la salida no destructiva: ocultarlo.
+  const fn = html.match(/async function borrar\(\)[\s\S]*?\n  \}/)[0];
   assert.match(fn, /confirm\(/, 'borra sin confirmar');
   assert.match(fn, /p\.nombre/, 'el confirm no nombra el producto');
-  assert.match(fn, /ocultarlo|ojo/i, 'no ofrece la alternativa de ocultar');
+  assert.match(fn, /Mostrar en la página|ocultar/i,
+    'no ofrece la alternativa de ocultarlo en vez de borrarlo');
+});
+
+test('la ficha no ofrece borrar cuando el producto todavía no existe', () => {
+  // Un botón de borrar en un producto nuevo no tiene sentido y asusta.
+  assert.match(html, /id="zona-peligro"[^>]*\bhidden\b/,
+    'la zona de borrado tiene que arrancar oculta');
+  assert.match(html, /\$\('#zona-peligro'\)\.hidden\s*=\s*esNuevo/,
+    'la zona de borrado no se muestra según si el producto ya existe');
 });
